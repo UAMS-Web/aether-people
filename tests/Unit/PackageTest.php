@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use UAMSWeb\AddonTemplate\ServiceProvider;
+use UAMSWeb\Aether\People\ServiceProvider;
 
 /**
  * `composer.json` registers the add-on's service provider for Laravel package

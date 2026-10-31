@@ -1,12 +1,14 @@
 {
-    "name": "uams-web/statamic-addon-template",
-    "description": "Starting point for UAMS Statamic add-ons. Replace this description when you start an add-on from it.",
+    "name": "uams-web/aether-people",
+    "description": "The people collection for Statamic, its lenses and the clinical provider layer.",
     "keywords": [
         "statamic",
-        "statamic-addon"
+        "statamic-addon",
+        "people",
+        "providers"
     ],
     "type": "statamic-addon",
-    "homepage": "https://github.com/UAMS-Web/statamic-addon-template",
+    "homepage": "https://github.com/UAMS-Web/aether-people",
     "authors": [
         {
             "name": "UAMS Web Services"
@@ -17,27 +19,27 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/UAMS-Web/statamic-addon-template/issues",
-        "source": "https://github.com/UAMS-Web/statamic-addon-template"
+        "issues": "https://github.com/UAMS-Web/aether-people/issues",
+        "source": "https://github.com/UAMS-Web/aether-people"
     },
     "autoload": {
         "psr-4": {
-            "UAMSWeb\\AddonTemplate\\": "src/"
+            "UAMSWeb\\Aether\\People\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "UAMSWeb\\AddonTemplate\\Tests\\": "tests/"
+            "UAMSWeb\\Aether\\People\\Tests\\": "tests/"
         }
     },
     "extra": {
         "statamic": {
-            "name": "Addon Template",
-            "description": "Replace this description when you start an add-on from the template."
+            "name": "People",
+            "description": "The people collection, its lenses and the clinical provider layer."
         },
         "laravel": {
             "providers": [
-                "UAMSWeb\\AddonTemplate\\ServiceProvider"
+                "UAMSWeb\\Aether\\People\\ServiceProvider"
             ]
         },
         "composer-exit-on-patch-failure": true

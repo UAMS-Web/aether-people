@@ -26,9 +26,9 @@ Oldest first, one entry per closed decision, so **a new entry is appended to the
 
 ---
 
-## 2026-10-14: Started from the add-on template (repository setup)
+## 2026-10-31: Started from the add-on template (repository setup)
 
-**Decision.** This repository started from `UAMS-Web/statamic-addon-template`. It carries no synced files (`.agents/`, `.claude/`, `.cursor/`) and no `LICENSE`, and `composer.json` has no `license` field.
+**Decision.** This repository started from `UAMS-Web/statamic-addon-template@197c764`, the template's `main` tip when it was created. It carries no synced files (`.agents/`, `.claude/`, `.cursor/`) and no `LICENSE`, and `composer.json` has no `license` field.
 
 **Why.** The shared rules and skills reach a repository by onboarding it to the sync in `UAMS-Web/uams-claude-skills`, not by copying a snapshot that goes stale. The license waits on the general decision from UAMS legal in `UAMS-Web/uams-statamic#261`.
 

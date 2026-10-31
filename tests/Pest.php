@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use UAMSWeb\AddonTemplate\Tests\TestCase;
+use UAMSWeb\Aether\People\Tests\TestCase;
 
 pest()->extend(TestCase::class)->in('Integration');

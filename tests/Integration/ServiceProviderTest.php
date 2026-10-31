@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Statamic\Facades\Addon;
-use UAMSWeb\AddonTemplate\ServiceProvider;
+use UAMSWeb\Aether\People\ServiceProvider;
 
 /**
  * The add-on boots inside a minimal Statamic.
@@ -12,14 +12,14 @@ use UAMSWeb\AddonTemplate\ServiceProvider;
  */
 it('is discovered by Statamic as an add-on', function (): void {
     // Expect the add-on among those Statamic booted
-    expect(Addon::all()->map->package()->all())->toContain('uams-web/statamic-addon-template');
+    expect(Addon::all()->map->package()->all())->toContain('uams-web/aether-people');
 });
 
 it('publishes its config file under the tag the README names', function (): void {
     // Read the paths published under the config tag
-    $paths = ServiceProvider::pathsToPublish(null, 'statamic-addon-template-config');
+    $paths = ServiceProvider::pathsToPublish(null, 'aether-people-config');
 
     // Expect the package config to publish to the app's config directory
-    expect(array_map(realpath(...), array_keys($paths)))->toBe([realpath(__DIR__.'/../../config/statamic-addon-template.php')])
-        ->and(array_values($paths))->toBe([config_path('statamic-addon-template.php')]);
+    expect(array_map(realpath(...), array_keys($paths)))->toBe([realpath(__DIR__.'/../../config/aether-people.php')])
+        ->and(array_values($paths))->toBe([config_path('aether-people.php')]);
 });
