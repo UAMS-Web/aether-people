@@ -7,7 +7,7 @@ The gate (`composer ci`) boots a minimal Statamic through Testbench. Behavior th
 Keep one persistent Statamic 6 host per developer machine, in the directory the local web server serves (Herd's, on the maintainers' machines), named for the add-on it serves:
 
 ```
-statamic-addon-template-host
+aether-people-host
 ```
 
 It is a stock `statamic/statamic` project with one change: `composer.json` carries a path repository pointing at the add-on checkout, and requires the add-on at `@dev`. Record any other change the add-on needs (for example, turning on multisite and defining two sites, if the add-on is about sites) in the host's own files, so it can be rebuilt from this page, and add that step to the list below.
@@ -17,36 +17,36 @@ It is a stock `statamic/statamic` project with one change: `composer.json` carri
 Run these in the web server's directory. `<path-to-addon-checkout>` is the absolute path of the primary checkout or the slot being tested; it differs per machine, so it is written as a placeholder here.
 
 ```bash
-composer create-project statamic/statamic statamic-addon-template-host
-cd statamic-addon-template-host
+composer create-project statamic/statamic aether-people-host
+cd aether-people-host
 composer config repositories.addon path "<path-to-addon-checkout>"
 composer config minimum-stability dev
 composer config prefer-stable true
-composer require uams-web/statamic-addon-template:@dev
+composer require uams-web/aether-people:@dev
 ```
 
 ## Picking up a change
 
-A path repository installs by symlink where the filesystem allows it, so an edit in the checkout is live in the host with no further step. Where a symlink cannot be created Composer copies instead, and a change then needs `composer reinstall uams-web/statamic-addon-template`. Check which one happened: `vendor/uams-web/statamic-addon-template` is a symlink to the checkout, or it is not.
+A path repository installs by symlink where the filesystem allows it, so an edit in the checkout is live in the host with no further step. Where a symlink cannot be created Composer copies instead, and a change then needs `composer reinstall uams-web/aether-people`. Check which one happened: `vendor/uams-web/aether-people` is a symlink to the checkout, or it is not.
 
 To run the host against a worktree slot rather than the primary checkout, repoint that symlink and set it back afterwards. In PowerShell, from the host root, with the slot's absolute path in place of `<slot-path>`:
 
 ```powershell
-$link = 'vendor\uams-web\statamic-addon-template'
+$link = 'vendor\uams-web\aether-people'
 [System.IO.Directory]::Delete($link, $false)                  # removes the link, not its target
 New-Item -ItemType SymbolicLink -Path $link -Target '<slot-path>'
 ```
 
-On macOS or Linux, `ln -sfn <slot-path> vendor/uams-web/statamic-addon-template` does the same.
+On macOS or Linux, `ln -sfn <slot-path> vendor/uams-web/aether-people` does the same.
 
-The autoloader maps the add-on's namespace to that path, so a class added on the slot's branch loads with no `composer dump-autoload`. A change to `composer.json` (a new provider, a new `extra.statamic` key) needs `composer update uams-web/statamic-addon-template` from the host root, and the `Discovered Addon:` line at the end of the output confirms discovery.
+The autoloader maps the add-on's namespace to that path, so a class added on the slot's branch loads with no `composer dump-autoload`. A change to `composer.json` (a new provider, a new `extra.statamic` key) needs `composer update uams-web/aether-people` from the host root, and the `Discovered Addon:` line at the end of the output confirms discovery.
 
 ## Confirming the add-on loaded
 
 From the host root:
 
 ```bash
-php artisan package:discover                      # lists uams-web/statamic-addon-template
+php artisan package:discover                      # lists uams-web/aether-people
 php artisan tinker --execute='echo \Statamic\Facades\Addon::all()->map->package()->implode(",");'
 ```
 
@@ -54,7 +54,7 @@ Then request `/cp/addons` as a super user, in a browser or in process, and confi
 
 ## Control Panel assets
 
-`npm run build` writes the production build to `resources/dist`, which is committed. In the host, `php artisan vendor:publish --tag=statamic-addon-template --force` copies `resources/dist/build` to `public/vendor/statamic-addon-template/build`, and `statamic:install` does the same after a `composer update`. After publishing, the `/cp/addons` page references the built `cp-<hash>.js` and `cp-<hash>.css` under `/vendor/statamic-addon-template/build/assets/`. `npm ci` needs `vendor/statamic/cms`, because `@statamic/cms` is a `file:` link into it, so run `composer install` first.
+`npm run build` writes the production build to `resources/dist`, which is committed. In the host, `php artisan vendor:publish --tag=aether-people --force` copies `resources/dist/build` to `public/vendor/aether-people/build`, and `statamic:install` does the same after a `composer update`. After publishing, the `/cp/addons` page references the built `cp-<hash>.js` and `cp-<hash>.css` under `/vendor/aether-people/build/assets/`. `npm ci` needs `vendor/statamic/cms`, because `@statamic/cms` is a `file:` link into it, so run `composer install` first.
 
 ## Editions can be added later
 
@@ -74,10 +74,10 @@ So declaring editions later, with `free` first, leaves an install that never cho
 `tests/Feature/` holds tests that extend the host's `Tests\TestCase`. They are not part of `composer ci`: the package has no `Feature` suite and PHPStan excludes the directory, because `Tests\TestCase` does not exist in this package. From the host root:
 
 ```bash
-php artisan test vendor/uams-web/statamic-addon-template/tests/Feature/HostRegistersAddonTest.php
+php artisan test vendor/uams-web/aether-people/tests/Feature/HostRegistersAddonTest.php
 ```
 
-`HostRegistersAddonTest` asserts that the host lists the add-on and registers its service provider. Add a host-bound test for each behavior only a host exercises, and run the whole directory with `php artisan test vendor/uams-web/statamic-addon-template/tests/Feature/`. The `host-only-behavior-needs-a-host-run` rule says when a run is required, and the `host-app-tests` skill covers claiming a slot and reading results.
+`HostRegistersAddonTest` asserts that the host lists the add-on and registers its service provider. Add a host-bound test for each behavior only a host exercises, and run the whole directory with `php artisan test vendor/uams-web/aether-people/tests/Feature/`. The `host-only-behavior-needs-a-host-run` rule says when a run is required, and the `host-app-tests` skill covers claiming a slot and reading results.
 
 ## Patch leakage
 

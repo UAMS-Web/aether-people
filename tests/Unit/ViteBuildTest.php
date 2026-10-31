@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Application;
-use UAMSWeb\AddonTemplate\ServiceProvider;
+use UAMSWeb\Aether\People\ServiceProvider;
 
 /**
  * The Control Panel build: the provider's `$vite` property, `vite.config.js`,

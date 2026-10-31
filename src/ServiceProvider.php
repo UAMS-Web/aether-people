@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace UAMSWeb\AddonTemplate;
+namespace UAMSWeb\Aether\People;
 
 use Statamic\Providers\AddonServiceProvider;
 

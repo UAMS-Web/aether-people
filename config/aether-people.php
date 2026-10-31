@@ -8,15 +8,13 @@ declare(strict_types=1);
 |--------------------------------------------------------------------------
 |
 | Statamic merges this file into the application's config under the add-on's
-| handle (the package name without its vendor: `statamic-addon-template`), so
-| `config('statamic-addon-template.some_key')` reads it. The host publishes it
+| handle (the package name without its vendor: `aether-people`), so
+| `config('aether-people.some_key')` reads it. The host publishes it
 | to its own `config/` directory with:
 |
-|     php artisan vendor:publish --tag=statamic-addon-template-config
+|     php artisan vendor:publish --tag=aether-people-config
 |
-| Rename this file to `config/<handle>.php` when the package is renamed. Delete
-| it, and the config test in `tests/Integration/ServiceProviderTest.php`, if the
-| add-on has no settings.
+| The add-on has no settings yet; add each one below.
 |
 | Give every setting a comment saying what it does and which values it takes,
 | and a default that is safe to leave unset.

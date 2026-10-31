@@ -9,7 +9,7 @@ Written against v0.0.0.
 ## Example
 
 ```php
-// config/statamic-addon-template.php
+// config/aether-people.php
 return [
     'some_key' => 'value',
 ];
