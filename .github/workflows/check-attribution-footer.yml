@@ -1,24 +1,15 @@
 name: Check attribution footer
 
-# Fails when a pull-request body carries the harness attribution footer, which the
-# `no-emoji-in-durable-records` rule forbids in pull-request and issue bodies. The harness tells
-# authors to add it, so it arrives on pull request after pull request and is otherwise removed by
-# hand at the gate. No other check can see a body: the no-emoji guard in `ci.yml` scans the
-# filesystem, and a body is not on it. A squash merge turns the body into the commit message on
-# `main`, so the body is what lands in history.
+# Fails when a pull-request body carries the harness attribution footer, which
+# the no-emoji-in-durable-records rule forbids in pull-request and issue bodies.
+# This is the copy for UAMS-Web/aether-people of the shared template
+# .claude/skills/writing-pull-requests/templates/check-attribution-footer.yml.
+# Only this header may differ from the template: the synced-files skill's
+# check-workflow-copies.mjs fails when the rest does. The script it runs ships in
+# the synced .claude/ tree.
 #
-# All five trigger types are needed. A body can take on the footer when the pull request opens,
-# which is where most specimens carried it, and through any later edit.
-#
-# The body is read from the API rather than from the event payload, so an edit that lands between
-# the event and the run is still the text that is checked.
-#
-# A Dependabot body is generated from the upstream release notes, which can carry emoji nobody on
-# this repository wrote and nobody can edit, so the body check is skipped for that author. The
-# skip is inside the step, not a job-level `if`: a skipped required check stays pending, and a
-# step that exits cleanly reports success.
-#
-# Adapted from the copy in UAMS-Web/uams-statamic.
+# The job name, `Attribution footer`, is a required status check context in the
+# repository's ruleset. Renaming it means changing the ruleset.
 
 on:
   pull_request:
@@ -38,10 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-
       - name: Check the body for the attribution footer
         env:
           GH_TOKEN: ${{ github.token }}
@@ -54,4 +41,4 @@ jobs:
             exit 0
           fi
           gh api "repos/$REPO/pulls/$NUMBER" --jq '.body // ""' > "$RUNNER_TEMP/body.md"
-          node scripts/check-attribution-footer.mjs "$RUNNER_TEMP/body.md"
+          node .claude/skills/writing-pull-requests/scripts/check-attribution-footer.mjs "$RUNNER_TEMP/body.md"
