@@ -15,6 +15,15 @@ name: CI
 # Job names must stay unique across all workflows in this repository.
 # `check-required-checks.yml` compares the two lists and reports drift; see its header for the
 # order in which a job and its ruleset entry change.
+#
+# THE AGGREGATE. The last job, `CI`, `needs:` every other job in this file, runs `if: always()`,
+# and fails unless each needed job succeeded, so one required context can stand for the whole
+# chain (UAMS-Web/uams-claude-skills#471). A job can only `needs:` jobs in its own workflow file,
+# which is why the aggregate lives here and not in the synced `synced-checks.yml`. Add, rename
+# or remove a job and the `needs:` list of `CI` changes in the same change: a job left out of it
+# is required by nothing once `CI` is the required context. The `aggregate-needs` job runs
+# `.claude/skills/code-quality/scripts/check-aggregate-needs.mjs`, which fails naming any job
+# missing from that list. Do not rename `CI`.
 
 on:
   pull_request:
@@ -223,3 +232,56 @@ jobs:
 
       - run: composer stan
       - run: composer test
+
+  # Fails, naming the job, when a job in this file is missing from the `needs:` list of `CI`, or
+  # when one of the three fixed required names is reported by no job. It reads the workflow files
+  # with Node alone. Allow-list for a job that is deliberately not aggregated:
+  # .github/aggregate-needs-allow.json.
+  aggregate-needs:
+    name: Aggregate needs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - run: node .claude/skills/code-quality/scripts/check-aggregate-needs.mjs
+
+  # The one context the aggregate ruleset requires from this workflow. Keep `needs:` naming
+  # every other job above; `aggregate-needs` fails when one is missing.
+  ci:
+    name: CI
+    needs:
+      - composer-validate
+      - no-emoji
+      - scripts
+      - built-assets
+      - mutate-ignore
+      - parallel-safe
+      - pint
+      - rector
+      - phpstan
+      - pest
+      - compatibility
+      - aggregate-needs
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # `skipped` and `cancelled` fail as well as `failure`: a job that did not run proved nothing.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Needed job results: $RESULTS"
+          # An empty list (an emptied `needs:`, a dropped `env:`) would run no iterations and pass having read nothing.
+          if [ -z "$RESULTS" ]; then echo "::error::No needed job results to read"; exit 1; fi
+          for result in $RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "::error::A needed job reported $result"
+              exit 1
+            fi
+          done
