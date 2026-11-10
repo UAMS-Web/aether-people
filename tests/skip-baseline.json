@@ -11,7 +11,7 @@
         "once you know why the new skip is correct, and say so in the PR."
     ],
     "bands": {
-        "parallel": {
+        "suite": {
             "expected": 0,
             "why": "No test skips. Every test in the Unit and Integration suites runs."
         }
