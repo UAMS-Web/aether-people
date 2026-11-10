@@ -79,7 +79,7 @@
         "test:mutate-ignore": "@php scripts/check-mutate-ignore.php",
         "test:parallel-safe": "@php scripts/check-parallel-safe-tests.php",
         "test:bands": [
-            "@php scripts/check-skip-baseline.php --report=junit-parallel.xml --band=parallel",
+            "@php scripts/check-skip-baseline.php --report=junit-parallel.xml --band=suite",
             "@php scripts/check-slowest-class.php --report=junit-parallel.xml --band=parallel"
         ],
         "test:scripts": [
