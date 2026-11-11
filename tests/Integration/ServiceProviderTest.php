@@ -23,3 +23,15 @@ it('publishes its config file under the tag the README names', function (): void
     expect(array_map(realpath(...), array_keys($paths)))->toBe([realpath(__DIR__.'/../../config/aether-people.php')])
         ->and(array_values($paths))->toBe([config_path('aether-people.php')]);
 });
+
+it('builds the Control Panel assets from the files vite.config.js names', function (): void {
+    // Read the Vite settings the provider hands to Statamic
+    $vite = new ReflectionProperty(ServiceProvider::class, 'vite')
+        ->getValue(new ServiceProvider(app()));
+
+    // Expect the entry points and the output directory to match the committed build
+    expect($vite)->toBe([
+        'input' => ['resources/js/cp.js', 'resources/css/cp.css'],
+        'publicDirectory' => 'resources/dist',
+    ]);
+});
