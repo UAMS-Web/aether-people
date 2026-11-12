@@ -7,10 +7,6 @@ declare(strict_types=1);
  * prerequisite for a public package. The test fails when one is dropped; it does
  * not submit anything.
  *
- * `license` is not in the list yet: add it to the field list below in the same
- * change that adds it to `composer.json`, once UAMS legal has decided
- * (UAMS-Web/uams-statamic#261).
- *
  * @command  vendor/bin/pest tests/Unit/SubmissionReadinessTest.php
  */
 
@@ -29,7 +25,7 @@ it('declares every top-level field a public package needs', function (string $fi
     // Expect the field present and filled in
     expect(submissionManifest())->toHaveKey($field);
     expect(submissionManifest()[$field])->not->toBeEmpty();
-})->with(['name', 'description', 'keywords', 'type', 'authors', 'support', 'autoload']);
+})->with(['name', 'description', 'keywords', 'type', 'authors', 'license', 'support', 'autoload']);
 
 it('is a statamic-addon under the uams-web vendor', function (): void {
     // Read the manifest
@@ -53,4 +49,16 @@ it('names and describes itself for the Control Panel', function (): void {
 
 it('ships the checklist the readiness fields come from', function (): void {
     expect(dirname(__DIR__, 2).'/docs/SUBMISSION.md')->toBeFile();
+});
+
+it('declares the license that LICENSE holds', function (): void {
+    // Read the license file and the declared license
+    $text = (string) file_get_contents(dirname(__DIR__, 2).'/LICENSE');
+    $license = submissionManifest()['license'];
+    if (! is_string($license)) {
+        throw new RuntimeException('composer.json must declare license as a string');
+    }
+
+    // Expect the file to open with the declared license's name
+    expect($text)->toStartWith($license.' License');
 });

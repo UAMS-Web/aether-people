@@ -49,12 +49,13 @@ it('states the statamic/cms floor that composer.json requires', function (): voi
     expect(readmeText())->toContain('Statamic '.$floor.' or later');
 });
 
-it('names the license that composer.json declares, once it declares one', function (): void {
-    // Read the declared license, which the template leaves out until UAMS legal decides (uams-statamic#261)
+it('names the license that composer.json declares', function (): void {
+    // Read the declared license
     $license = readmeComposerManifest()['license'] ?? null;
 
-    // Expect the README to name the license and point at the file, or no license to be declared
-    expect($license === null || str_contains(readmeText(), $license.'. See [`LICENSE`](LICENSE)'))->toBeTrue();
+    // Expect a declared license, and the README to name it and point at the file
+    expect($license)->not->toBeNull()
+        ->and(readmeText())->toContain($license.'. See [`LICENSE`](LICENSE)');
 });
 
 it('requires the package by the name composer.json gives it', function (): void {
