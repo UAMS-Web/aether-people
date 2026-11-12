@@ -1,0 +1,14 @@
+title: 'uamsweb_common_contact (stand-in for the host fieldset)'
+fields:
+  -
+    handle: email_address
+    field:
+      type: text
+  -
+    handle: mitel_extension
+    field:
+      type: text
+  -
+    handle: phone
+    field:
+      type: text

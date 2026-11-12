@@ -1,0 +1,22 @@
+title: 'uamsweb_common_block (stand-in for the host fieldset)'
+fields:
+  -
+    handle: background_color_simple
+    field:
+      type: text
+  -
+    handle: block_heading
+    field:
+      type: text
+  -
+    handle: description_textarea_centered
+    field:
+      type: text
+  -
+    handle: hide_block_heading
+    field:
+      type: text
+  -
+    handle: more_query
+    field:
+      type: text

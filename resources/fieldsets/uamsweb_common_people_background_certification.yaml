@@ -1,0 +1,75 @@
+title: 'UAMSWeb Common Reusable Fields, People, Professional Background, Certification'
+fields:
+  -
+    handle: activity
+    field:
+      type: terms_search_index
+      search_index: certifications
+      display: Certification
+      taxonomies:
+        - certifications
+      max_items: 1
+      validate:
+        - required
+      localizable: false
+  -
+    handle: activity_id
+    field:
+      type: text
+      display: 'Certification ID'
+      replicator_preview: false
+      localizable: false
+  -
+    handle: activity_date_issued
+    field:
+      type: date
+      display: 'Date This Certification Was First Issued'
+      instructions: |-
+        Enter the date this certification was first awarded (the initial certification date).
+
+        If the certification later lapsed and was reissued or reinstated, create a separate entry for each new active period with its own start and expiration dates.
+      format: Y-m-d
+      replicator_preview: false
+      width: 50
+      localizable: false
+  -
+    handle: activity_date_audit
+    field:
+      type: date
+      display: 'Most Recent Audit Date for This Certification'
+      instructions: |-
+        Enter the date of the most recent audit of this certification (e.g., recertification, maintenance of certification).
+
+        If this certification has never gone through that process, leave this field blank.
+      replicator_preview: false
+      format: Y-m-d
+      width: 50
+      localizable: false
+  -
+    handle: activity_date_expires
+    field:
+      type: date
+      display: 'Expiration Date for This Certification'
+      instructions: 'The date **after which** this certification is no longer valid.'
+      replicator_preview: false
+      format: Y-m-d
+      width: 50
+      localizable: false
+  -
+    handle: activity_valid_for
+    field:
+      type: hidden
+      display: 'Duration of Validity (Computed)'
+      instructions: 'Computed value based on duration between `activity_date_issued` and `activity_date_expires`'
+      replicator_preview: false
+      visibility: read_only
+      localizable: false
+  -
+    handle: activity_active_query
+    field:
+      type: hidden
+      display: 'Is the Certification Active? (Computed)'
+      instructions: 'Computed value based on whether today is between `activity_date_issued` and `activity_date_expires`'
+      replicator_preview: false
+      visibility: read_only
+      localizable: false

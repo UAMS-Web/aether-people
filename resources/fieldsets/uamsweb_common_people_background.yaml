@@ -1,0 +1,690 @@
+title: 'UAMSWeb Common Reusable Fields, People, Professional Background'
+fields:
+  -
+    handle: professional_and_leadership_development_activities_term
+    field:
+      type: terms_search_index
+      display: 'Professional and Leadership Development Activities'
+      taxonomies:
+        - professional_and_leadership_development_activities
+      search_index: professional_and_leadership_development_activities
+      max_items: 1
+      width: 100
+      localizable: false
+  -
+    handle: activity_notes
+    field:
+      type: textarea
+      display: Notes
+      character_limit: 160
+      replicator_preview: false
+      localizable: false
+  -
+    handle: education_organization
+    field:
+      taxonomies:
+        - education_organizations
+      search_index: education_organizations
+      max_items: 1
+      type: terms_search_index
+      display: 'Education Organization'
+      localizable: false
+      validate:
+        - required
+        - sometimes
+  -
+    handle: participating_sites
+    field:
+      taxonomies:
+        - education_organizations
+      search_index: education_organizations
+      max_items: 25
+      type: terms_search_index
+      display: 'Participating Sites'
+      instructions: 'Additional locations where this training actually took place — affiliated hospitals, clinics, or other sites beyond the sponsoring institution. Leave empty when all training occurred at the sponsoring institution.'
+      localizable: false
+  -
+    handle: activity_start_date
+    field:
+      type: partial_date
+      display: 'Date Started'
+      width: 50
+      localizable: false
+  -
+    handle: activity_end_date
+    field:
+      type: partial_date
+      display: 'Date Completed'
+      width: 50
+      localizable: false
+  -
+    handle: specialty
+    field:
+      taxonomies:
+        - specialties_acgme
+        - specialties_aoa
+        - specialties_non_accredited
+      search_index: medical_specialties_all
+      type: terms_search_index
+      display: Specialty
+      localizable: false
+      query_scopes:
+        - specialty
+      validate:
+        - required
+        - 'specialty_taxonomy_term_type:specialty'
+  -
+    handle: education
+    field:
+      collapse: true
+      type: replicator
+      display: Education
+      button_label: 'Add Education Activity'
+      localizable: false
+      sets:
+        education_set_group:
+          display: 'Education Set Group'
+          sets:
+            post_secondary:
+              display: 'Post-Secondary Education'
+              fields:
+                -
+                  handle: activity
+                  field:
+                    taxonomies:
+                      - credentials
+                    search_index: credentials
+                    max_items: 1
+                    type: terms_search_index
+                    display: Degree
+                    localizable: false
+                    validate:
+                      - required
+                -
+                  handle: specialty
+                  field:
+                    taxonomies:
+                      - fields_of_study
+                    search_index: fields_of_study
+                    type: terms_search_index
+                    display: 'Field of Study'
+                    localizable: false
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    display: 'Date Completed/Attained'
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            secondary:
+              display: 'Secondary Education'
+              fields:
+                -
+                  handle: activity
+                  field:
+                    type: radio
+                    display: 'Diploma Type'
+                    options:
+                      -
+                        key: SecondarySchoolDiploma
+                        value: 'Secondary School Diploma'
+                      -
+                        key: GeneralEducationDevelopment
+                        value: 'General Education Development'
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    if:
+                      activity: 'equals SecondarySchoolDiploma'
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field:
+                    type: partial_date
+                    display: 'Date Completed/Attained'
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+  -
+    handle: training
+    field:
+      collapse: true
+      type: replicator
+      display: Training
+      button_label: 'Add Training Activity'
+      localizable: false
+      sets:
+        medical_training:
+          display: 'Medical Training'
+          sets:
+            medical_fellowship:
+              display: 'Medical Fellowship'
+              fields:
+                -
+                  handle: specialty
+                  field: aether-people::uamsweb_common_people_background.specialty
+                  config:
+                    display: Subspecialty
+                    query_scopes:
+                      - subspecialty
+                    validate:
+                      - required
+                      - 'specialty_taxonomy_term_type:subspecialty'
+                    localizable: false
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            medical_residency:
+              display: 'Medical Residency'
+              fields:
+                -
+                  handle: specialty
+                  field: aether-people::uamsweb_common_people_background.specialty
+                  config:
+                    localizable: false
+                -
+                  handle: chief_resident
+                  field:
+                    type: true_false
+                    display: 'As Chief Resident?'
+                    localizable: false
+                    replicator_preview: false
+                    validate:
+                      - required
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            medical_internship:
+              display: 'Medical Internship (Standalone)'
+              instructions: 'A position that does not continue into full residency at the same organization'
+              fields:
+                -
+                  handle: specialty
+                  field: aether-people::uamsweb_common_people_background.specialty
+                  config:
+                    localizable: false
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            medical_externship:
+              display: 'Medical Externship'
+              fields:
+                -
+                  handle: specialty
+                  field: aether-people::uamsweb_common_people_background.specialty
+                  config:
+                    taxonomies:
+                      - specialties_non_accredited
+                    search_index: specialties_non_accredited
+                    localizable: false
+                    validate:
+                      - required
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            medical_apprenticeship:
+              display: 'Medical Apprenticeship'
+              fields:
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            medical_postdoctoral_fellowship:
+              display: 'Medical Postdoctoral Fellowship'
+              fields:
+                -
+                  handle: specialty
+                  field: aether-people::uamsweb_common_people_background.specialty
+                  config:
+                    taxonomies:
+                      - research_specialties_acgme
+                      - research_specialties_non_accredited
+                    search_index: research_specialties_all
+                    display: Specialty/Subspecialty
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+        non_medical_training:
+          display: 'Non-Medical Training'
+          sets:
+            postdoctoral_fellowship:
+              display: 'Postdoctoral Fellowship (Non-Medical)'
+              fields:
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            internship:
+              display: 'Internship (Non-Medical)'
+              fields:
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            externship:
+              display: 'Externship (Non-Medical)'
+              fields:
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            apprenticeship:
+              display: 'Apprenticeship (Non-Medical)'
+              fields:
+                -
+                  handle: organization
+                  field: aether-people::uamsweb_common_people_background.education_organization
+                  config:
+                    display: 'Sponsoring Institution'
+                    instructions: 'The single organization with primary institutional responsibility for this training and serving as its academic home.'
+                    max_items: 1
+                    localizable: false
+                -
+                  handle: participating_sites
+                  field: aether-people::uamsweb_common_people_background.participating_sites
+                  config:
+                    localizable: false
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+  -
+    handle: certifications
+    field:
+      collapse: true
+      type: replicator
+      display: Certifications
+      button_label: 'Add Certification'
+      localizable: false
+      sets:
+        certifications_set_group:
+          display: 'Certifications Set Group'
+          sets:
+            board_certification:
+              display: 'Board Certification'
+              fields:
+                -
+                  import: aether-people::uamsweb_common_people_background_certification_board
+            other_certification:
+              display: 'Other Certification'
+              fields:
+                -
+                  import: aether-people::uamsweb_common_people_background_certification_general
+  -
+    handle: professional_and_leadership_development_activities
+    field:
+      collapse: true
+      type: replicator
+      display: 'Professional and Leadership Development Activities'
+      button_label: 'Add Development Activity'
+      localizable: false
+      sets:
+        professional_and_leadership_development_set_group:
+          display: 'Professional and Leadership Development Activities Set Group'
+          sets:
+            professional_development_activity:
+              display: 'Professional Development Activity'
+              fields:
+                -
+                  handle: activity
+                  field: aether-people::uamsweb_common_people_background.professional_and_leadership_development_activities_term
+                  config:
+                    display: 'Professional Development Activity'
+                    localizable: false
+                    query_scopes:
+                      - professional_development_activity_term
+                    validate:
+                      - required
+                      - professional_development_activity_term
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+            leadership_development_activity:
+              display: 'Leadership Development Activity'
+              fields:
+                -
+                  handle: activity
+                  field: aether-people::uamsweb_common_people_background.professional_and_leadership_development_activities_term
+                  config:
+                    display: 'Leadership Development Activity'
+                    localizable: false
+                    query_scopes:
+                      - leadership_development_activity_term
+                    validate:
+                      - required
+                      - leadership_development_activity_term
+                -
+                  handle: activity_start_date
+                  field: aether-people::uamsweb_common_people_background.activity_start_date
+                  config:
+                    localizable: false
+                -
+                  handle: activity_end_date
+                  field: aether-people::uamsweb_common_people_background.activity_end_date
+                  config:
+                    localizable: false
+                -
+                  handle: notes
+                  field: aether-people::uamsweb_common_people_background.activity_notes
+                  config:
+                    localizable: false
+  -
+    handle: member_of
+    field:
+      type: grid
+      mode: stacked
+      display: 'Professional Memberships'
+      add_row: 'Add Membership'
+      instructions: |-
+        Use this field to identify organizations, professional societies, or formal groups where this person holds an active membership, and the level held.
+
+        **What to include:** Professional associations (e.g., American Medical Association, IEEE), non-profit boards, or specialized committees.
+
+        **What to avoid:** Do not use this field for the person's primary employer or institutional department.
+
+        **Selection:** You may add multiple organizations. If an organization is missing from the list, please contact the UAMS Web Services team to have the entity added to the list of options.
+      localizable: false
+      fields:
+        -
+          handle: organization
+          field:
+            type: terms_search_index
+            search_index: membership_organizations
+            display: Organization
+            taxonomies:
+              - membership_organizations
+            max_items: 1
+            create: true
+            validate:
+              - required
+            localizable: false
+        -
+          handle: membership_level
+          field:
+            type: select
+            display: 'Membership Level'
+            options:
+              -
+                key: member
+                value: Member
+              -
+                key: fellow
+                value: Fellow
+              -
+                key: emeritus_fellow
+                value: 'Emeritus Fellow'
+            default: member
+            max_items: 1
+            multiple: false
+            clearable: false
+            validate:
+              - required
+            localizable: false

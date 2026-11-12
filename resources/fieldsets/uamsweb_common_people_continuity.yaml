@@ -1,0 +1,68 @@
+title: 'UAMSWeb Common Reusable Fields, People, Continuity of Care'
+fields:
+  -
+    handle: clinical_separated_query
+    field: uamsweb_common.true_false
+    config:
+      display: Separated
+      default: false
+      instructions: 'The "Separated" state allows the provider''s profile to remain published while making it clear that the provider no longer practices at UAMS Health.'
+      localizable: false
+  -
+    handle: separated_new_location
+    field:
+      display: 'New Practice Location'
+      type: text
+      if:
+        clinical_separated_query: 'equals true'
+      validate:
+        - required
+        - sometimes
+      localizable: false
+  -
+    handle: separated_start_date
+    field:
+      type: date
+      display: 'Start Date for Separation'
+      format: Y-m-d
+      if:
+        clinical_separated_query: 'equals true'
+      validate:
+        - required
+        - sometimes
+      localizable: false
+  -
+    handle: separated_end_date
+    field:
+      type: date
+      display: 'End Date for Profile'
+      instructions: 'Indicate the last day the profile should remain published.'
+      format: Y-m-d
+      if:
+        clinical_separated_query: 'equals true'
+      validate:
+        - required
+        - sometimes
+      localizable: false
+  -
+    handle: separated_active_query
+    field:
+      type: hidden
+      display: 'Actively Separated But Published'
+      instructions: |-
+        The provider is marked as 'Separated';
+        and their 'Start Date for Separation' is on or before the current date;
+        and their 'End Date for Profile' is on or after the current date
+      visibility: computed
+      localizable: false
+  -
+    handle: separated_unpublish_query
+    field:
+      type: hidden
+      display: 'Separation Profile End Date Has Passed'
+      instructions: |-
+        The provider is marked as 'Separated';
+        and their 'End Date for Profile' is before the current date;
+        so their profile should be unpublished
+      visibility: computed
+      localizable: false

@@ -1,0 +1,133 @@
+title: 'UAMSWeb Block, Find-a-Doc, Providers'
+fields:
+  -
+    handle: block_heading
+    field: uamsweb_common_block.block_heading
+    config:
+      display: 'Block Heading'
+      validate:
+        - required
+  -
+    handle: hide_block_heading
+    field: uamsweb_common_block.hide_block_heading
+    config:
+      validate:
+        - required
+  -
+    handle: block_description
+    field: uamsweb_common_block.description_textarea_centered
+    config:
+      display: 'Block Description'
+      validate:
+        - required
+  -
+    handle: section_filtering
+    field:
+      type: subsection
+      display: Filtering
+      localizable: false
+  -
+    handle: enable_filtering
+    field:
+      type: toggle
+      display: 'Enable reader filtering'
+      instructions: 'Add an on-page facet filter (Areas of Expertise, Clinical Title, Region) so readers can narrow this block''s providers without a page reload. Off by default; the block renders as a static list. The fields below pre-filter which providers the block shows.'
+      default: false
+      localizable: false
+  -
+    handle: expertise
+    field: uamsweb_common_fad.expertise
+    config:
+      display: 'Areas of Expertise'
+  -
+    handle: special_interest_clinical_conditions
+    field: uamsweb_common_fad.special_interest_clinical_conditions
+    config:
+      display: 'Special Interest — Medical Conditions'
+      instructions: 'Filter the listing to providers with a special interest in any of the selected medical conditions.'
+  -
+    handle: special_interest_clinical_services
+    field: uamsweb_common_fad.special_interest_clinical_services
+    config:
+      display: 'Special Interest — Medical Services'
+      instructions: 'Filter the listing to providers with a special interest in any of the selected medical services.'
+  -
+    handle: clinical_locations
+    field: uamsweb_common_fad.clinical_locations
+    config:
+      display: Locations
+  -
+    handle: regions
+    field: uamsweb_common_address.regions
+  -
+    handle: recognition_lists
+    field:
+      type: entries
+      display: 'Recognition List'
+      instructions: 'Filter the listing to providers on the selected recognition list(s) — or a category within one. Leave blank (the default) for no recognition constraint.'
+      collections:
+        - recognition_lists
+      localizable: false
+  -
+    handle: providers
+    field: uamsweb_common_fad.providers
+    config:
+      display: Providers
+  -
+    handle: section_display_settings
+    field:
+      type: subsection
+      display: 'Display Settings'
+      localizable: false
+  -
+    handle: background_color
+    field: uamsweb_common_block.background_color_simple
+    config:
+      display: 'Background Color'
+      validate:
+        - required
+  -
+    handle: more_query
+    field: uamsweb_common_block.more_query
+  -
+    handle: more_heading
+    field: uamsweb_common_block_footer_link.more_heading
+    config:
+      validate:
+        - required
+        - sometimes
+      if:
+        more_query: 'equals true'
+  -
+    handle: more_button_text
+    field: uamsweb_common_block_footer_link.more_button_text
+    config:
+      validate:
+        - required
+        - sometimes
+      if:
+        more_query: 'equals true'
+  -
+    handle: more_button_url
+    field: uamsweb_common_block_footer_link.more_button_url
+    config:
+      validate:
+        - required
+        - sometimes
+      if:
+        more_query: 'equals true'
+  -
+    handle: more_button_target
+    field: uamsweb_common_block_footer_link.more_button_target
+    config:
+      validate:
+        - required
+        - sometimes
+      if:
+        more_query: 'equals true'
+  -
+    handle: more_button_link_description
+    field: uamsweb_common_block_footer_link.more_button_link_description
+    config:
+      if:
+        more_query: 'equals true'

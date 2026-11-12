@@ -1,0 +1,166 @@
+title: 'UAMSWeb Computed Fields, Person/Provider'
+fields:
+  -
+    handle: clinical_provider_profile_eligible_query
+    field:
+      type: toggle
+      display: 'Is this person eligible for a UAMS Health clinical provider profile?'
+      visibility: computed
+      localizable: false
+  -
+    handle: prefix
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: Prefix
+      localizable: false
+  -
+    handle: full_name
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Full Name'
+      localizable: false
+  -
+    handle: full_name_with_credentials
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Full Name, With Credentials'
+      localizable: false
+  -
+    handle: full_name_with_prefix
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Full Name, With Prefix'
+      localizable: false
+  -
+    handle: display_name_full
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Display Name, Full'
+      localizable: false
+  -
+    handle: display_name_full_with_credentials
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Display Name, Full With Credentials'
+      localizable: false
+  -
+    handle: display_name_full_with_clinical_credentials
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Display Name, Full With Clinical Credentials'
+      localizable: false
+  -
+    handle: display_name_full_with_prefix
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Display Name, Full With Prefix'
+      localizable: false
+  -
+    handle: display_name_short_with_prefix
+    field: uamsweb_computed.text_phonetic_pair
+    config:
+      display: 'Display Name, Short With Prefix'
+      localizable: false
+  -
+    handle: alternate_name_list
+    field: uamsweb_computed.text_phonetic_pair_grid
+    config:
+      display: 'Alternate Name List'
+      localizable: false
+  -
+    handle: nickname_list
+    field: uamsweb_computed.text_phonetic_pair_grid
+    config:
+      display: 'Nickname List'
+      localizable: false
+  -
+    handle: brand_organizations
+    field: uamsweb_schema.brand_organizations
+    config:
+      display: 'Third-Party Brand Organization'
+      instructions: 'The value of this field is automatically defined by the third-party brand organization values of the location entries associated with the provider.'
+      localizable: false
+      visibility: computed
+  -
+    handle: portal
+    field: uamsweb_common_fad.portal
+    config:
+      display: 'Patient Portal'
+      localizable: false
+      instructions: 'The value of this field is automatically defined by the patient portal value of the primary location entry associated with the provider.'
+      visibility: computed
+  -
+    handle: asp_filter
+    field:
+      type: textarea
+      display: 'Ajax Search Pro Search Filter'
+      instructions: 'The value of this field is automatically defined by the title values of the area of expertise entries, condition entries, and treatment entries associated with the provider.'
+      localizable: false
+      visibility: computed
+  -
+    handle: regions
+    field: uamsweb_common_address.regions
+    config:
+      instructions: 'The value of this field is automatically defined by the region values of the location entries associated with the provider.'
+      localizable: false
+      visibility: computed
+  -
+    handle: knows_about_terms
+    field:
+      type: terms_search_index
+      display: 'Knows About (Terms)'
+      instructions: 'Canonical term ids (`taxonomy::slug`) derived from the person profile: fields of study and the specialty taxonomies. Subject matter entries are in Knows About (Entries).'
+      taxonomies:
+        - fields_of_study
+        - specialties_aoa
+        - specialties_acgme
+        - specialties_non_accredited
+        - research_specialties_acgme
+        - research_specialties_non_accredited
+        - other_specialties
+      localizable: false
+      visibility: computed
+  -
+    handle: knows_about_entries
+    field:
+      type: entries
+      display: 'Knows About (Entries)'
+      select_across_sites: true
+      localizable: false
+      visibility: computed
+  -
+    handle: knows_about_strings
+    field:
+      type: list
+      display: 'Knows About (Strings)'
+      instructions: 'Free-text research interest strings plus `keywords` from each `subject_matter` entry referenced in Knows About (Entries).'
+      localizable: false
+      visibility: computed
+  -
+    handle: searchable
+    field:
+      type: hidden
+      display: Searchable
+      instructions: |-
+        Display in search results or lists.
+
+        Computed from 'Separated' values (`clinical_separated_query`) and from the 'Hide from Provider List' field (`hidden_from_provider_list_query`).
+      localizable: false
+      visibility: computed
+  -
+    handle: credited_content
+    field:
+      type: entries
+      display: 'Credited Content'
+      instructions: 'Read-only. Posts, clinical resources, and knowledge base articles that credit this person in any creator role (writer, editor, host, guest, …).'
+      localizable: false
+      visibility: computed
+  -
+    handle: clinical_provider_entry
+    field:
+      type: entries
+      display: 'Clinical Provider Entry'
+      instructions: 'Read-only. The clinical-provider record that wraps this person, if one exists (a one-to-one link).'
+      max_items: 1
+      localizable: false
+      visibility: computed

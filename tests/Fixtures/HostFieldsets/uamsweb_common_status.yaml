@@ -1,0 +1,18 @@
+title: 'uamsweb_common_status (stand-in for the host fieldset)'
+fields:
+  -
+    handle: is_password_hashed
+    field:
+      type: text
+  -
+    handle: password_protected
+    field:
+      type: text
+  -
+    handle: status_and_visibility
+    field:
+      type: text
+  -
+    handle: visibility_password
+    field:
+      type: text

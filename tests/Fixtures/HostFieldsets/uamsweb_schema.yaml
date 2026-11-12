@@ -1,0 +1,10 @@
+title: 'uamsweb_schema (stand-in for the host fieldset)'
+fields:
+  -
+    handle: brand_organizations
+    field:
+      type: text
+  -
+    handle: same_as
+    field:
+      type: text
