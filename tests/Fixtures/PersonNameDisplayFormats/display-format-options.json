@@ -1,0 +1,1138 @@
+{
+    "_about": "Generated from UAMSWeb\\Aether\\People\\Support\\PersonNameDisplayFormats::buildOptions() over corpus.json (UAMS-Web/uams-statamic-archive#3053). Do not edit by hand.",
+    "_regenerate": "php scripts/generate-person-name-display-format-fixtures.php",
+    "cases": [
+        {
+            "label": "first and last only",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "with a middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "with a nickname",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Annie"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Ann \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "nickname_only@ns",
+                    "label": "Annie Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "with a generational suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "generational_suffix": "Jr."
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ws",
+                    "label": "Ann Lee Jr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "middle name, nickname and suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": "Marie"
+                },
+                "nickname": {
+                    "text": "Annie"
+                },
+                "generational_suffix": "III"
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ws",
+                    "label": "Ann Marie Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_full_middle_nickname@ws",
+                    "label": "Ann Marie \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ws",
+                    "label": "Ann M. Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial_nickname@ws",
+                    "label": "Ann M. \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ws",
+                    "label": "A. Marie Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle_nickname@ws",
+                    "label": "A. Marie \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "middle_only@ws",
+                    "label": "Marie Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "middle_only_nickname@ws",
+                    "label": "Marie \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ws",
+                    "label": "A. M. Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial_nickname@ws",
+                    "label": "A. M. \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ws",
+                    "label": "Ann Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ws",
+                    "label": "Ann \"Annie\" Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "nickname_only@ws",
+                    "label": "Annie Lee III",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_full_middle_nickname@ns",
+                    "label": "Ann Marie \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial_nickname@ns",
+                    "label": "Ann M. \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle_nickname@ns",
+                    "label": "A. Marie \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only_nickname@ns",
+                    "label": "Marie \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial_nickname@ns",
+                    "label": "A. M. \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Ann \"Annie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "nickname_only@ns",
+                    "label": "Annie Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "middle name and nickname, no suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Robert"
+                },
+                "last_name": {
+                    "text": "Smith"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "James"
+                },
+                "nickname": {
+                    "text": "Bob"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Robert James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_full_middle_nickname@ns",
+                    "label": "Robert James \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Robert J. Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial_nickname@ns",
+                    "label": "Robert J. \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "R. James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle_nickname@ns",
+                    "label": "R. James \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only_nickname@ns",
+                    "label": "James \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "R. J. Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial_nickname@ns",
+                    "label": "R. J. \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Robert Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Robert \"Bob\" Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "nickname_only@ns",
+                    "label": "Bob Smith",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "middle name and suffix, no nickname",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Robert"
+                },
+                "last_name": {
+                    "text": "Smith"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": "James"
+                },
+                "generational_suffix": "Sr."
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ws",
+                    "label": "Robert James Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ws",
+                    "label": "Robert J. Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ws",
+                    "label": "R. James Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "middle_only@ws",
+                    "label": "James Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ws",
+                    "label": "R. J. Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ws",
+                    "label": "Robert Smith Sr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Robert James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Robert J. Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "R. James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "James Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "R. J. Smith",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Robert Smith",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname and suffix, no middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "William"
+                },
+                "last_name": {
+                    "text": "Gates"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "nickname": {
+                    "text": "Bill"
+                },
+                "generational_suffix": "II"
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ws",
+                    "label": "William Gates II",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ws",
+                    "label": "William \"Bill\" Gates II",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "nickname_only@ws",
+                    "label": "Bill Gates II",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "William Gates",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "William \"Bill\" Gates",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "nickname_only@ns",
+                    "label": "Bill Gates",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "middle name repeats the first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Ann"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann A. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. A. Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname repeats the first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Ann"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Ann \"Ann\" Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname repeats the first name, with a suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "nickname": {
+                    "text": "Ann"
+                },
+                "generational_suffix": "Jr."
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ws",
+                    "label": "Ann Lee Jr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ws",
+                    "label": "Ann \"Ann\" Lee Jr.",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Ann \"Ann\" Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname repeats the middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie"
+                },
+                "nickname": {
+                    "text": "Marie"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_full_middle_nickname@ns",
+                    "label": "Ann Marie \"Marie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial_nickname@ns",
+                    "label": "Ann M. \"Marie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle_nickname@ns",
+                    "label": "A. Marie \"Marie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only_nickname@ns",
+                    "label": "Marie \"Marie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial_nickname@ns",
+                    "label": "A. M. \"Marie\" Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "Ann \"Marie\" Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "multi-word first and last names",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Mary Ann"
+                },
+                "last_name": {
+                    "text": "Van Buren"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Louise"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Mary Ann Louise Van Buren",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Mary Ann L. Van Buren",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "M. A. Louise Van Buren",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Louise Van Buren",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "M. A. L. Van Buren",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Mary Ann Van Buren",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "hyphenated first and middle names",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Jean-Luc"
+                },
+                "last_name": {
+                    "text": "Picard"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie-Claire"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Jean-Luc Marie-Claire Picard",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Jean-Luc M. C. Picard",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "J. L. Marie-Claire Picard",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie-Claire Picard",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "J. L. M. C. Picard",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Jean-Luc Picard",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "non-ASCII letters",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "José"
+                },
+                "last_name": {
+                    "text": "Núñez"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Ángel"
+                },
+                "nickname": {
+                    "text": "Pepe"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "José Ángel Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_full_middle_nickname@ns",
+                    "label": "José Ángel \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "José Á. Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial_nickname@ns",
+                    "label": "José Á. \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "J. Ángel Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle_nickname@ns",
+                    "label": "J. Ángel \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Ángel Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only_nickname@ns",
+                    "label": "Ángel \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "J. Á. Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial_nickname@ns",
+                    "label": "J. Á. \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "José Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only_nickname@ns",
+                    "label": "José \"Pepe\" Núñez",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "nickname_only@ns",
+                    "label": "Pepe Núñez",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "surrounding whitespace",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "  Ann  "
+                },
+                "last_name": {
+                    "text": " Lee "
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": " Marie "
+                },
+                "generational_suffix": " IV "
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ws",
+                    "label": "Ann Marie Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ws",
+                    "label": "Ann M. Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ws",
+                    "label": "A. Marie Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "middle_only@ws",
+                    "label": "Marie Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ws",
+                    "label": "A. M. Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_only@ws",
+                    "label": "Ann Lee IV",
+                    "group": "with_suffix"
+                },
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname field excluded, nickname text present",
+            "include_nickname": false,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Annie"
+                },
+                "middle_name": {
+                    "text": "Marie"
+                }
+            },
+            "options": [
+                {
+                    "key": "full_first_full_middle@ns",
+                    "label": "Ann Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_middle_initial@ns",
+                    "label": "Ann M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_full_middle@ns",
+                    "label": "A. Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "middle_only@ns",
+                    "label": "Marie Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "first_initial_middle_initial@ns",
+                    "label": "A. M. Lee",
+                    "group": "without_suffix"
+                },
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "nickname field excluded, nickname blank and not switched off",
+            "include_nickname": false,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true
+            },
+            "options": [
+                {
+                    "key": "full_first_only@ns",
+                    "label": "Ann Lee",
+                    "group": "without_suffix"
+                }
+            ]
+        },
+        {
+            "label": "not ready: no last name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": ""
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            },
+            "options": []
+        },
+        {
+            "label": "not ready: no first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": ""
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            },
+            "options": []
+        },
+        {
+            "label": "not ready: middle name blank and not switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            },
+            "options": []
+        },
+        {
+            "label": "not ready: nickname blank and not switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true
+            },
+            "options": []
+        },
+        {
+            "label": "not ready: suffix neither chosen nor switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": false
+            },
+            "options": []
+        }
+    ]
+}
