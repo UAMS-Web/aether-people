@@ -1,5 +1,5 @@
 {
-    "_hash": "5470c8a69e71c720a0efc6b67e9522a22f84e41cb38a65086a2a39439d938eea",
+    "_hash": "cfd1520d29b74e2559d3daf29fc808eec95af0ed049033c124174e97373ea407",
     "patches": {
         "pestphp/pest-plugin-mutate": [
             {
@@ -79,6 +79,18 @@
                 "description": "Give each parallel test worker its own service manifest (temporary; see UAMS-Web/patches-orchestra-testbench-core#1)",
                 "url": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-services-manifest.patch",
                 "sha256": "0b2c164aa2bf3a27c69db0e3c067f001479324e409035ffeb9a1fee36eb03be1",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            }
+        ],
+        "statamic/cms": [
+            {
+                "package": "statamic/cms",
+                "description": "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch",
+                "sha256": "0b15638367a8a3fc3a6bd95ac840edea2c07887234d36e06cdca1ef91379ae11",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"

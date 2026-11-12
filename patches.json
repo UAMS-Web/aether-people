@@ -11,6 +11,9 @@
         },
         "orchestra/testbench-core": {
             "Give each parallel test worker its own service manifest (temporary; see UAMS-Web/patches-orchestra-testbench-core#1)": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-services-manifest.patch"
+        },
+        "statamic/cms": {
+            "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch"
         }
     }
 }
