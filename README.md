@@ -28,4 +28,4 @@ The add-on owns the `UAMSWeb\Aether\People` prefix, mapped to `src/`. A companio
 
 ## License
 
-No license is declared yet. The choice waits on the general decision from UAMS legal in [`UAMS-Web/uams-statamic#261`](https://github.com/UAMS-Web/uams-statamic/issues/261).
+MIT. See [`LICENSE`](LICENSE).

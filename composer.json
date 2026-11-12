@@ -9,6 +9,7 @@
     ],
     "type": "statamic-addon",
     "homepage": "https://github.com/UAMS-Web/aether-people",
+    "license": "MIT",
     "authors": [
         {
             "name": "UAMS Web Services"
