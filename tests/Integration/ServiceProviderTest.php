@@ -35,3 +35,23 @@ it('builds the Control Panel assets from the files vite.config.js names', functi
         'publicDirectory' => 'resources/dist',
     ]);
 });
+
+it('merges the people config under the key the code reads', function (): void {
+    expect(config('people.collection'))->toBe('people');
+});
+
+it('fills a missing people config while it registers', function (): void {
+    // Drop the merged config, then register the provider again
+    config(['people' => []]);
+    new ServiceProvider(app())->register();
+
+    expect(config('people.collection'))->toBe('people');
+});
+
+it('leaves a people config the host has set', function (): void {
+    // Set the host's own value, then register the provider again
+    config(['people.collection' => 'staff']);
+    new ServiceProvider(app())->register();
+
+    expect(config('people.collection'))->toBe('staff');
+});
