@@ -127,7 +127,7 @@ final class PersonNameDisplayFormatFixtures
         }
 
         return [
-            '_about' => 'Generated from ' . PersonNameDisplayFormats::class . '::buildOptions() over corpus.json (UAMS-Web/uams-statamic-archive#3053). Do not edit by hand.',
+            '_about' => 'Generated from '.PersonNameDisplayFormats::class.'::buildOptions() over corpus.json (UAMS-Web/uams-statamic-archive#3053). Do not edit by hand.',
             '_regenerate' => self::REGENERATE_COMMAND,
             'cases' => $cases,
         ];
