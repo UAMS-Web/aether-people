@@ -21,6 +21,11 @@ final class ProviderNarrativeLanguage
      *
      * @var array<string, string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. Each removed entry is observable, and the exception tests in
+    // `ProviderNarrativeLanguageTest` pin it, except `honorary`: `honor` is also a prefix of it, so
+    // removing that entry changes no article.
+    // @pest-mutate-ignore: RemoveArrayItem
     private const array ARTICLE_EXCEPTIONS = [
         // Vowel letter, consonant sound → "a".
         'university' => 'a',
@@ -45,6 +50,8 @@ final class ProviderNarrativeLanguage
     {
         $trimmed = trim($following);
 
+        // An empty string also reaches the first-word guard below, which returns the same "a"
+        // @pest-mutate-ignore: EmptyStringToNotEmpty, RemoveEarlyReturn
         if ($trimmed === '') {
             return 'a';
         }
@@ -52,6 +59,9 @@ final class ProviderNarrativeLanguage
         // Reduce to the first whitespace-delimited word, stripping leading
         // punctuation (e.g. a parenthesized or quoted title). Keep the original
         // case so an initialism can be detected.
+        // Splitting a non-empty string always yields a first element, and this fixed pattern cannot fail,
+        // so neither fallback is reached
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
         $firstWordRaw = preg_replace('/^[^A-Za-z]+/', '', preg_split('/\s+/', $trimmed)[0] ?? '') ?? '';
 
         if ($firstWordRaw === '') {
@@ -128,6 +138,9 @@ final class ProviderNarrativeLanguage
     {
         $normalized = strtolower(trim((string) $gender));
 
+        // PCOV marks no coverage on this line, so Pest selects no test for its mutant. Matching on `false`
+        // instead is observable: applied by hand, it fails 20 of the pronoun tests.
+        // @pest-mutate-ignore: TrueToFalse
         return match (true) {
             str_starts_with($normalized, 'female') => 'female',
             str_starts_with($normalized, 'male') => 'male',

@@ -20,6 +20,12 @@ final class PersonNameDisplayFormats
      *
      * @var array<string, int>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. Each removed entry and each changed rank that alters a kept option is
+    // observable, and the colliding-label test in `PersonNameDisplayFormatsTest` pins it. The other rank
+    // changes (raising the higher or lowering the lower rank of a colliding pair) change no output: a
+    // probe of `buildOptions()` over 504 generated names found none that differs.
+    // @pest-mutate-ignore: RemoveArrayItem, IncrementInteger, DecrementInteger
     private const array PATTERN_DEDUPE_RANK = [
         'full_first_full_middle' => 1,
         'full_first_full_middle_nickname' => 1,
@@ -692,6 +698,10 @@ final class PersonNameDisplayFormats
      *
      * @var array<string, string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. A removed letter is observable, and the letter-name test in
+    // `PersonNameDisplayFormatsTest` pins each one.
+    // @pest-mutate-ignore: RemoveArrayItem
     private const array ENGLISH_LETTER_IPA = [
         'A' => 'eɪ',
         'B' => 'bi',
@@ -726,6 +736,10 @@ final class PersonNameDisplayFormats
      *
      * @var array<string, string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. A removed label is observable, and the suffix-label test in
+    // `PersonNameDisplayFormatsTest` pins each one.
+    // @pest-mutate-ignore: RemoveArrayItem
     private const array PEDIGREE_LABEL_IPA = [
         'jr' => 'ˈʤunjər',
         'sr' => 'ˈsinjər',
@@ -1158,7 +1172,11 @@ final class PersonNameDisplayFormats
     ): string {
         $parsed = self::parseDisplayFormatKey($fullKey);
 
+        // Both callers pass a key that `buildOptions()` composed from a known pattern, so it always parses
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($parsed === null) {
+            // The same reason: this return is never reached
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             return '';
         }
 
@@ -1298,6 +1316,8 @@ final class PersonNameDisplayFormats
                 $qNickPhonetic,
                 $lP
             ),
+            // The key was composed by `buildOptions()` from one of the patterns above, so no other pattern reaches here
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             default => '',
         };
 

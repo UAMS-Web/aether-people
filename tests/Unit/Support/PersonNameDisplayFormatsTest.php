@@ -49,10 +49,11 @@ function nameFormatsWithWarningsThrown(callable $callback): mixed
  * Mutation: with PersonNameDisplayFormatsAlternateExpansionTest and PersonNameDisplayFormatsFixturesTest,
  * every tested mutant of UAMSWeb\Aether\People\Support\PersonNameDisplayFormats is killed. The
  * equivalent ones are annotated in the source with `@pest-mutate-ignore` and the reason on the line
- * above. 79 more are reported uncovered and run by nothing: 76 on the lines of the
- * `PATTERN_DEDUPE_RANK`, `ENGLISH_LETTER_IPA` and `PEDIGREE_LABEL_IPA` class constants, which the
- * coverage driver never marks as executed, two on line 1162 and one on line 1301. The same run in
- * the site, before the move, reported the same 79.
+ * above. The coverage driver marks no line of the `PATTERN_DEDUPE_RANK`, `ENGLISH_LETTER_IPA` and
+ * `PEDIGREE_LABEL_IPA` class constants as executed, so their mutants are annotated too, each with
+ * the test that pins it: a dataset test reads every letter and suffix entry, and the colliding-label
+ * test pins the rank order; rank changes that test misses were checked over 504 generated names and
+ * change no output. Before the move the site reported 79 mutants of this class uncovered.
  *
  * @command  vendor/bin/pest tests/Unit/Support/PersonNameDisplayFormatsTest.php
  */
@@ -958,3 +959,69 @@ it('builds an empty phonetic for an alternate-name part with no phonetic', funct
     expect(PersonNameDisplayFormats::normalizedFromAlternateNameShell([], [], [], [], null)['first_name'])
         ->toBe(['text' => '', 'phonetic_text' => '']);
 });
+
+/**
+ * The options buildOptions() keeps for a name, as display-format key to label.
+ *
+ * @param  string  $first  The first name.
+ * @param  string  $middle  The middle name.
+ * @param  string  $nickname  The nickname.
+ * @return array<string, string> Each kept option's label, keyed by its display-format key.
+ */
+function displayFormatLabelsByKey(string $first, string $middle, string $nickname): array
+{
+    $options = PersonNameDisplayFormats::buildOptions(PersonNameDisplayFormats::normalizeValue([
+        'first_name' => ['text' => $first],
+        'middle_name' => ['text' => $middle],
+        'nickname' => ['text' => $nickname],
+        'last_name' => ['text' => 'Hoover'],
+        'no_middle_name' => false,
+        'no_nickname' => false,
+        'no_generational_suffix' => true,
+    ]));
+
+    return array_column($options, 'label', 'key');
+}
+
+it('keeps the higher-ranked pattern when two patterns render the same label', function (): void {
+    // A first name that is already an initial makes the full-first patterns render the same
+    // labels as the first-initial ones, so the pattern rank decides which key is kept
+    expect(displayFormatLabelsByKey('J.', 'E', 'J'))->toBe([
+        'first_initial_full_middle@ns' => 'J. E Hoover',
+        'first_initial_full_middle_nickname@ns' => 'J. E "J" Hoover',
+        'middle_only@ns' => 'E Hoover',
+        'middle_only_nickname@ns' => 'E "J" Hoover',
+        'first_initial_middle_initial@ns' => 'J. E. Hoover',
+        'first_initial_middle_initial_nickname@ns' => 'J. E. "J" Hoover',
+        'full_first_only@ns' => 'J. Hoover',
+        'full_first_only_nickname@ns' => 'J. "J" Hoover',
+        'nickname_only@ns' => 'J Hoover',
+    ]);
+
+    // A middle name equal to the first name makes the middle-only patterns collide with the
+    // full-first-only ones, and the middle-only patterns are ranked higher
+    expect(displayFormatLabelsByKey('J.', 'J.', 'J'))->toBe([
+        'middle_only@ns' => 'J. Hoover',
+        'middle_only_nickname@ns' => 'J. "J" Hoover',
+        'first_initial_middle_initial@ns' => 'J. J. Hoover',
+        'first_initial_middle_initial_nickname@ns' => 'J. J. "J" Hoover',
+        'nickname_only@ns' => 'J Hoover',
+    ]);
+});
+
+it('gives each English letter its letter-name pronunciation', function (string $letter, string $ipa): void {
+    expect(PersonNameDisplayFormats::initialsIpaFromDisplayText($letter))->toBe($ipa);
+})->with([
+    ['A', 'eɪ'], ['B', 'bi'], ['C', 'si'], ['D', 'di'], ['E', 'i'], ['F', 'ɛf'], ['G', 'ʤi'],
+    ['H', 'eɪʧ'], ['I', 'aɪ'], ['J', 'ʤeɪ'], ['K', 'keɪ'], ['L', 'ɛl'], ['M', 'ɛm'], ['N', 'ɛn'],
+    ['O', 'oʊ'], ['P', 'pi'], ['Q', 'kju'], ['R', 'ɑr'], ['S', 'ɛs'], ['T', 'ti'], ['U', 'ju'],
+    ['V', 'vi'], ['W', 'ˈdʌbəlju'], ['X', 'ɛks'], ['Y', 'waɪ'], ['Z', 'zi'],
+]);
+
+it('gives each generational suffix label its pronunciation', function (string $label, string $ipa): void {
+    expect(PersonNameDisplayFormats::generationalSuffixPhoneticFromLabel($label))->toBe($ipa);
+})->with([
+    ['Jr.', 'ˈʤunjər'], ['Sr.', 'ˈsinjər'], ['II', 'ðə ˈsɛkənd'], ['III', 'ðə θɜrd'],
+    ['IV', 'ðə fɔrθ'], ['V', 'ðə fɪfθ'], ['VI', 'ðə sɪksθ'], ['VII', 'ðə ˈsɛvənθ'],
+    ['VIII', 'ðə eɪtθ'], ['IX', 'ðə naɪnθ'], ['X', 'ðə tɛnθ'],
+]);

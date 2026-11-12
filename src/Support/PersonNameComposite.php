@@ -47,6 +47,10 @@ final class PersonNameComposite
      *
      * @var list<string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. A removed part is observable, and the split test in `PersonNameCompositeTest`
+    // that clears every legal part's pronunciation pins each one.
+    // @pest-mutate-ignore: RemoveArrayItem
     public const array PRONOUNCED_PARTS = [
         'first_name',
         'middle_name',
@@ -133,6 +137,9 @@ final class PersonNameComposite
         $joined = [];
 
         foreach ($personName as $key => $value) {
+            // PHP stores a numeric string key as an integer either way, so the cast changes no key; it
+            // is kept to tell PHPStan the result is keyed by strings
+            // @pest-mutate-ignore: RemoveStringCast
             $joined[(string) $key] = $value;
         }
 

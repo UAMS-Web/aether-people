@@ -158,3 +158,57 @@ it('takes the display format from its own field', function (mixed $format, ?stri
     'an empty string' => ['', null],
     'null' => [null, null],
 ]);
+
+it('gives a later legal part its pronunciation when an earlier part has none kept', function (): void {
+    $joined = mustBeStringKeyed(PersonNameComposite::fromData([
+        'person_name' => PersonNameComposite::split(compositeWholeName())['person_name'],
+        'name_pronunciation' => ['middle_name' => 'bɑr', 'last_name' => 'bæz'],
+    ]), 'the joined name');
+
+    expect($joined['first_name'])->toBe(['text' => 'Leonard', 'phonetic_text' => null])
+        ->and($joined['middle_name'])->toBe(['text' => 'Horatio', 'phonetic_text' => 'bɑr'])
+        ->and($joined['last_name'])->toBe(['text' => 'McCoy', 'phonetic_text' => 'bæz']);
+});
+
+it('reads a blank display format field as no display format', function (): void {
+    $joined = mustBeStringKeyed(PersonNameComposite::fromData([
+        'person_name' => PersonNameComposite::split(compositeWholeName())['person_name'],
+        'name_display_format' => '   ',
+    ]), 'the joined name');
+
+    expect($joined['display_format'])->toBeNull();
+});
+
+it('keeps the pronunciation of a later legal part when an earlier part is missing', function (): void {
+    $name = compositeWholeName();
+    unset($name['first_name']);
+
+    expect(PersonNameComposite::split($name)['name_pronunciation'])->toBe([
+        'middle_name' => 'bɑr',
+        'last_name' => 'bæz',
+    ]);
+});
+
+it('drops a nickname whose text is blank when splitting', function (): void {
+    $name = compositeWholeName();
+    $name['nickname'] = ['text' => '   ', 'phonetic_text' => 'kʌks'];
+
+    expect(PersonNameComposite::split($name)['nickname'])->toBeNull();
+});
+
+it('drops a nickname pronunciation that is blank or not text when splitting', function (mixed $phonetic): void {
+    $name = compositeWholeName();
+    $name['nickname'] = ['text' => 'Bones', 'phonetic_text' => $phonetic];
+
+    expect(PersonNameComposite::split($name)['nickname'])->toBe(['text' => 'Bones', 'phonetic_text' => null]);
+})->with([
+    'blank' => ['   '],
+    'a number' => [7],
+]);
+
+it('drops a blank display format when splitting', function (): void {
+    $name = compositeWholeName();
+    $name['display_format'] = '   ';
+
+    expect(PersonNameComposite::split($name)['name_display_format'])->toBeNull();
+});

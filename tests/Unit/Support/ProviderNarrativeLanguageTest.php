@@ -56,3 +56,33 @@ it('derives the possessive pronoun from the gender value', function (?string $ge
     'null' => [null, 'their'],
     'key-cased' => ['female', 'her'],
 ]);
+
+it('reads the first word after trimming, case-insensitively and by prefix', function (string $following, string $expected): void {
+    expect(ProviderNarrativeLanguage::indefiniteArticle($following))->toBe($expected);
+})->with([
+    'leading space' => [' oncologist', 'an'],
+    'capitalized vowel title' => ['Oncologist', 'an'],
+    'capitalized silent h' => ['Hour', 'an'],
+    'exception as a prefix' => ['hourly rate', 'an'],
+    'no letters at all' => ['(123)', 'a'],
+]);
+
+it('takes the article from each exception', function (string $following, string $expected): void {
+    expect(ProviderNarrativeLanguage::indefiniteArticle($following))->toBe($expected);
+})->with([
+    'university' => ['university', 'a'],
+    'urologic' => ['urologic surgeon', 'a'],
+    'unit' => ['unit director', 'a'],
+    'one' => ['one-time visit', 'a'],
+    'hour' => ['hour', 'an'],
+    'honest' => ['honest broker', 'an'],
+    'honor' => ['honor society', 'an'],
+]);
+
+it('reads a gender value by its leading word, after trimming', function (?string $gender, string $expected): void {
+    expect(ProviderNarrativeLanguage::subjectPronoun($gender))->toBe($expected);
+})->with([
+    'padded female' => [' female ', 'she'],
+    'female with more after it' => ['Female (she/her)', 'she'],
+    'male with more after it' => ['Male (he/him)', 'he'],
+]);
