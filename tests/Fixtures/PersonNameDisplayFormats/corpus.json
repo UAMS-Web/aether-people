@@ -1,0 +1,416 @@
+{
+    "_about": "Input corpus for the PersonNameDisplayFormats PHP and JavaScript parity check (UAMS-Web/uams-statamic-archive#3053). Edit this file, then regenerate display-format-options.json; see README.md.",
+    "cases": [
+        {
+            "label": "first and last only",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "with a middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie"
+                }
+            }
+        },
+        {
+            "label": "with a nickname",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Annie"
+                }
+            }
+        },
+        {
+            "label": "with a generational suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "generational_suffix": "Jr."
+            }
+        },
+        {
+            "label": "middle name, nickname and suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": "Marie"
+                },
+                "nickname": {
+                    "text": "Annie"
+                },
+                "generational_suffix": "III"
+            }
+        },
+        {
+            "label": "middle name and nickname, no suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Robert"
+                },
+                "last_name": {
+                    "text": "Smith"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "James"
+                },
+                "nickname": {
+                    "text": "Bob"
+                }
+            }
+        },
+        {
+            "label": "middle name and suffix, no nickname",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Robert"
+                },
+                "last_name": {
+                    "text": "Smith"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": "James"
+                },
+                "generational_suffix": "Sr."
+            }
+        },
+        {
+            "label": "nickname and suffix, no middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "William"
+                },
+                "last_name": {
+                    "text": "Gates"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "nickname": {
+                    "text": "Bill"
+                },
+                "generational_suffix": "II"
+            }
+        },
+        {
+            "label": "middle name repeats the first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Ann"
+                }
+            }
+        },
+        {
+            "label": "nickname repeats the first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Ann"
+                }
+            }
+        },
+        {
+            "label": "nickname repeats the first name, with a suffix",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": false,
+                "nickname": {
+                    "text": "Ann"
+                },
+                "generational_suffix": "Jr."
+            }
+        },
+        {
+            "label": "nickname repeats the middle name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie"
+                },
+                "nickname": {
+                    "text": "Marie"
+                }
+            }
+        },
+        {
+            "label": "multi-word first and last names",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Mary Ann"
+                },
+                "last_name": {
+                    "text": "Van Buren"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Louise"
+                }
+            }
+        },
+        {
+            "label": "hyphenated first and middle names",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Jean-Luc"
+                },
+                "last_name": {
+                    "text": "Picard"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Marie-Claire"
+                }
+            }
+        },
+        {
+            "label": "non-ASCII letters",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "José"
+                },
+                "last_name": {
+                    "text": "Núñez"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "middle_name": {
+                    "text": "Ángel"
+                },
+                "nickname": {
+                    "text": "Pepe"
+                }
+            }
+        },
+        {
+            "label": "surrounding whitespace",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "  Ann  "
+                },
+                "last_name": {
+                    "text": " Lee "
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": false,
+                "middle_name": {
+                    "text": " Marie "
+                },
+                "generational_suffix": " IV "
+            }
+        },
+        {
+            "label": "nickname field excluded, nickname text present",
+            "include_nickname": false,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": false,
+                "no_generational_suffix": true,
+                "nickname": {
+                    "text": "Annie"
+                },
+                "middle_name": {
+                    "text": "Marie"
+                }
+            }
+        },
+        {
+            "label": "nickname field excluded, nickname blank and not switched off",
+            "include_nickname": false,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "not ready: no last name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": ""
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "not ready: no first name",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": ""
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "not ready: middle name blank and not switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": false,
+                "no_nickname": true,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "not ready: nickname blank and not switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": false,
+                "no_generational_suffix": true
+            }
+        },
+        {
+            "label": "not ready: suffix neither chosen nor switched off",
+            "include_nickname": true,
+            "value": {
+                "first_name": {
+                    "text": "Ann"
+                },
+                "last_name": {
+                    "text": "Lee"
+                },
+                "no_middle_name": true,
+                "no_nickname": true,
+                "no_generational_suffix": false
+            }
+        }
+    ]
+}
