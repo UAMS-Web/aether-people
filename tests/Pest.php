@@ -13,4 +13,6 @@ declare(strict_types=1);
 
 use UAMSWeb\Aether\People\Tests\TestCase;
 
+require_once __DIR__.'/Support/TypeNarrowing.php';
+
 pest()->extend(TestCase::class)->in('Integration');
