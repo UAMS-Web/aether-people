@@ -66,6 +66,17 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
+     * Merge the `people` config while providers register, so a host provider that reads
+     * `people.collection` during its own registration finds it (UAMS-Web/uams-statamic#281).
+     */
+    #[\Override]
+    public function register(): void
+    {
+        // Merge the add-on's defaults under the key the code reads
+        $this->mergeConfigFrom(__DIR__.'/../config/people.php', 'people');
+    }
+
+    /**
      * Boot the add-on once Statamic has booted.
      */
     public function bootAddon(): void
