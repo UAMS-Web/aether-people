@@ -1,0 +1,6 @@
+title: 'uamsweb_common_video (stand-in for the host fieldset)'
+fields:
+  -
+    handle: video_url
+    field:
+      type: text

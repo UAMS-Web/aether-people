@@ -1,0 +1,156 @@
+title: 'UAMSWeb Common Reusable Fields, People, Research'
+fields:
+  -
+    handle: research_interests
+    field:
+      type: replicator
+      display: 'Research Interests'
+      button_label: 'Add Research Interest'
+      localizable: false
+      sets:
+        research_interests:
+          display: 'Research Interests'
+          sets:
+            controlled_vocabulary:
+              display: 'Controlled Vocabulary'
+              fields:
+                -
+                  handle: subject_matter
+                  field:
+                    collections:
+                      - subject_matter
+                      - clinical_specializations
+                    max_items: 1
+                    type: entries
+                    select_across_sites: true
+                    search_index: subject_concepts
+                    display: 'Research Interest'
+                    instructions: 'Select the subject matter or clinical specialization this research interest is related to. A clinical concept is chosen from Clinical Specializations (the NUCC Health Care Provider Taxonomy code set and its UAMS extensions), never from Subject Matter.'
+                    localizable: false
+                    validate:
+                      - required
+                    create: false
+            free_text:
+              display: 'Free Text'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: 'Research Interest'
+                    localizable: false
+                    validate:
+                      - required
+  -
+    handle: research_interests_free_text
+    field:
+      type: textarea
+      display: 'Research Interests (Legacy Import — Migrate, Then Clear)'
+      instructions: |-
+        Legacy free-text research interests imported from the previous site. Rewrite this content as structured rows in the **Research Interests** field above, then clear this field.
+
+        ⚠️ The entry **cannot be saved** while this field still contains text. Once empty, this field is hidden. (Migration aide only — it is not rendered anywhere on the site.)
+      if:
+        research_interests_free_text: 'not empty'
+      always_save: true
+      validate:
+        - prohibited
+      localizable: false
+  -
+    handle: research_profile_url
+    field: uamsweb_common.url
+    config:
+      display: 'UAMS Research Profile URL'
+      instructions: |-
+        Add a link to the person's UAMS TRI research profile.
+
+        Include the full URL, including <code>https://</code>.
+      placeholder: 'e.g., https://uams-triprofiles.uams.edu/profiles/display/12345'
+      validate:
+        - tri_profile_url
+      localizable: false
+  -
+    handle: research_publication_display_count
+    field:
+      type: radio
+      display: 'Number of Latest Research Articles to Display'
+      options:
+        -
+          key: 1
+          value: null
+        -
+          key: 3
+          value: null
+        -
+          key: 5
+          value: null
+        -
+          key: 9
+          value: null
+      default: 5
+      if:
+        pubmed_author_id: 'not empty'
+      always_save: true
+      validate:
+        - required
+        - sometimes
+      localizable: false
+  -
+    handle: research_publication_exclude
+    field:
+      type: replicator
+      display: 'Excluded Publications From PubMed'
+      instructions: |-
+        Use this field to enter the PubMed Identifiers (PMIDs) of articles listed under the specified PubMed Author Identifier (e.g., `mccoy lh`) that are not associated with the intended author.
+
+        Since PubMed relies on author names, which may overlap due to common names or variations, the returned list of publications may include articles by other authors with the same identifier. Enter the PMIDs of any such articles to exclude them from the results.'
+      sets:
+        new_set_group:
+          display: 'New Publication Exclusion'
+          sets:
+            new_set:
+              display: 'Excluded Publication'
+              fields:
+                -
+                  handle: pmid
+                  field: uamsweb_common_identifiers.pmid
+                  config:
+                    validate:
+                      - required
+                      - sometimes
+      button_label: 'Add Excluded Publication'
+      if:
+        pubmed_author_id: 'not empty'
+      always_save: true
+      localizable: false
+  -
+    handle: research_publication_select
+    field:
+      type: replicator
+      display: 'Selected Publications From PubMed'
+      sets:
+        new_set_group:
+          display: 'New Included Publication'
+          sets:
+            new_set:
+              display: 'Included Publication'
+              fields:
+                -
+                  handle: pmid
+                  field: uamsweb_common_identifiers.pmid
+                  config:
+                    validate:
+                      - required
+                      - sometimes
+                -
+                  handle: pubmed_information
+                  field:
+                    type: textarea
+                    display: 'PubMed Information (HTML)'
+                    localizable: false
+                    visibility: computed
+      button_label: 'Add Selected Publication'
+      if:
+        pubmed_author_id: 'not empty'
+      always_save: true
+      localizable: false

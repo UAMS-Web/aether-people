@@ -1,0 +1,71 @@
+title: 'UAMSWeb Common Reusable Fields, People, Name'
+fields:
+  -
+    handle: person_name
+    field:
+      type: person_name
+      display: 'Legal Name'
+      instructions: 'The name Workday holds for this person. The nickname, pronunciation and display format are set in their own fields below.'
+      include_display_format: false
+      include_nickname: false
+      include_phonetic: false
+      include_phonetic_instructions: false
+      validate:
+        - required
+      localizable: false
+  -
+    handle: nickname
+    field:
+      type: text_phonetic_pair
+      display: Nickname
+      instructions: 'The name the person goes by, if it differs from their first name. Leave it empty when they have none.'
+      text_label: 'Nickname (Text)'
+      phonetic_label: 'Nickname (Phonetic Text)'
+      include_phonetic_instructions: false
+      quote_straight_on_text: true
+      localizable: false
+  -
+    handle: name_pronunciation
+    field:
+      type: group
+      display: 'Name Pronunciation'
+      instructions: 'How each part of the legal name is said, in International Phonetic Alphabet (IPA) symbols only, without slashes or brackets. Leave a part empty when it is unknown or the person has no middle name.'
+      replicator_preview: false
+      localizable: false
+      fields:
+        -
+          handle: first_name
+          field:
+            type: text
+            display: 'First Name (Phonetic Text)'
+            validate:
+              - nullable
+              - international_phonetic_alphabet
+        -
+          handle: middle_name
+          field:
+            type: text
+            display: 'Middle Name (Phonetic Text)'
+            validate:
+              - nullable
+              - international_phonetic_alphabet
+        -
+          handle: last_name
+          field:
+            type: text
+            display: 'Last Name (Phonetic Text)'
+            validate:
+              - nullable
+              - international_phonetic_alphabet
+  -
+    handle: name_display_format
+    field:
+      type: person_name_display_format
+      display: 'Preferred Display Format'
+      instructions: 'Choose how the name should be displayed.'
+      localizable: false
+  -
+    handle: credentials
+    field: aether-people::uamsweb_common_people.credentials
+    config:
+      localizable: false

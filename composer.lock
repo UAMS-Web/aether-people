@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8269ead5990f3b05ea4d6688efb0ae9",
+    "content-hash": "3e4d39720d328f237a22e2467355543b",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -11684,8 +11684,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T12:14:22+00:00",
-            "published-time": "2026-11-03T12:14:36+00:00"
+            "time": "2026-11-03T12:14:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -13740,8 +13739,57 @@
                 "issues": "https://github.com/UAMS-Web/patches-pest-plugin-mutate/issues",
                 "source": "https://github.com/UAMS-Web/patches-pest-plugin-mutate"
             },
-            "time": "2026-11-10T21:43:23+00:00",
-            "published-time": "2026-11-10T21:45:52+00:00"
+            "time": "2026-11-10T21:43:23+00:00"
+        },
+        {
+            "name": "uams-web/patches-statamic-cms",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UAMS-Web/patches-statamic-cms.git",
+                "reference": "67e6527c136cb6a578cc89110a192c03ab03211b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UAMS-Web/patches-statamic-cms/zipball/67e6527c136cb6a578cc89110a192c03ab03211b",
+                "reference": "67e6527c136cb6a578cc89110a192c03ab03211b",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "6.40.0"
+            },
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "statamic/cms": {
+                        "Add blueprint-aware collection create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-collection-create-label-blueprint.patch",
+                        "Add blueprint-aware taxonomy create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-taxonomy-create-label-blueprint.patch",
+                        "Align CP updates badge with updater availableUpdatesCount": "vendor/uams-web/patches-statamic-cms/patches/statamic-updates-overview-badge.patch",
+                        "Skip a Stache file removed between listing and stat so a concurrent delete cannot abort the traversal (temporary; see UAMS-Web/uams-statamic-archive#2241)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-traverser-vanished-file.patch",
+                        "Skip a Stache file removed after its stat in Store::paths() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-paths.patch",
+                        "Skip a Stache file removed after the change scan in Store::getItemFromModifiedPath() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-modified.patch",
+                        "Return no items from TaxonomyTermsStore::getItemFromModifiedPath() when the parent skips a vanished file, rather than fatal on null (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-modified.patch",
+                        "Skip a Stache term file removed after its stat in TaxonomyTermsStore::paths() so it is not rebuilt as a new, empty term (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-paths.patch",
+                        "Return null from TaxonomyTermsStore::getItem() for a term file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-get-item.patch",
+                        "Return null from BasicStore::getItem() for a file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-basic-vanished-file-get-item.patch",
+                        "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch"
+                    }
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Patches UAMS-Web repositories apply to statamic/cms",
+            "keywords": [
+                "composer",
+                "patches",
+                "statamic"
+            ],
+            "support": {
+                "issues": "https://github.com/UAMS-Web/patches-statamic-cms/issues",
+                "source": "https://github.com/UAMS-Web/patches-statamic-cms"
+            },
+            "time": "2026-11-12T21:36:28+00:00"
         }
     ],
     "aliases": [],
@@ -13756,5 +13804,5 @@
     "platform-overrides": {
         "php": "8.4.27"
     },
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }

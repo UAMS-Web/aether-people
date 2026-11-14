@@ -1,0 +1,50 @@
+title: 'uamsweb_common_identifiers (stand-in for the host fieldset)'
+fields:
+  -
+    handle: epic_ser_id
+    field:
+      type: text
+  -
+    handle: google_scholar_author_id
+    field:
+      type: text
+  -
+    handle: npi
+    field:
+      type: text
+  -
+    handle: orcid_id
+    field:
+      type: text
+  -
+    handle: pmid
+    field:
+      type: text
+  -
+    handle: pubmed_author_id
+    field:
+      type: text
+  -
+    handle: researcherid
+    field:
+      type: text
+  -
+    handle: scopus_author_id
+    field:
+      type: text
+  -
+    handle: workday_contingent_worker_id
+    field:
+      type: text
+  -
+    handle: workday_employee_id
+    field:
+      type: text
+  -
+    handle: workday_student_id
+    field:
+      type: text
+  -
+    handle: workday_universal_id
+    field:
+      type: text

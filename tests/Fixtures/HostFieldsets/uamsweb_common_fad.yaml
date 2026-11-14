@@ -1,0 +1,50 @@
+title: 'uamsweb_common_fad (stand-in for the host fieldset)'
+fields:
+  -
+    handle: clinical_locations
+    field:
+      type: text
+  -
+    handle: clinical_resources
+    field:
+      type: text
+  -
+    handle: clinical_specializations
+    field:
+      type: text
+  -
+    handle: conditions
+    field:
+      type: text
+  -
+    handle: expertise
+    field:
+      type: text
+  -
+    handle: podcast_guest_name_uams_health_talk
+    field:
+      type: text
+  -
+    handle: portal
+    field:
+      type: text
+  -
+    handle: providers
+    field:
+      type: text
+  -
+    handle: service_line
+    field:
+      type: text
+  -
+    handle: special_interest_clinical_conditions
+    field:
+      type: text
+  -
+    handle: special_interest_clinical_services
+    field:
+      type: text
+  -
+    handle: treatments
+    field:
+      type: text

@@ -1,0 +1,367 @@
+title: 'UAMSWeb Common Reusable Fields, People, Block/Set Shared Fields'
+fields:
+  -
+    handle: multiple_groups_selection
+    field:
+      type: toggle
+      display: 'Multiple Groups Selection'
+      localizable: false
+  -
+    handle: group_single
+    field:
+      max_items: 1
+      create: false
+      collections:
+        - people_groups
+      type: entries
+      mode: select
+      display: Group
+      if:
+        multiple_groups_selection: 'equals false'
+      localizable: false
+  -
+    handle: group_multiple
+    field:
+      create: false
+      collections:
+        - people_groups
+      type: entries
+      mode: select
+      display: Groups
+      if:
+        multiple_groups_selection: 'equals true'
+      localizable: false
+  -
+    handle: id_include
+    field:
+      default: '0'
+      type: mask_field
+      display: 'IDs to display'
+      instructions: 'Comma-separated ID values of specific entries you want to display. Example: <code>7,11</code>. Leave blank or <code>0</code> to display all.'
+      localizable: false
+      input_mask: '/^(\d+(,\d+){0,},?)?$/'
+  -
+    handle: id_exclude
+    field:
+      default: '0'
+      type: mask_field
+      display: 'IDs to Exclude'
+      instructions: 'Comma-separated ID values of specific entries you want to exclude. Example: <code>7,11</code>. Leave blank or <code>0</code> to display all.'
+      localizable: false
+      input_mask: '/^(\d+(,\d+){0,},?)?$/'
+  -
+    handle: order_by
+    field:
+      options:
+        -
+          key: none
+          value: 'Default (Drag & drop / Order Field)'
+        -
+          key: title
+          value: Name
+        -
+          key: sortpriority
+          value: 'Priority (High to Low) then Alpha (Sort Text)'
+        -
+          key: sorttext
+          value: 'Alpha (Sort Text) then Order Field'
+        -
+          key: modified
+          value: 'Modified Date'
+      default: sorttext
+      type: select
+      display: 'Order By'
+      localizable: false
+  -
+    handle: limit
+    field:
+      default: '0'
+      type: integer
+      display: 'Number of entries to display'
+      instructions: 'Leave blank or <code>0</code> to display all.'
+      visibility: hidden
+      localizable: false
+  -
+    handle: pagination
+    field:
+      options:
+        -
+          key: 'false'
+          value: 'No Pagination'
+      cast_booleans: true
+      default: false
+      type: select
+      display: Pagination
+      instructions: 'You should set a limit above for the pagination to work properly.'
+      visibility: hidden
+      localizable: false
+  -
+    handle: display_detail
+    field:
+      options:
+        -
+          key: name
+          value: Name
+        -
+          key: photo
+          value: Portrait
+        -
+          key: position
+          value: 'Position Title'
+        -
+          key: freehtml
+          value: 'Short Bio'
+        -
+          key: email
+          value: Email
+        -
+          key: telephone
+          value: 'Phone Number'
+        -
+          key: mitel_extension
+          value: 'Mitel Extension'
+        -
+          key: fax
+          value: 'Fax Number'
+        -
+          key: location
+          value: Location
+        -
+          key: website
+          value: 'UAMS Health Provider Profile URL'
+        -
+          key: deptweb
+          value: "Academic Faculty\_/ Staff Profile URL"
+        -
+          key: triweb
+          value: 'UAMS TRI Research Profile URL'
+        -
+          key: youtube
+          value: 'Video URL'
+      type: checkboxes
+      display: 'What information do you want to display'
+      default:
+        - name
+        - photo
+        - position
+      validate:
+        - required
+      localizable: false
+  -
+    handle: entry_link_query
+    field: uamsweb_common.true_false
+    config:
+      display: 'Link to single profiles?'
+      default: false
+      validate:
+        - required
+  -
+    handle: entry_link_url
+    field:
+      options:
+        -
+          key: entry
+          value: 'People Entry'
+        -
+          key: clinical_profile
+          value: 'UAMS Health Provider Profile URL'
+        -
+          key: academic_profile
+          value: 'Academic Profile URL'
+        -
+          key: research_profile
+          value: 'UAMS Research Profile URL'
+        -
+          key: video
+          value: 'Video URL'
+      default: entry
+      type: radio
+      display: 'Single Profile Destination'
+      localizable: false
+      if:
+        entry_link_query: 'equals true'
+      validate:
+        - required
+        - sometimes
+  -
+    handle: entry_link_target
+    field: uamsweb_common_link.new_window_query
+    config:
+      validate:
+        - required
+        - sometimes
+      if:
+        entry_link_query: 'equals true'
+  -
+    handle: load_a_layout_preset
+    field:
+      options:
+        -
+          key: uams
+          value: 'UAMS Card Grid'
+      default: uams
+      type: select
+      display: 'Load a layout preset'
+      instructions: 'Choosing a  preset will automatically select predefined values for the visuals. You can then adjust the options to your needs.'
+      validate:
+        - required
+      visibility: hidden
+      localizable: false
+  -
+    handle: uams_card_grid
+    field:
+      type: subsection
+      display: 'UAMS Card Grid'
+      if:
+        load_a_layout_preset: 'equals uams'
+      visibility: hidden
+      localizable: false
+  -
+    handle: layout
+    field:
+      options:
+        -
+          key: grid
+          value: Grid
+      default: grid
+      type: select
+      display: Layout
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: columns
+    field:
+      options:
+        -
+          key: 1
+          value: 'One Column'
+      default: '1'
+      type: select
+      display: Columns
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: groups_filter
+    field:
+      options:
+        -
+          key: inactive
+          value: Inactive
+        -
+          key: filter
+          value: 'Active - Hide Filter'
+        -
+          key: enhance-filter
+          value: 'Active - Enhance Filter'
+        -
+          key: isotope-filter
+          value: 'Active - Isotope Hide Filter'
+        -
+          key: dropdown-filter
+          value: 'Active - Dropdown Hide Filter'
+      default: inactive
+      type: select
+      display: 'Groups Filter'
+      instructions: 'When active, a jQuery Category filter will display above the Grid.'
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      localizable: false
+  -
+    handle: theme
+    field:
+      options:
+        -
+          key: white-card-theme
+          value: 'Simple White Card'
+      default: white-card-theme
+      type: select
+      display: Theme
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: composition
+    field:
+      options:
+        -
+          key: img-left
+          value: 'Image Left - Content Right'
+      default: img-left
+      type: select
+      display: Composition
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: image_shape
+    field:
+      options:
+        -
+          key: img-square
+          value: 'Square (normal)'
+      default: img-square
+      type: select
+      display: 'Image Shape'
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: image_effect
+    field:
+      options:
+        -
+          key: 'false'
+          value: None
+      cast_booleans: true
+      default: false
+      type: select
+      display: 'Image Effect'
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false
+  -
+    handle: text_alignment
+    field:
+      options:
+        -
+          key: text-left
+          value: Left
+      default: text-left
+      type: select
+      display: 'Text Alignment'
+      if:
+        load_a_layout_preset: 'equals uams'
+      validate:
+        - required
+        - sometimes
+      visibility: hidden
+      localizable: false

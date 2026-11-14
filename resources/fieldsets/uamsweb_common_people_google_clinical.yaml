@@ -1,0 +1,33 @@
+title: 'UAMSWeb Common Reusable Fields, People, Google Business Profile, Clinical Provider'
+fields:
+  -
+    handle: google_business_profile_clinical_query
+    field: uamsweb_common_google.google_business_profile_query
+    config:
+      display: 'Does this clinical provider have one or more listings on Google Business Profiles?'
+      localizable: false
+  -
+    handle: google_business_profile_clinical_cid
+    field: uamsweb_common_google.google_business_profile_cid
+    config:
+      display: 'Google Business Profile CID Numbers for This Clinical Provider'
+      if:
+        google_business_profile_clinical_query: 'equals true'
+      localizable: false
+  -
+    handle: google_business_profile_clinical_exclude_query
+    field: uamsweb_common_google.google_business_profile_exclude_query
+    config:
+      display: 'Should this clinical provider be excluded from any bulk imports and updates in Google Business Profiles?'
+      localizable: false
+  -
+    handle: google_business_profile_clinical_category
+    field: uamsweb_common_google.google_business_profile_category
+    config:
+      instructions: |-
+        Select up to 10 categories. Rearrange them so that the first item is the primary category. "Doctor" is a good standard choice, if you cannot find a better option.
+
+        For reference, you can <a href='https://communications.uams.edu/web/kb/google-my-business-categories/' target='_blank'>view a list of available categories.</a>
+      if:
+        google_business_profile_clinical_exclude_query: 'equals false'
+      localizable: false
