@@ -69,7 +69,7 @@ it('reads no override directories from a view.paths that is not a list', functio
 it('finds a host override whose view path does not resolve as written', function (): void {
     // A real directory reached through a `..` segment: Laravel stores the hint
     // resolved, so the override has to be resolved before it is compared
-    $root = sys_get_temp_dir().'/aether-people-hints-'.bin2hex(random_bytes(4));
+    $root = sys_get_temp_dir().'/aether-people-hints-'.uniqid();
     mkdir($root.'/views/vendor/statamic', 0777, true);
 
     try {
@@ -89,7 +89,7 @@ it('finds a host override whose view path does not resolve as written', function
 
 it('finds a host override that a Laravel release stored unresolved', function (): void {
     // Older Laravel releases keep a hint as given, so plant the `..` path in the finder directly
-    $root = sys_get_temp_dir().'/aether-people-hints-'.bin2hex(random_bytes(4));
+    $root = sys_get_temp_dir().'/aether-people-hints-'.uniqid();
     mkdir($root.'/views/vendor/statamic', 0777, true);
 
     try {
