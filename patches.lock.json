@@ -1,5 +1,5 @@
 {
-    "_hash": "4134c486ea923c62dbb8416a6b172db5bcceafb7e9385eea5578fb551f1950ef",
+    "_hash": "fd1c247b4b749083a644bb46eb7c04ccb9fb7ebe9909edfd05211af66762c87e",
     "patches": {
         "pestphp/pest-plugin-mutate": [
             {
@@ -71,6 +71,76 @@
                 "extra": {
                     "provenance": "patches-file:patches.json"
                 }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Select tests for a mutated scalar function default, so it is not scored without a test running it (temporary; see UAMS-Web/uams-2020#673)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-function-defaults.patch",
+                "sha256": "04e7c1c42edb2ef07da615e5ac57b2236384e8c2ca8aa27323a69ed5aef37a7e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Propagate a mutation into isolated test processes and reject a test report that ran no tests, so an isolated run cannot score a mutant killed without running a test (temporary; see UAMS-Web/UAMSWP-Logo-List#82)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-isolated-processes.patch",
+                "sha256": "6dd578588121b5291568bf26d001bd865a3a7e74d93f236a31ce93326dc0f3d2",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Map a class constant mutant to the tests covering its containing class, since a constant initializer has no executable coverage line (temporary)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-class-constant-coverage.patch",
+                "sha256": "e09b3535c7a69db85b35366fd1c0aa676a5cf98d0671d8245323516f8018b8f4",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Skip a node whose own comment carries a matching @pest-mutate-ignore marker, including when the traverser still leaves that node (temporary)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-ignore-annotated-statement.patch",
+                "sha256": "70378c227b12c6218eeb4f7ee5e2d0de5396bfb9165cff5683de7be5bdd6ff44",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Size a mutant child's time limit from the serial work the initial suite stands for, so a --parallel run cannot score a mutant a timeout that no test caused (temporary; see UAMS-Web/patches-pest-plugin-mutate#2)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-mutant-timeout.patch",
+                "sha256": "ff9e004e545e2b93cb051af4dafe109cb3427869d1294543aec06a26bac7c2b1",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Keep Patchwork in front of the mutation stream wrapper after a pass-through read, so a function a test mocks is still redefined in a mutant child that logs to junit (temporary; see UAMS-Web/patches-pest-plugin-mutate#31)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-stream-wrapper-patchwork.patch",
+                "sha256": "c4e064cf26f7f9daaa21f06b0f71c68993faa178813672188562cc54b7bf6827",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "pestphp/pest-plugin-mutate",
+                "description": "Run a mutant child again when it times out once, and score a timeout only when the second attempt times out too, so a transient slowdown of the machine cannot keep --min=100 out of reach (temporary; see UAMS-Web/patches-pest-plugin-mutate#30)",
+                "url": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-mutant-timeout-retry.patch",
+                "sha256": "2516b97553a04990fbdfd51a2651b7dc24e372f885d9ebd2f247742f2fa94f19",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
             }
         ],
         "orchestra/testbench-core": [
@@ -101,6 +171,106 @@
                 "description": "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)",
                 "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch",
                 "sha256": "0b15638367a8a3fc3a6bd95ac840edea2c07887234d36e06cdca1ef91379ae11",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Add blueprint-aware collection create labels",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-collection-create-label-blueprint.patch",
+                "sha256": "795ddc21d85270e1e2b642dd9ec5fa2a483ce5642bdb8623ecbf295f4da63278",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Add blueprint-aware taxonomy create labels",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-taxonomy-create-label-blueprint.patch",
+                "sha256": "97c8ac5b5de383513981adeb14c0c725beb1f74c22b832a630fddf9e263dd5fe",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Align CP updates badge with updater availableUpdatesCount",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-updates-overview-badge.patch",
+                "sha256": "8a89d44c84095f3e0a2560f0419d017bf58d090a46e14639d2ff3c9161a9fe6c",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Skip a Stache file removed between listing and stat so a concurrent delete cannot abort the traversal (temporary; see UAMS-Web/uams-statamic-archive#2241)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-traverser-vanished-file.patch",
+                "sha256": "97cb35eae5d57869c5a7476684a29c1570823079e56853c035ab0cdfdc602556",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Skip a Stache file removed after its stat in Store::paths() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-paths.patch",
+                "sha256": "10610d3761d3a4f5b7d412e0e3926af052180807e92eeebb31c7da543dd6d8bf",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Skip a Stache file removed after the change scan in Store::getItemFromModifiedPath() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-modified.patch",
+                "sha256": "13ddb6ba19ca9f90e9049e73bf5ae0dbe2970fb2c65b2f5ae6f3fff5295c4292",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Return no items from TaxonomyTermsStore::getItemFromModifiedPath() when the parent skips a vanished file, rather than fatal on null (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-modified.patch",
+                "sha256": "4b9ba9c167faaf7bae52a246e16fbc67d73057d96c372668d8b711633a8541b3",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Skip a Stache term file removed after its stat in TaxonomyTermsStore::paths() so it is not rebuilt as a new, empty term (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-paths.patch",
+                "sha256": "b57bbb7673fcbd5cbd6cad05754a8397202643e297ea79d2804e14926111dc4e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Return null from TaxonomyTermsStore::getItem() for a term file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-get-item.patch",
+                "sha256": "54a321a6e6ba825e97866ac9add0dc9631df18c35c79a4b745dcf976a5dd1396",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Return null from BasicStore::getItem() for a file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-basic-vanished-file-get-item.patch",
+                "sha256": "edb5b63794a9508c335872c3dd9fa9357d0a68082efff1313d690a2e25f252be",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"
