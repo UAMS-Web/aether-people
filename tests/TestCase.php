@@ -6,7 +6,9 @@ namespace UAMSWeb\Aether\People\Tests;
 
 use Illuminate\Foundation\Application;
 use Statamic\Testing\AddonTestCase;
+use UAMSWeb\Aether\People\Contracts\LocationRegions;
 use UAMSWeb\Aether\People\ServiceProvider;
+use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
 /**
  * Base class for the Integration suite: boots a minimal Statamic through
@@ -79,5 +81,9 @@ abstract class TestCase extends AddonTestCase
         // edition they require, are read per request and left to each test.
         $app['config']->set('statamic.api.enabled', true);
         $app['config']->set('statamic.graphql.enabled', true);
+
+        // Bind the contracts the host binds, to stand-ins that return what the host returns for
+        // content it has nothing for
+        $app->singleton(LocationRegions::class, fn (): LocationRegions => HostFakes::locationRegions());
     }
 }
