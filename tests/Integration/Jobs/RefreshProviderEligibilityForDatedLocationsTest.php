@@ -42,7 +42,7 @@ use UAMSWeb\Aether\People\Support\ProviderEligibilityIndexRefresher;
  *
  * @command  vendor/bin/pest tests/Integration/Jobs/RefreshProviderEligibilityForDatedLocationsTest.php
  */
-covers(RefreshProviderEligibilityForDatedLocations::class);
+covers(RefreshProviderEligibilityForDatedLocations::class, ServiceProvider::class);
 
 beforeEach(function (): void {
     // Read host fieldsets from the stand-ins, as the host would from its own directory

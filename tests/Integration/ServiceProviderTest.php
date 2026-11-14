@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Statamic\Facades\Addon;
 use UAMSWeb\Aether\People\ServiceProvider;
 
+covers(ServiceProvider::class);
+
 /**
  * The add-on boots inside a minimal Statamic.
  *
@@ -55,3 +57,23 @@ it('leaves a people config the host has set', function (): void {
 
     expect(config('people.collection'))->toBe('staff');
 });
+
+it('fills a missing provider eligibility config while it registers', function (string $key): void {
+    // Drop the merged config, then register the provider again
+    config([$key => []]);
+    new ServiceProvider(app())->register();
+
+    // Expect the add-on's own file to supply it again
+    $defaults = require __DIR__.'/../../config/'.$key.'.php';
+
+    expect(config($key))->toBe($defaults)
+        ->and($defaults)->not->toBeEmpty();
+})->with(['clinical_provider_profile', 'researcher_profile']);
+
+it('leaves a provider eligibility config value the host has set', function (string $key): void {
+    // Set the host's own value, then register the provider again
+    config(["{$key}.host_marker" => 'kept']);
+    new ServiceProvider(app())->register();
+
+    expect(config("{$key}.host_marker"))->toBe('kept');
+})->with(['clinical_provider_profile', 'researcher_profile']);
