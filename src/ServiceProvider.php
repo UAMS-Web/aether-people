@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace UAMSWeb\Aether\People;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Blueprint;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -85,6 +87,9 @@ class ServiceProvider extends AddonServiceProvider
         foreach (self::COLLECTION_BLUEPRINT_DIRECTORIES as $collection) {
             Blueprint::addNamespace("collections.{$collection}", self::collectionBlueprintPath($collection));
         }
+
+        // Render the person_name field on a public form
+        $this->addStatamicViewsAfterHostOverrides(__DIR__.'/../resources/field-views');
     }
 
     /**
@@ -105,5 +110,68 @@ class ServiceProvider extends AddonServiceProvider
     public static function collectionBlueprintPath(string $collection): string
     {
         return \dirname(__DIR__)."/resources/collection-blueprints/{$collection}";
+    }
+
+    /**
+     * Add a path to the `statamic` view namespace, after a host's overrides of it.
+     *
+     * Statamic renders a public form field with the first of
+     * `statamic::forms.fields.<handle>` and its fallbacks that exists. Laravel
+     * lists a host's own `resources/views/vendor/statamic` ahead of Statamic's
+     * views, which is how a host overrides a package view. The add-on's views go
+     * between the two, so they supply the view and a host's copy still wins.
+     * The same helper is in `uams-web/aether-form-settings`, where the path
+     * resolution was fixed first (UAMS-Web/aether-form-settings#37).
+     *
+     * @param  string  $path  The add-on's view directory.
+     */
+    private function addStatamicViewsAfterHostOverrides(string $path): void
+    {
+        // Read the namespace's current paths
+        $finder = View::getFinder();
+        // Laravel's view factory always holds a FileViewFinder, so the guard is for PHPStan and the
+        // other branch cannot be reached from a test.
+        // @pest-mutate-ignore: InstanceOfToTrue
+        $hints = $finder instanceof FileViewFinder ? $finder->getHints()['statamic'] ?? [] : [];
+
+        // The override directories Laravel looks for under each of the host's view paths, resolved as the
+        // finder resolves a hint: a recent Laravel stores a hint through realpath(), so a view path that goes
+        // through a symlink or a `..` segment would otherwise never match its own hint
+        $viewPaths = config('view.paths');
+        $overrides = array_map(
+            // A view path that is not a string names no directory, so any text in its place matches no hint.
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
+            static fn (mixed $viewPath): string => self::resolveViewPath((\is_string($viewPath) ? $viewPath : '').'/vendor/statamic'),
+            \is_array($viewPaths) ? $viewPaths : [],
+        );
+
+        // Keep the host's overrides first, then the add-on's views, then the rest
+        $first = [];
+        $rest = [];
+        foreach ($hints as $hint) {
+            // Resolve the hint too, for a Laravel release that stores hints as given
+            $resolved = \is_string($hint) ? self::resolveViewPath($hint) : $hint;
+
+            // Hints and overrides are both directory paths, which compare the same loosely or strictly.
+            // @pest-mutate-ignore: TrueToFalse
+            if (\in_array($resolved, $overrides, true)) {
+                $first[] = $hint;
+            } else {
+                $rest[] = $hint;
+            }
+        }
+
+        View::replaceNamespace('statamic', [...$first, $path, ...$rest]);
+    }
+
+    /**
+     * Resolve a view directory the way Laravel's view finder resolves a namespace hint.
+     *
+     * @param  string  $path  The directory as configured.
+     * @return string The directory with its symlinks resolved, or as given when it does not exist.
+     */
+    private static function resolveViewPath(string $path): string
+    {
+        return realpath($path) ?: $path;
     }
 }
