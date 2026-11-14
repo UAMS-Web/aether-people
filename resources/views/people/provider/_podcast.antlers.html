@@ -1,0 +1,103 @@
+{{#
+	@name UAMS Health Talk podcast section
+	@desc The clinical provider lens's podcast section (UAMS-Web/uams-statamic-archive#1683): a RadioMD widget listing
+	      the UAMS Health Talk episodes a provider has appeared on, gated on the provider
+	      carrying a podcast guest name.
+
+	      Ported from WordPress as-is for MVP. The embed always reflects whatever RadioMD
+	      holds - including episodes that never migrated - and needs no provider→episode
+	      association to be modeled first. Replacing it with a first-party episode list
+	      is #170; when that lands, this partial and the `health_talk_*` fields on
+	      `uams_fad_settings` go with it.
+
+	      The vendor arguments are configuration, not literals (UAMS-Web/uams-statamic-archive#1688): client slug,
+	      station id, program id, script URL, and the "more" destination all come from
+	      the **UAMS Health Talk Podcast** tab of `uams_fad_settings`, so a RadioMD
+	      re-provisioning is a CP edit rather than a deploy.
+
+	      NO editor data is interpolated into JavaScript source. The guest name is an
+	      editor field, Antlers is raw by default, and a script body is not an HTML
+	      context - `sanitize` would be the wrong tool there and `strip_tags` no
+	      protection at all. Instead every value crosses into JS through `data-`
+	      attributes on the mount element, where `sanitize` genuinely does neutralize
+	      the quote that would otherwise break out, and the inline script reads them
+	      from `dataset`. A name containing `"`, `'`, `<`, or a backslash therefore has
+	      no path into the `radiomd_embedded_filtered_doctor(...)` call at all.
+
+	      The inline script guards on the vendor function existing, so a blocked or
+	      failed third-party load leaves an empty section rather than a console error
+	      and a broken page. The inline `<style>` carries `{{ csp_nonce }}` because
+	      `style-src` is nonce-gated and drops `'unsafe-inline'`.
+	      The section's gate reads `health_talk_query:value`, not the bare field:
+	      a `true_false` augments to a `LabeledValue`, truthy even for an explicit
+	      "No" (the UAMS-Web/uams-statamic-archive#1190 trap). It tests against `false` rather than `true` so an
+	      unsaved global (null, before an editor has ever opened the tab) still renders
+	      the section, matching both the field's `default: true` and WordPress, which
+	      has no toggle at all.
+	@set people.provider.podcast
+#}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-podcast"
+	block_class="profile-podcast"
+	:when="( podcast_guest_name_uams_health_talk | trim ) && uams_fad_settings:health_talk_query:value !== false"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="UAMS Health Talk Podcast"
+			block_id="provider-podcast"
+		}}
+		<div class="col-12">
+			{{# `lead` is the design system's own lede class - the one `block_more` and the
+			    404 page use, and the one `cta-bar.scss` / `entry-content.scss` `@extend`.
+			    WordPress wraps this sentence in its `lead` + centered wrapper classes;
+			    the centering is NOT carried over (UAMS-Web/uams-statamic-archive#1695). Every other block on this
+			    profile is left-aligned - the location and resource card lists are
+			    explicitly `card-list-left` - so a centered lede here would be the only
+			    centered text on the page. Settled against the design system rather than
+			    by copying the legacy classes. #}}
+			<p class="lead provider-podcast-lede">Listen to the episodes featuring {{ display_name_short_with_prefix.text | strip_tags | sanitize }}.</p>
+
+			<div
+				id="radiomd-embedded-filtered-doctor"
+				class="provider-podcast-embed"
+				data-radiomd-client="{{ uams_fad_settings:health_talk_client | sanitize }}"
+				data-radiomd-station="{{ uams_fad_settings:health_talk_station_id | sanitize }}"
+				data-radiomd-program="{{ uams_fad_settings:health_talk_program_id | sanitize }}"
+				data-radiomd-guest="{{ podcast_guest_name_uams_health_talk | strip_tags | sanitize }}"></div>
+
+			<style nonce="{{ csp_nonce }}">
+				#radiomd-embedded-filtered-doctor iframe { width: 100%; border: none; }
+			</style>
+
+			{{ if uams_fad_settings:health_talk_script_url }}
+				<script src="{{ uams_fad_settings:health_talk_script_url | sanitize_url }}"></script>
+				<script nonce="{{ csp_nonce }}">
+					(function () {
+						var mount = document.getElementById('radiomd-embedded-filtered-doctor');
+
+						if (!mount || typeof radiomd_embedded_filtered_doctor !== 'function') {
+							return;
+						}
+
+						radiomd_embedded_filtered_doctor(
+							mount.dataset.radiomdClient,
+							mount.id,
+							parseInt(mount.dataset.radiomdStation, 10),
+							parseInt(mount.dataset.radiomdProgram, 10),
+							mount.dataset.radiomdGuest
+						);
+					})();
+				</script>
+			{{ /if }}
+
+			{{# Omitted unless a destination is configured: WordPress links `/podcast/`,
+			    which has no equivalent page in Statamic yet, so the field defaults blank
+			    rather than shipping a link to a 404. #}}
+			{{ if uams_fad_settings:health_talk_more_url }}
+				<a class="btn btn-primary provider-podcast-more" href="{{ uams_fad_settings:health_talk_more_url | sanitize_url }}">Listen to More Episodes</a>
+			{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}

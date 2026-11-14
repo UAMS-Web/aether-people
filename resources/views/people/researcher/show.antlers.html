@@ -1,0 +1,23 @@
+{{#
+	@name Researcher people lens
+	@desc The researcher people lens (UAMS-Web/uams-statamic-archive#1667): ONE canonical `people` entry rendered for a
+	      research audience at `/researcher/{slug}`, gated PERSON-LEVEL by a public research
+	      identity ({@see App\Support\People\Lenses\Gates\ResearcherLensGate}), not by a
+	      site's organization - researchers are scattered across sites and the org-to-people
+	      bridge has no research role. Registered on every site; the person-level gate is
+	      the filter. Its renderable body lives in the `people/researcher/profile` partial
+	      so it is testable without the layout (mirroring `people/provider/show`).
+	@set people.researcher.show
+#}}
+{{
+	partial:layout/article
+	title_options="none"
+	article_class="researcher-profile"
+}}
+	{{
+		partial:layout/entry-content
+		content_width="false"
+	}}
+		{{ partial:people/researcher/profile }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

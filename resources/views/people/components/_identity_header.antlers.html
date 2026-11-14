@@ -1,0 +1,87 @@
+{{#
+	@name People lens identity header
+	@desc The audience-neutral identity header shared by the people lenses (UAMS-Web/uams-statamic-archive#1636 / UAMS-Web/uams-statamic-archive#1667):
+	      name + credentials, job title, and portrait, tagged with the lens marker
+	      (`data-lens`). This is the ONLY chrome shared across the org-derived and
+	      researcher lenses - each lens's own `_profile` body curates a DIFFERENT field
+	      selection around it (UAMS-Web/uams-statamic-archive#1667), so the audience presentations diverge rather than
+	      all delegating to one identical body. Antlers output is raw by default, so the
+	      editor-entered name is `strip_tags`-escaped.
+
+	      A lens MAY override the subtitle by passing `subtitle` (UAMS-Web/uams-statamic-archive#1680). The clinical
+	      provider lens passes the patient-facing `clinical_title` there, because a
+	      patient wants the specialty, not the person's Workday employment title. An
+	      empty or absent `subtitle` falls through to `job_title`, which is the correct
+	      register for the academic, institutional, researcher, and general lenses - so
+	      those render byte-identically to before.
+
+	      A lens MAY also pass `subtitle_only="true"` to turn that fallback off, so an
+	      empty `subtitle` renders no subtitle at all (UAMS-Web/uams-statamic-archive#2600). The clinical provider lens
+	      does, for WordPress parity: `single-physicians.php` printed an empty subtitle
+	      for a provider with no specialization, never the employment title.
+
+	      A lens MAY pass `identity_name` to replace the name shown in the `<h1>` and
+	      the portrait's alt text (UAMS-Web/uams-statamic#344). The clinical provider
+	      lens passes `display_name_full_with_clinical_credentials.text`, which keeps
+	      only regulatory-designation credentials. Absent or empty, the header shows
+	      `display_name_full_with_credentials` (the `<h1>` then the entry `title`),
+	      as every other lens does.
+	@set people.components.identity_header
+#}}
+<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white" data-lens="{{ lens }}">
+	<div class="row mx-0 mx-xs-n4 mx-sm-n8">
+		<div class="col-12 col-xs p-4 py-xs-0 px-xs-4 px-sm-8 order-2 text">
+			<h1 class="page-title">
+				<span class="name">{{ ( identity_name ?: ( display_name_full_with_credentials.text ?? title ) ) | strip_tags }}</span>
+				{{ if subtitle }}
+					{{# A lens-supplied subtitle (UAMS-Web/uams-statamic-archive#1680). Escaped on the same footing as the
+					    name beside it, and NOT passed through `people/components/job_title`:
+					    that partial title-cases its input, which would render the provider
+					    card's "Ear, Nose and Throat (ENT)" as "Ent" here and break the
+					    card↔profile parity this override exists to guarantee. #}}
+					<span class="subtitle font-weight-normal">{{ subtitle | strip_tags | widont }}</span>
+				{{ elseif job_title && ! subtitle_only }}
+					{{ if job_title | is_iterable }}
+						{{ job_title }}
+							{{ $job_title_name = '' }}
+							{{ if title | is_iterable }}
+								{{ if title.value }}
+									{{ $job_title_name = title.value }}
+								{{ /if }}
+							{{ else }}
+								{{ $job_title_name = title }}
+							{{ /if }}
+							{{
+								partial:people/components/job_title
+								:job_title_name="$job_title_name"
+								:job_title_department="department.name"
+							}}
+						{{ /job_title }}
+					{{ elseif job_title }}
+						{{
+							partial:people/components/job_title
+							:job_title_name="job_title"
+							:job_title_department=""
+						}}
+					{{ /if }}
+				{{ /if }}
+			</h1>
+		</div>
+		{{ if portrait:permalink }}
+			<div class="col-12 col-xs px-0 px-xs-4 px-sm-8 order-1 image">
+				<picture>
+					<source
+						srcset="{{ glide :src="portrait:permalink" w="389" h="519" fit="crop_focal" }}"
+						media="(min-width: 992px)">
+					<img src="{{ glide :src="portrait:permalink" w="778" h="1038" fit="crop_focal" }}"
+						alt="{{ ( identity_name ?: display_name_full_with_credentials.text ) | strip_tags | sanitize }}"
+						width="778"
+						height="1038"
+						loading="eager"
+						fetchpriority="high"
+						decoding="async">
+				</picture>
+			</div>
+		{{ /if }}
+	</div>
+</section>

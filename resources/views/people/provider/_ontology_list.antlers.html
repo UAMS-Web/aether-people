@@ -1,0 +1,58 @@
+{{#
+	@name Clinical ontology list
+	@desc One clinical-ontology section of the provider profile (UAMS-Web/uams-statamic-archive#571): a linked list of
+	      the related entries in an `entries` field - areas of expertise, conditions,
+	      treatments, or locations. Four sections share one shape, so they share one
+	      partial rather than four near-identical blocks.
+
+	      Absent entirely when the field holds nothing, so a provider with no conditions
+	      shows no empty "Conditions Treated" heading.
+
+	      The gate is `entries_list | count`, NOT a bare `entries_list`:
+
+	      An `entries` field augments to a `Value` wrapping a `StatusQueryBuilder`, and
+	         `AugmentedEntry::keys()` merges every blueprint handle - so on a real entry the
+	         key is never ABSENT, and `Partial::shouldRender()`'s `params->bool('when')`
+	         casts the builder OBJECT to `true` even when it resolves to zero entries. The
+	         section would then render, and `{{ entries_list }}` over the empty builder emits
+	         its body once against the PARENT scope, so `url` / `title` cascade to the
+	         provider's own permalink and name - every empty relation becoming a section that
+	         links the provider to themselves.
+
+	      `| count` counts the published entries the builder resolves, so a relation
+	      holding only an unpublished entry counts 0 and opens no empty heading (UAMS-Web/uams-statamic-archive#1693,
+	      UAMS-Web/uams-statamic-archive#2422). It behaves identically on the plain-array fixtures the render tests use.
+
+	      Antlers is raw by default. An entry `url` is app-generated, but it is still
+	      `sanitize_url`-escaped for the attribute on the same footing as every other
+	      href in the people lenses (the UAMS-Web/uams-statamic-archive#1500 pattern), and the entry `title` is
+	      `sanitize`d because it is editor text.
+	@set people.provider.ontology_list
+#}}
+{{
+	partial:page_builder/uamsweb_block
+	:block_id="block_id"
+	:block_class="block_class"
+	:when="entries_list | count"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			:heading="heading"
+			:block_id="block_id"
+		}}
+		<div class="col-12">
+			<ul class="provider-ontology-list">
+				{{ entries_list }}
+					<li class="provider-ontology-item">
+						{{ if url }}
+							<a href="{{ url | sanitize_url }}">{{ title | sanitize }}</a>
+						{{ else }}
+							{{ title | sanitize }}
+						{{ /if }}
+					</li>
+				{{ /entries_list }}
+			</ul>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}

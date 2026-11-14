@@ -1,0 +1,12 @@
+{{#
+	@name  Search Card: People
+	@desc  A `people` search hit (UAMS-Web/uams-statamic-archive#1510): the shared compact card with the person's
+	       portrait as a small 3:4 thumbnail and their clinical title under the name.
+	       The Find-a-Doc provider card (`page_builder/components/fad_provider_card`) is
+	       not reused here: it is a grid card with a full-height 3:4 portrait, or a
+	       full-height "no image available" placeholder, so in a one-per-row results list
+	       it filled the width with the placeholder. Its name line also reads a computed
+	       display name that search hits leave empty. The entry `title` carries the
+	       display name, credentials included.
+#}}
+{{ partial:aether-search::cards/compact :portrait_url="portrait:url" :subtitle="clinical_title" }}

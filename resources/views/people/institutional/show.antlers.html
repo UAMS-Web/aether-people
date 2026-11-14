@@ -1,0 +1,23 @@
+{{#
+	@name Institutional people lens
+	@desc The institutional people lens (UAMS-Web/uams-statamic-archive#1636): ONE canonical `people` entry rendered
+	      for an institutional department audience at `/staff/{slug}`, gated by
+	      membership in the site's organization roster over the org-to-people bridge
+	      (UAMS-Web/uams-statamic-archive#1556 / UAMS-Web/uams-statamic-archive#1557). Renders its OWN curated `people/institutional/profile` body
+	      (UAMS-Web/uams-statamic-archive#1667) - a departmental-staff field selection (contact + memberships) distinct
+	      from the academic and researcher lenses - over the shared
+	      `people/components/identity_header`.
+	@set people.institutional.show
+#}}
+{{
+	partial:layout/article
+	title_options="none"
+	article_class="institutional-profile"
+}}
+	{{
+		partial:layout/entry-content
+		content_width="false"
+	}}
+		{{ partial:people/institutional/profile }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

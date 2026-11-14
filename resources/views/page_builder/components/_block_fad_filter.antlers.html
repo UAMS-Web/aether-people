@@ -1,0 +1,237 @@
+{{#
+	@name UAMS Health Find-a-Doc Ontology List Filter
+	@desc The list filter UI for a UAMS Health Find-a-Doc ontology list page builder block. The facet `<select>`s are bound to the `fadFilter` Alpine engine (UAMS-Web/uams-statamic-archive#1242) via `x-model="filters.<facet>"` and tagged with `data-fad-facet="<facet>"` so the engine can prune options no card carries; the engine reads the matching `data-<facet>` slugs off each card. The block wraps this partial + its card list in the `x-data="fadFilter"` root. Without JavaScript the controls are inert and the list stays static.
+	@set page.page_builder.uamsweb_block_fad*
+#}}
+
+<!-- Begin resources\views\page_builder\components\_block_fad_filter.antlers.html !-->
+
+{{# Per-instance id namespace (UAMS-Web/uams-statamic-archive#1481): the block passes its stable `module-<id>` as
+    `fad_filter_namespace` so two filtering blocks on one page never emit duplicate
+    control ids / `for` / `name` targets (invalid HTML + broken label association).
+    Empty (defensive) → bare ids, the prior single-block behavior. The `data-fad-facet`
+    hooks and `x-model` bindings stay bare - the engine scopes them to each block's own
+    Alpine `$root`, so only the page-global ids need the prefix. #}}
+{{ $fad_id_prefix = '' }}
+{{ if fad_filter_namespace }}{{ $fad_id_prefix = fad_filter_namespace + '-' }}{{ /if }}
+
+{{# Define the variables #}}
+
+	{{# Filter Display Queries #}}
+
+		{{# Areas of Expertise #}}
+		{{ $filter_expertise_show = switch(
+			( fad_filter_collection == 'clinical_providers' && !filter_expertise_hide ) => true,
+			( fad_filter_collection == 'clinical_locations' && !filter_expertise_hide ) => false,
+			( fad_filter_collection == 'clinical_expertise' && !filter_expertise_hide ) => false,
+			( fad_filter_collection == 'clinical_resources' && !filter_expertise_hide ) => false
+		) }}
+
+		{{# Provider Clinical Title #}}
+		{{ $filter_provider_title_show = switch(
+			( fad_filter_collection == 'clinical_providers' && !filter_provider_title_hide ) => true,
+			( fad_filter_collection == 'clinical_locations' && !filter_provider_title_hide ) => false,
+			( fad_filter_collection == 'clinical_expertise' && !filter_provider_title_hide ) => false,
+			( fad_filter_collection == 'clinical_resources' && !filter_provider_title_hide ) => false
+		) }}
+
+		{{# Location Type #}}
+		{{ $filter_location_type_show = switch(
+			( fad_filter_collection == 'clinical_providers' && !filter_location_type_hide ) => false,
+			( fad_filter_collection == 'clinical_locations' && !filter_location_type_hide ) => true,
+			( fad_filter_collection == 'clinical_expertise' && !filter_location_type_hide ) => false,
+			( fad_filter_collection == 'clinical_resources' && !filter_location_type_hide ) => false
+		) }}
+
+		{{# Clinical Resource Type #}}
+		{{ $filter_clinical_resource_type_show = switch(
+			( fad_filter_collection == 'clinical_providers' && !filter_clinical_resource_type_hide ) => false,
+			( fad_filter_collection == 'clinical_locations' && !filter_clinical_resource_type_hide ) => false,
+			( fad_filter_collection == 'clinical_expertise' && !filter_clinical_resource_type_hide ) => false,
+			( fad_filter_collection == 'clinical_resources' && !filter_clinical_resource_type_hide ) => true
+		) }}
+
+		{{# Region #}}
+		{{ $filter_region_show = switch(
+			( fad_filter_collection == 'clinical_providers' && !filter_region_hide ) => true,
+			( fad_filter_collection == 'clinical_locations' && !filter_region_hide ) => true,
+			( fad_filter_collection == 'clinical_expertise' && !filter_region_hide ) => false,
+			( fad_filter_collection == 'clinical_resources' && !filter_region_hide ) => false
+		) }}
+
+	{{# Column Classes #}}
+
+		{{ $filter_item_class_base = 'col-12 mb-4 col-sm-auto mb-sm-0' }}
+
+		{{# Areas of Expertise #}}
+		{{ $filter_expertise_class = switch(
+			( fad_filter_collection == 'clinical_providers' ) => '',
+			( fad_filter_collection == 'clinical_locations' ) => '',
+			( fad_filter_collection == 'clinical_expertise' ) => '',
+			( fad_filter_collection == 'clinical_resources' ) => ''
+		) }}
+
+		{{# Provider Clinical Title #}}
+		{{ $filter_provider_title_class = switch(
+			( fad_filter_collection == 'clinical_providers' ) => '',
+			( fad_filter_collection == 'clinical_locations' ) => '',
+			( fad_filter_collection == 'clinical_expertise' ) => '',
+			( fad_filter_collection == 'clinical_resources' ) => ''
+		) }}
+
+		{{# Location Type #}}
+		{{ $filter_location_type_class = switch(
+			( fad_filter_collection == 'clinical_providers' ) => '',
+			( fad_filter_collection == 'clinical_locations' ) => '',
+			( fad_filter_collection == 'clinical_expertise' ) => '',
+			( fad_filter_collection == 'clinical_resources' ) => ''
+		) }}
+
+		{{# Clinical Resource Type #}}
+		{{ $filter_clinical_resource_type_class = switch(
+			( fad_filter_collection == 'clinical_providers' ) => '',
+			( fad_filter_collection == 'clinical_locations' ) => '',
+			( fad_filter_collection == 'clinical_expertise' ) => '',
+			( fad_filter_collection == 'clinical_resources' ) => ''
+		) }}
+
+		{{# Region #}}
+		{{ $filter_region_class = switch(
+			( fad_filter_collection == 'clinical_providers' ) => '',
+			( fad_filter_collection == 'clinical_locations' ) => '',
+			( fad_filter_collection == 'clinical_expertise' ) => '',
+			( fad_filter_collection == 'clinical_resources' ) => ''
+		) }}
+
+{{# Render the HTML #}}
+
+<div class="ajax-filter" id="{{ $fad_id_prefix }}provider-title-ajax-filter">
+	<h3 class="sr-only">Filter the {{ fad_filter_title_plural ?? 'Items' }}</h3>
+	{{# Alpine drives the filtering client-side (fadFilter, UAMS-Web/uams-statamic-archive#1242); the submit is
+	    neutralized so pressing Enter never reloads the page. #}}
+	<form action="" @submit.prevent>
+		<div class="form-row align-items-center justify-content-center">
+
+			{{# Areas of Expertise #}}
+			{{ if $filter_expertise_show }}
+				<div
+					class="{{
+						[
+							$filter_item_class_base,
+							$filter_expertise_class
+						] | classes | collapse_whitespace
+					}}"
+				>
+					<label class="sr-only" for="{{ $fad_id_prefix }}provider_expertise">Areas of Expertise</label>
+					<select name="{{ $fad_id_prefix }}provider_expertise" id="{{ $fad_id_prefix }}provider_expertise" class="form-control" data-fad-facet="expertise" x-model="filters.expertise">
+						<option value="">Any Area of Expertise</option>
+						{{# Options are the Areas of Expertise entries (archive-parity slugs); the
+						    fadFilter engine prunes any option no rendered card carries. #}}
+						{{ collection:clinical_expertise sort="title:asc" }}
+							<option value="{{ slug }}">{{ title | sanitize }}</option>
+						{{ /collection:clinical_expertise }}
+					</select>
+				</div>
+			{{ /if }}
+
+			{{# Provider Clinical Title #}}
+			{{ if $filter_provider_title_show }}
+				<div
+					class="{{
+						[
+							$filter_item_class_base,
+							$filter_provider_title_class
+						] | classes | collapse_whitespace
+					}}"
+				>
+					<label class="sr-only" for="{{ $fad_id_prefix }}provider_title">Clinical Title</label>
+					<select name="{{ $fad_id_prefix }}provider_title" id="{{ $fad_id_prefix }}provider_title" class="form-control" data-fad-facet="specialty" x-model="filters.specialty">
+						<option value="">Any Clinical Title</option>
+						{{# Options are the Clinical Specialization entries (archive-parity slugs),
+						    read from `default`, the one site the collection lives on (UAMS-Web/uams-statamic-archive#2605), so the
+						    options are the same on every site. The label uses the entry title; the card's visible subtitle is the
+						    patient-facing `clinical_title` (ClinicalTitleResolver), which may read
+						    differently, but the facet matches on slug. The engine prunes unused options. #}}
+						{{ collection:clinical_specializations site="default" sort="title:asc" }}
+							<option value="{{ slug }}">{{ title | sanitize }}</option>
+						{{ /collection:clinical_specializations }}
+					</select>
+				</div>
+			{{ /if }}
+
+			{{# Location Type #}}
+			{{ if $filter_location_type_show }}
+			<div
+				class="{{
+					[
+						$filter_item_class_base,
+						$filter_location_type_class
+					] | classes | collapse_whitespace
+				}}"
+			>
+					<label class="sr-only" for="{{ $fad_id_prefix }}location_type">Location Type</label>
+					<select name="{{ $fad_id_prefix }}location_type" id="{{ $fad_id_prefix }}location_type" class="form-control">
+						<option value="">Any Type</option>
+						{{ taxonomy:location_types sort="title:asc" }}
+							<option value="{{ slug }}">{{ title | sanitize }}</option>
+						{{ /taxonomy:location_types }}
+					</select>
+				</div>
+			{{ /if }}
+
+			{{# Clinical Resource Type #}}
+			{{ if $filter_clinical_resource_type_show }}
+			<div
+				class="{{
+					[
+						$filter_item_class_base,
+						$filter_clinical_resource_type_class
+					] | classes | collapse_whitespace
+				}}"
+			>
+					<label class="sr-only" for="{{ $fad_id_prefix }}clinical_resource_type">Clinical Resource Type</label>
+					{{# The five public resource subtypes are the entry BLUEPRINT handles (a fixed
+					    set, matching the index control UAMS-Web/uams-statamic-archive#1468), not taxonomy terms - the card's
+					    `data-type` facet is `{{ blueprint }}`. The fadFilter engine prunes any
+					    option no rendered card carries. #}}
+					<select name="{{ $fad_id_prefix }}clinical_resource_type" id="{{ $fad_id_prefix }}clinical_resource_type" class="form-control" data-fad-facet="type" x-model="filters.type">
+						<option value="">Any Type</option>
+						<option value="article">Article</option>
+						<option value="audio">Audio</option>
+						<option value="document">Document</option>
+						<option value="infographic">Infographic</option>
+						<option value="video">Video</option>
+					</select>
+				</div>
+			{{ /if }}
+
+			{{# Region #}}
+			{{ if $filter_region_show }}
+			<div
+				class="{{
+					[
+						$filter_item_class_base,
+						$filter_region_class
+					] | classes | collapse_whitespace
+				}}"
+			>
+				<label class="sr-only" for="{{ $fad_id_prefix }}{{ fad_filter_collection }}_region">Region</label>
+				<select name="{{ $fad_id_prefix }}{{ fad_filter_collection }}_region" id="{{ $fad_id_prefix }}{{ fad_filter_collection }}_region" class="form-control" data-fad-facet="region" x-model="filters.region">
+					<option value="">Any Region</option>
+					{{ taxonomy:regions sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /taxonomy:regions }}
+				</select>
+			</div>
+			{{ /if }}
+
+			{{# Reset Button  #}}
+			<div class="col-auto">
+				<input type="button" id="{{ $fad_id_prefix }}{{ fad_filter_collection }}_clear" name="{{ $fad_id_prefix }}{{ fad_filter_collection }}_clear" value="Reset" class="btn btn-outline-primary" @click="reset()">
+			</div>
+		</div>
+	</form>
+</div>
+<hr>
+
+<!-- End resources\views\page_builder\components\_block_fad_filter.antlers.html !-->

@@ -1,0 +1,22 @@
+{{#
+	@name Academic people lens
+	@desc The academic people lens (UAMS-Web/uams-statamic-archive#1636): ONE canonical `people` entry rendered for
+	      an academic department/division audience at `/faculty/{slug}`, gated by
+	      membership in the site's organization roster over the org-to-people bridge
+	      (UAMS-Web/uams-statamic-archive#1556 / UAMS-Web/uams-statamic-archive#1557). Renders its OWN curated `people/academic/profile` body (UAMS-Web/uams-statamic-archive#1667)
+	      - a faculty-audience field selection distinct from the institutional and
+	      researcher lenses - over the shared `people/components/identity_header`.
+	@set people.academic.show
+#}}
+{{
+	partial:layout/article
+	title_options="none"
+	article_class="academic-profile"
+}}
+	{{
+		partial:layout/entry-content
+		content_width="false"
+	}}
+		{{ partial:people/academic/profile }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

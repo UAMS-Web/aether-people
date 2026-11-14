@@ -1,0 +1,20 @@
+{{#
+	@name Referral-Requirement Disclaimer
+	@desc When a provider explicitly does not require a referral
+	      (`referral_required` is false), note that the patient's insurance plan
+	      may still require one. Rendered only in the false state - never when a
+	      referral is required (true) or when the field is unset on a
+	      non-provider profile (null). Standard boilerplate, no per-provider
+	      input. (UAMS-Web/uams-statamic-archive#1190)
+
+      `referral_required:value` unwraps the augmented `LabeledValue` (a
+      `true_false` field never resolves to a raw bool in a real render) so the
+      strict `=== false` matches only an explicit "No" - never true or an unset
+      field. Comparing the bare `referral_required` with `===` would always be
+      false (object-vs-bool), leaving the disclaimer inert.
+#}}
+{{ if referral_required:value === false }}
+	<section class="profile-referral-disclaimer" role="note" aria-label="Referral information">
+		<p>This provider does not require a referral for new patients. However, your insurance plan may still require one — please check with your insurer before scheduling.</p>
+	</section>
+{{ /if }}

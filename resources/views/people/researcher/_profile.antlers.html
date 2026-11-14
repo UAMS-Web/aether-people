@@ -1,0 +1,92 @@
+{{#
+	@name Researcher people lens body
+	@desc The researcher lens's curated field selection (UAMS-Web/uams-statamic-archive#1667). For a research audience:
+	      the UAMS TRI research profile link, declared research interests, scholarly author
+	      identifiers (ORCID, ResearcherID, Scopus, Google Scholar, PubMed), and the
+	      research bio (falling back to the general bio). Gated person-level by a public
+	      research identity (`config/researcher_profile.php`), so this body renders only
+	      for people who actually have research signals. Antlers is raw by default, so
+	      editor-entered values are `strip_tags`/`sanitize`-escaped and the profile-URL
+	      href is `sanitize_url`-escaped (the UAMS-Web/uams-statamic-archive#1500 pattern).
+	@set people.researcher.profile
+#}}
+{{ partial:people/components/identity_header lens="researcher" }}
+
+{{ if research_profile_url }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white">
+		{{# Editor/importer-controlled profile URL: `sanitize_url` neutralizes a dangerous scheme (javascript:/data:) AND HTML-encodes the href for the attribute - the XSS sink (UAMS-Web/uams-statamic-archive#1500 pattern). #}}
+		{{ research_profile_link_text = ( research_profile_link_text ?? 'UAMS Research Profile' ) | strip_tags | trim }}
+		<dl class="lens-profiles">
+			<dt>Profile</dt>
+			<dd><a href="{{ research_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ research_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ research_profile_link_text }}</a></dd>
+		</dl>
+	</section>
+{{ /if }}
+
+{{ if research_interests }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white research-interests">
+		<h2 class="h3">Research Interests</h2>
+		<ul>
+			{{# `research_interests` is a REPLICATOR (fieldset uamsweb_common_people_research): a `free_text` row carries a `text` string; a `controlled_vocabulary` row carries a `subject_matter` terms field. A row has no flat `title`/`value`/`label`, so read the real set field per row type - the same handles App\Support\People\PersonKnowsAboutComputer reads. #}}
+			{{ research_interests }}
+				{{ if type == 'free_text' }}
+					{{ if text }}<li>{{ text | strip_tags }}</li>{{ /if }}
+				{{ elseif type == 'controlled_vocabulary' }}
+					{{ subject_matter }}
+						{{ if title }}<li>{{ title | strip_tags }}</li>{{ /if }}
+					{{ /subject_matter }}
+				{{ /if }}
+			{{ /research_interests }}
+		</ul>
+	</section>
+{{ /if }}
+
+{{ $research_ids_count = [(orcid_id | trim), (researcherid | trim), (scopus_author_id | trim), (google_scholar_author_id | trim), (pubmed_author_id | trim)] | filter_empty | count }}
+{{ if ( $research_ids_count > 0 ) }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white research-identifiers">
+		<h2 class="h3">Research {{ 'Identifier' | plural($research_ids_count) }}</h2>
+		<dl>
+			{{ if orcid_id }}
+				<dt>ORCID iD</dt>
+				<dd>{{ orcid_id | strip_tags }}</dd>
+			{{ /if }}
+			{{ if researcherid }}
+				<dt>Web of Science ResearcherID</dt>
+				<dd>{{ researcherid | strip_tags }}</dd>
+			{{ /if }}
+			{{ if scopus_author_id }}
+				<dt>Scopus Author ID</dt>
+				<dd>{{ scopus_author_id | strip_tags }}</dd>
+			{{ /if }}
+			{{ if google_scholar_author_id }}
+				<dt>Google Scholar</dt>
+				<dd>{{ google_scholar_author_id | strip_tags }}</dd>
+			{{ /if }}
+			{{ if pubmed_author_id }}
+				<dt>PubMed</dt>
+				<dd>{{ pubmed_author_id | strip_tags }}</dd>
+			{{ /if }}
+		</dl>
+	</section>
+{{ /if }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="research-bio"
+	block_class="profile-bio"
+	:when="bio_research || bio"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="{{ 'About ' + display_name_short_with_prefix.text }}"
+			block_id="research-bio"
+		}}
+		<div class="module-body">
+			{{ if bio_research }}{{ bio_research }}{{ else }}{{ bio }}{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Provider awards (UAMS-Web/uams-statamic-archive#1170) - shared component, absent when the person has none. #}}
+{{ partial:people/components/awards }}

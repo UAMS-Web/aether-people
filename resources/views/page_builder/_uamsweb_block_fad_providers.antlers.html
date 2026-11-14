@@ -1,0 +1,113 @@
+{{#
+	@name UAMS Health Providers List
+	@desc The UAMS Health Providers List page builder block.
+	@set page.page_builder.uamsweb_block_fad_providers
+#}}
+
+
+<!-- Begin resources\views\page_builder\_uamsweb_block_fad_providers.antlers.html !-->
+
+{{# Only render if required fields (and conditionals) have values #}}
+
+	{{ $block_valid = block_heading && block_description && background_color && more_query != null }}
+	{{ if $block_valid && more_query }}
+		{{ $block_valid = more_heading && more_button_text && more_button_url }}
+	{{ /if }}
+
+{{# Render the Block #}}
+
+{{ if $block_valid }}
+	{{# The block's stable per-instance id (module-<id>), used to namespace the filter's
+	    query-string keys + control ids so two filtering blocks on one page can't collide
+	    (UAMS-Web/uams-statamic-archive#1481). Resolved here in the block scope (the tag reads block.id/id from context). #}}
+	{{ $fad_namespace = {page_builder_block_auto_id} }}
+
+	{{#
+		UAMS-Web/uams-statamic-archive#1166: resolve the eligible, published provider set ONCE, up here, BEFORE the
+		`uamsweb_block_fad` wrapper emits the section heading. That wrapper renders the
+		heading *above* the card loop, so a `no_results` check inside the loop is too late -
+		the heading is already out. Gating the whole wrapper on this query's `no_results`
+		keeps the empty section (heading, wrapper, and cards) out of the server-rendered HTML
+		entirely when no publishable provider resolves - e.g. every assigned provider is draft
+		or ineligible - rather than rendering it and hiding it afterward with JS. UAMS-Web/uams-statamic-archive#919's
+		eligibility + `searchable` conditions already narrow this to the renderable set, so the
+		guarded count is exactly what would render.
+
+		The provider card body (portrait + patient-facing clinical title, UAMS-Web/uams-statamic-archive#64) and the
+		eligible-provider output filter (UAMS-Web/uams-statamic-archive#919 - `clinical_provider_profile_eligible_query:is`
+		layered beside `searchable:is`, narrowing the query to clinical-provider-eligible,
+		searchable `people`) are built. UAMS-Web/uams-statamic-archive#1242 adds the reader-facing facet contract on top:
+		when the editor enables `enable_filtering`, the block wraps the filter partial + the
+		card list in the `fadFilter` Alpine root and each card emits its `data-*` facet slugs
+		(via `fad_facet="true"`); when it is off, the block renders the static list unchanged.
+	#}}
+	{{# The recognition-list filter (UAMS-Web/uams-statamic-archive#1176) composes with the expertise pre-filter as a
+	    second pipe-listed query scope: `recognition_list_membership` narrows to providers
+	    on the selected recognition list(s) / category(ies) via `whereJsonOverlaps` over the
+	    UAMS-Web/uams-statamic-archive#1546 top-level `recognition_lists` relationship. Blank (the default) passes an empty
+	    id string, which the scope treats as no constraint - the block renders unchanged. #}}
+	{{ collection:people
+		as="items"
+		sort="title"
+		query_scope="ontology_overlap_expertise|recognition_list_membership"
+		expertise="{{ expertise | pluck:'id' | implode:',' }}"
+		recognition_lists="{{ recognition_lists | pluck:'id' | implode:',' }}"
+		searchable:is="true"
+		clinical_provider_profile_eligible_query:is="true"
+	}}
+		{{ if no_results }}
+			{{# No publishable provider resolved - suppress the whole section (heading +
+			    wrapper + cards) so no empty markup reaches the browser (UAMS-Web/uams-statamic-archive#1166). The
+			    reader-facing "no matches" empty state below is a distinct, client-side
+			    concern owned by UAMS-Web/uams-statamic-archive#1242. #}}
+		{{ else }}
+			{{ partial:page_builder/uamsweb_block_fad
+				fad_block_class="provider-list"
+				fad_block_title_plural="Providers"
+			}}
+				{{ if enable_filtering }}
+					{{# Reader filtering on: the Alpine root wraps the facet controls + the card
+					    list so `fadFilter` can narrow the cards client-side (no request). The
+					    block's `module-<id>` namespace (`data-fad-namespace` → the engine's URL
+					    query keys; `fad_filter_namespace` → the partial's control ids) keeps two
+					    filtering blocks on one page from colliding (UAMS-Web/uams-statamic-archive#1481). #}}
+					<div x-data="fadFilter" data-fad-namespace="{{ $fad_namespace }}">
+						{{ partial:page_builder/components/block_fad_filter
+							fad_filter_collection="clinical_providers"
+							fad_filter_title_plural="Providers"
+							fad_filter_namespace="{{ $fad_namespace }}"
+						}}
+						<div class="card-list-container">
+							<div class="card-list card-list-doctors">
+								{{ items }}
+									{{ partial:page_builder/components/fad_provider_card fad_facet="true" }}
+								{{ /items }}
+							</div>
+						</div>
+						{{# Empty state, shown by the engine when no card matches. The inline
+						    `display: none` (not x-cloak - see signature.antlers.html) hides it
+						    until Alpine's `x-show` takes over, so it never flashes on load. #}}
+						<p class="ajax-filter-message" role="status" x-show="visibleCount === 0" style="display: none;">
+							No providers match the selected filters.
+							<button type="button" class="btn btn-link p-0 align-baseline" @click="reset()">Reset the filters</button>
+						</p>
+						{{# Polite live region announcing the visible count on each change. #}}
+						<div class="sr-only" aria-live="polite" x-text="announcement"></div>
+					</div>
+				{{ else }}
+					{{# Reader filtering off: the static list, byte-for-byte unchanged (no filter
+					    UI, no Alpine, no facet data-* on the cards). #}}
+					<div class="card-list-container">
+						<div class="card-list card-list-doctors">
+							{{ items }}
+								{{ partial:page_builder/components/fad_provider_card }}
+							{{ /items }}
+						</div>
+					</div>
+				{{ /if }}
+			{{ /partial:page_builder/uamsweb_block_fad }}
+		{{ /if }}
+	{{ /collection:people }}
+{{ /if }}
+
+<!-- End resources\views\page_builder\_uamsweb_block_fad_providers.antlers.html !-->

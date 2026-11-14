@@ -1,0 +1,84 @@
+{{ activities_list as="activity_items" }}
+	{{ unless no_results }}
+		{{ $professional_background_increment = { increment:professional_background } }}
+		{{ if ( $professional_background_increment | add:0 ) > 0 }}
+			<span class="d-block border-t border-r-0 border-b-0 border-l-0 border-solid border-gray-300" aria-hidden="true" role="presentation"></span>
+		{{ /if }}
+		<div>
+			<h3 class="module-inner-title">{{ heading | widont }}</h3>
+			{{
+				partial:page_builder/components/card_list
+				card_list_position="center"
+			}}
+				{{ activity_items }}
+					{{ $item_heading = null }}
+					{{ $item_subtitle = null }}
+					{{ $item_location = null }}
+					{{ $item_notes = null }}
+					{{ $item_date = null }}
+					{{ $item_date_prepend = null }}
+
+					{{ if variant == "education" }}
+						{{ $item_heading = activity.full_name }}
+						{{ $item_subtitle = ( ( specialty.title | title ) ?? ( specialty | normalize_list | pluck('title') | sentence_list | title ) ) }}
+						{{ if organization }}
+							{{ $item_location = ( organization.schema_object.name ?? organization.name ?? ( organization | normalize_list | pluck('name') | sentence_list ) ) }}
+						{{ /if }}
+						{{ $item_notes = notes }}
+						{{ $item_date = activity_end_date }}
+						{{ $item_date_prepend = "Attained" }}
+
+					{{ elseif variant == "training" }}
+						{{ $item_heading = type | deslugify | title }}
+						{{ $item_subtitle = ( ( specialty.title | title ) ?? ( specialty | normalize_list | pluck('title') | sentence_list | title ) ) }}
+						{{ if organization }}
+							{{ $item_location = ( organization.schema_object.name ?? organization.name ?? ( organization | normalize_list | pluck('name') | sentence_list ) ) }}
+						{{ /if }}
+						{{ $item_notes = notes }}
+						{{ $item_date = activity_end_date }}
+						{{ $item_date_prepend = "Completed" }}
+
+					{{ elseif variant == "certifications" }}
+
+						{{ $item_heading = activity | certification_heading(type) }}{{# The heading follows the row's kind (UAMS-Web/uams-statamic-archive#2973). #}}
+						{{ $item_subtitle = "" }}
+						{{ if activity.organization }}
+							{{ $item_location = ( activity.organization.schema_object.name ?? activity.organization.name ?? ( activity.organization | normalize_list | pluck('name') | sentence_list ) ) }}
+						{{ /if }}
+						{{ $item_notes = notes }}
+						{{ $item_date = activity_date_issued }}
+						{{ $item_date_prepend = "Issued" }}
+
+					{{ elseif variant == "professional_and_leadership_development_activities" }}
+						{{ $item_heading = activity.name }}
+						{{ $item_subtitle = "" }}
+						{{ if activity.organization }}
+							{{ $item_location = ( activity.organization.schema_object.name ?? activity.organization.name ?? ( activity.organization | normalize_list | pluck('name') | sentence_list ) ) }}
+						{{ /if }}
+						{{ $item_notes = notes }}
+						{{ $item_date = activity_end_date }}
+						{{ $item_date_prepend = "Completed" }}
+
+					{{ elseif variant == "member_of" }}
+						{{ $item_heading = ( organization.schema_object.name ?? organization.name ) | membership_heading(membership_level.value) }}{{# The level reads before the organization unless it is Member (UAMS-Web/uams-statamic#306). #}}
+						{{ $item_subtitle = null }}
+						{{ $item_location = null }}
+						{{ $item_notes = organization.description }}
+						{{ $item_date = null }}
+						{{ $item_date_prepend = null }}
+
+					{{ /if }}{{# A membership whose organization was deleted has no heading and renders no card. The guard shares these lines so no other variant's output changes. #}}{{ unless variant == "member_of" && ! $item_heading }}
+					{{
+						partial:people/components/professional_background_item
+						:item_heading="$item_heading"
+						:item_subtitle="$item_subtitle"
+						:item_location="$item_location"
+						:item_notes="$item_notes"
+						:item_date="$item_date"
+						:item_date_prepend="$item_date_prepend"
+					}}{{ /unless }}
+				{{ /activity_items }}
+			{{ /partial:page_builder/components/card_list }}
+		</div>
+	{{ /unless}}
+{{ /activities_list }}

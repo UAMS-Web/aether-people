@@ -1,0 +1,103 @@
+{{#
+	@name Clinical Providers Listing
+	@desc Card grid of the clinical-provider-eligible, searchable `people` subset
+	      surfaced under the `/providers` mount (UAMS-Web/uams-statamic-archive#1070). Filters to eligible AND
+	      searchable providers with the UAMS-Web/uams-statamic-archive#919 computed-tag conditions
+	      (`clinical_provider_profile_eligible_query:is="true" searchable:is="true"`) -
+	      the same pair the Find-a-Doc Providers block uses - so the directory and the
+	      block agree on who is a provider. The shared provider card escapes
+	      editor/taxonomy text (Antlers output is raw by default).
+
+	      UAMS-Web/uams-statamic-archive#570 layers the Find-a-Doc facet layer on top at WP `archive-physicians.php`
+	      parity (minus ratings): the whole grid is wrapped in the `fadProviderDirectory`
+	      Alpine root, each card emits its facet slugs (`fad_facet` + `fad_directory`),
+	      and the `people/provider/directory_filters` chrome + result count + client-side pager
+	      narrow the in-DOM cards with no request (UAMS-Web/uams-statamic-archive#1242 contract). Without JavaScript the
+	      full static list renders with no facets applied - the pre-#570 behavior.
+#}}
+
+{{#
+	@note `site="default"` is load-bearing, not incidental. The directory mounts on the
+	`health` site (`/health/providers`) while every `people` entry lives ONLY on the
+	canonical `default` site (UAMS-Web/uams-statamic-archive#1635). Statamic's `{{ collection }}` tag defaults `site`
+	to `Site::current()` on a multi-site install, so an unqualified query would scope to
+	`health` and render the directory EMPTY at its live URL. Pinning the canonical site
+	surfaces the providers cross-site regardless of the render context. `default` mirrors
+	`config('people_lenses.canonical_site')`, the single source the PHP substrate resolves.
+#}}
+{{
+	collection:people
+	site="default"
+	clinical_provider_profile_eligible_query:is="true"
+	searchable:is="true"
+	sort="title"
+	as="providers"
+}}
+	{{ partial:page_builder/components/container_row }}
+		<div class="col-12">
+			{{ if no_results }}
+				{{# Server-side empty state: no eligible, searchable provider exists at all. #}}
+				<p class="providers-empty">No clinical providers are available.</p>
+			{{ else }}
+				{{# The Alpine root wraps the filter chrome + the card list so
+				    `fadProviderDirectory` can narrow, sort, and page the cards
+				    client-side (no request). `data-fad-page-size` turns on pagination. #}}
+				<div x-data="fadProviderDirectory" data-fad-page-size="12" class="provider-directory">
+					{{ partial:people/provider/directory_filters }}
+
+					{{# Result count. The server-rendered total shows without JavaScript and
+					    until Alpine mounts; `x-text` then tracks the live match count. #}}
+					<p class="provider-directory-count text-center" aria-live="polite">
+						<span x-text="visibleCount">{{ total_results }}</span> providers
+					</p>
+
+					<div class="card-list-container">
+						<div class="card-list card-list-doctors" itemscope itemtype="https://schema.org/ItemList">
+							{{ providers }}
+								{{# Point the card at the clinical lens (`/provider/{slug}`, UAMS-Web/uams-statamic-archive#571) rather than
+								    the provider's base `/people/{slug}` permalink. The URL comes from the lens
+								    registry, so the route stays defined in ONE place; the tag returns '' if the
+								    lens is not active on the rendering site and the card falls back to `url`. #}}
+								{{
+									partial:page_builder/components/fad_provider_card
+									fad_facet="true"
+									fad_directory="true"
+									profile_url="{{ people_lens_url lens='provider' }}"
+								}}
+							{{ /providers }}
+						</div>
+					</div>
+
+					{{# Client-side empty state, shown by the engine when the active filters
+					    match no card. The inline `display: none` (not x-cloak) hides it
+					    until Alpine's `x-show` takes over, so it never flashes on load. #}}
+					<p class="ajax-filter-message" role="status" x-show="visibleCount === 0" style="display: none;">
+						No providers match the selected filters.
+						<button type="button" class="btn btn-link p-0 align-baseline" @click="reset()">Reset the filters</button>
+					</p>
+
+					{{# Client-side pager, revealed only when the match set spans more than
+					    one page. Same inline `display: none` so it never flashes. #}}
+					<nav class="provider-directory-pager" aria-label="Provider directory pages" x-show="totalPages > 1" style="display: none;">
+						<ul class="pagination justify-content-center flex-wrap">
+							<li class="page-item" :class="{ disabled: page === 1 }">
+								<button type="button" class="page-link" @click="prevPage()" :disabled="page === 1">Previous</button>
+							</li>
+							<template x-for="number in pageWindow" :key="number">
+								<li class="page-item" :class="{ active: number === page }">
+									<button type="button" class="page-link" @click="goToPage(number)" x-text="number" :aria-current="number === page ? 'page' : false"></button>
+								</li>
+							</template>
+							<li class="page-item" :class="{ disabled: page === totalPages }">
+								<button type="button" class="page-link" @click="nextPage()" :disabled="page === totalPages">Next</button>
+							</li>
+						</ul>
+					</nav>
+
+					{{# Polite live region announcing the visible count on each change. #}}
+					<div class="sr-only" aria-live="polite" x-text="announcement"></div>
+				</div>
+			{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /collection:people }}

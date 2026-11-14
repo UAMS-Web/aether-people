@@ -1,0 +1,28 @@
+{{#
+	@name Provider Awards
+	@desc Renders a provider's awards on the People profile, in the order they
+	      were entered on the entry. Rendered only when the `awards` replicator
+	      has at least one entry; absent (no heading) otherwise. (UAMS-Web/uams-statamic-archive#1170)
+
+	      `title` and `notes` are editor/importer-controlled `text` fields and
+	      Antlers is raw by default, so both are `sanitize`d - HTML-encoded so
+	      markup renders as inert text rather than live HTML (UAMS-Web/uams-statamic-archive#1672, the UAMS-Web/uams-statamic-archive#1500
+	      escaping pattern). `sanitize` rather than `strip_tags` because an award
+	      title is plain text that should survive verbatim (`Top 5 & Under`), not
+	      have its characters silently eaten.
+#}}
+{{ if awards }}
+	<section class="profile-awards" aria-label="Awards">
+		<h2>Awards</h2>
+		<ul class="profile-awards-list">
+			{{ awards }}
+				<li class="profile-awards-item">
+					<span class="profile-awards-title">{{ title | sanitize }}</span>
+					{{ if notes }}
+						<span class="profile-awards-notes">{{ notes | sanitize }}</span>
+					{{ /if }}
+				</li>
+			{{ /awards }}
+		</ul>
+	</section>
+{{ /if }}

@@ -1,0 +1,56 @@
+{{#
+	@name People group archive (structured collection)
+	@desc Renders a `people_groups` *collection* entry as a group archive (UAMS-Web/uams-statamic-archive#1863).
+	      `people_groups` was a flat taxonomy until UAMS-Web/uams-statamic-archive#1863 converted it to a
+	      structured collection so the WordPress importer can create parented
+	      groups (`UAMS-Web/wordpress-importer-archive#13`); the route the collection
+	      gained needs a template, and this is it.
+
+	      Two lists, mirroring the `post_categories/show` treatment (UAMS-Web/uams-statamic-archive#1434):
+	        - this group's immediate child groups (structure children, via
+	          `:parent:is="id"` - the knowledge_bases `_topic_list` idiom), so a
+	          parent group surfaces its subgroups;
+	        - the people filed under this group, sourced from the person's
+	          `people_groups` entries reference via the `people_in_groups` scope
+	          (not the retired taxonomy term).
+
+	      Breadcrumbs render from the global header's `nav:breadcrumbs`, which
+	      walks this collection's structure tree - no per-template code.
+#}}
+<article class="people-group">
+	{{# Group title is editor/importer input and Antlers is raw-by-default, so
+		strip tags and entity-encode it (as taxonomies/_term_heading does). #}}
+	<h1 class="people-group__heading">{{ title | strip_tags | entities }}</h1>
+
+	{{# Child groups - only rendered when this group has structure children. #}}
+	{{ collection:people_groups :parent:is="id" sort="title:asc" as="child_groups" }}
+		{{ unless no_results }}
+			<nav class="people-group__children" aria-label="Subgroups">
+				<h2 class="people-group__children-heading">Subgroups</h2>
+				<ul class="people-group__children-list">
+					{{ child_groups }}
+						<li class="people-group__children-item"><a href="{{ url }}">{{ title | strip_tags | entities }}</a></li>
+					{{ /child_groups }}
+				</ul>
+			</nav>
+		{{ /unless }}
+	{{ /collection:people_groups }}
+
+	{{# The people in this group, via the entries reference. #}}
+	{{ collection:people query_scope="people_in_groups" :groups="id" sort="title:asc" as="people" }}
+		{{ if no_results }}
+			<p class="people-group__empty">No people are listed in this group yet.</p>
+		{{ else }}
+			<ul class="people-group__people">
+				{{ people }}
+					{{# A group/category archive is public, so it must not disclose an
+						entry the visitor cannot open. Mirrors the navigation partials'
+						guard - the scopes constrain membership, not visibility. #}}
+					{{ unless status_and_visibility == "private" || password_protected }}
+						<li class="people-group__person"><a href="{{ url }}">{{ title | strip_tags | entities }}</a></li>
+					{{ /unless }}
+				{{ /people }}
+			</ul>
+		{{ /if }}
+	{{ /collection:people }}
+</article>
