@@ -1,0 +1,1522 @@
+title: Person
+tabs:
+  main:
+    display: General
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              display: 'Entry Title'
+              instructions: 'This value is only used in the control panel.'
+              validate:
+                - required
+                - sometimes
+              localizable: false
+          -
+            handle: sort_text_alpha
+            field:
+              type: text
+              display: 'Sortable Name (Deprecated)'
+              instructions: 'Enter the text to use for sorting. We recommend using the format: <code>Last, First Middle</code>. This is required for sorting by alphabetical and priority order.'
+              placeholder: 'e.g., McCoy, Leonard Horatio'
+              localizable: false
+      -
+        display: 'Person Name'
+        collapsible: true
+        fields:
+          -
+            import: aether-people::uamsweb_common_people_name
+      -
+        display: 'Alternate Names'
+        collapsible: true
+        fields:
+          -
+            handle: alternate_name
+            field: aether-people::uamsweb_common_people.person_alternate_name
+            config:
+              localizable: false
+      -
+        display: 'Personal Details'
+        collapsible: true
+        fields:
+          -
+            handle: gender
+            field: aether-people::uamsweb_common_people.gender
+            config:
+              localizable: false
+              width: 50
+          -
+            handle: pronouns
+            field: aether-people::uamsweb_common_people.pronouns
+            config:
+              localizable: false
+              width: 50
+          -
+            handle: workday_gender
+            field: aether-people::uamsweb_common_people.workday_gender
+            config:
+              localizable: false
+              width: 50
+          -
+            handle: language
+            field: aether-people::uamsweb_common_people.language
+            config:
+              localizable: false
+          -
+            handle: nationality
+            field: uamsweb_common_address.country_iso31661_alpha2
+            config:
+              display: Nationality
+              localizable: false
+              instructions: |-
+                Use this field to record the individual's legal **citizenship**. This data is used to generate Schema.org metadata and Wikidata property mappings, providing a structured, machine-readable way for web platforms to identify the person's official national affiliation.
+
+                **Note:** This field supports **multiple selections** to accurately reflect cases of dual or multiple citizenship. Please select all applicable countries where the person holds official citizenship.
+              multiple: true
+      -
+        display: 'Organizational Details'
+        collapsible: true
+        fields:
+          -
+            handle: uams_worker_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is this person currently a UAMS worker?'
+              localizable: false
+              validate:
+                - sometimes
+                - required
+          -
+            handle: uams_worker_subtype
+            field:
+              type: radio
+              display: 'UAMS Worker Subtype'
+              options:
+                -
+                  key: employee
+                  value: Employee
+                -
+                  key: contingent_worker
+                  value: 'Contingent Worker'
+              if:
+                uams_worker_query: 'equals true'
+              validate:
+                - sometimes
+                - required
+              localizable: false
+          -
+            handle: uams_employee_subtype
+            field:
+              type: radio
+              display: 'UAMS Employee Subtype'
+              options:
+                -
+                  key: regular
+                  value: Regular
+                -
+                  key: temporary
+                  value: Temporary
+                -
+                  key: less_than_annual_appointment
+                  value: 'Less-Than-Annual Appointment'
+              validate:
+                - sometimes
+                - required
+              if:
+                uams_worker_query: 'equals true'
+                uams_worker_subtype: 'equals employee'
+              localizable: false
+          -
+            handle: uams_workday_id
+            field:
+              type: group
+              display: 'UAMS Workday IDs'
+              if:
+                uams_worker_query: 'equals true'
+              localizable: false
+              fields:
+                -
+                  handle: workday_universal_id
+                  field: uamsweb_common_identifiers.workday_universal_id
+                  config:
+                    validate:
+                      - 'unique_identifier:people,{id},uams_workday_id.workday_universal_id,uams_workday_id.workday_employee_id,uams_workday_id.workday_contingent_worker_id,uams_workday_id.workday_student_id'
+                    localizable: false
+                -
+                  handle: workday_employee_id
+                  field: uamsweb_common_identifiers.workday_employee_id
+                  config:
+                    validate:
+                      - 'required_if:uams_worker_subtype,employee'
+                      - 'unique_identifier:people,{id},uams_workday_id.workday_universal_id,uams_workday_id.workday_employee_id,uams_workday_id.workday_contingent_worker_id,uams_workday_id.workday_student_id'
+                    localizable: false
+                -
+                  handle: workday_contingent_worker_id
+                  field: uamsweb_common_identifiers.workday_contingent_worker_id
+                  config:
+                    validate:
+                      - 'required_if:uams_worker_subtype,contingent_worker'
+                      - 'unique_identifier:people,{id},uams_workday_id.workday_universal_id,uams_workday_id.workday_employee_id,uams_workday_id.workday_contingent_worker_id,uams_workday_id.workday_student_id'
+                    localizable: false
+                -
+                  handle: workday_student_id
+                  field: uamsweb_common_identifiers.workday_student_id
+                  config:
+                    validate:
+                      - 'unique_identifier:people,{id},uams_workday_id.workday_universal_id,uams_workday_id.workday_employee_id,uams_workday_id.workday_contingent_worker_id,uams_workday_id.workday_student_id'
+                    localizable: false
+          -
+            handle: resident_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is the person a medical resident?'
+              localizable: false
+              if:
+                uams_worker_query: 'equals true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: fellow_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is the person a medical fellow?'
+              localizable: false
+              if:
+                uams_worker_query: 'equals true'
+                resident_query: 'equals false'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: job_title
+            field: aether-people::uamsweb_common_people.job_title
+            config:
+              localizable: false
+          -
+            handle: work_location
+            field: aether-people::uamsweb_common_people.work_location
+            config:
+              localizable: false
+          -
+            handle: people_groups
+            field:
+              type: entries
+              collections:
+                - people_groups
+              display: 'People, Groups'
+              mode: select
+              create: false
+              localizable: false
+          -
+            handle: priority
+            field:
+              options:
+                -
+                  key: 0
+                  value: 'No value'
+                -
+                  key: 1
+                  value: '1 (Lowest)'
+                -
+                  key: 2
+                  value: null
+                -
+                  key: 3
+                  value: null
+                -
+                  key: 4
+                  value: null
+                -
+                  key: 5
+                  value: null
+                -
+                  key: 6
+                  value: null
+                -
+                  key: 7
+                  value: null
+                -
+                  key: 8
+                  value: null
+                -
+                  key: 9
+                  value: null
+                -
+                  key: 10
+                  value: '10 (Highest)'
+              type: select
+              display: Priority
+              default: 0
+              instructions: 'Set the priority of this person in relation to the entire list of people on this website. Any number will be higher than no number. For example, set the department chair to <code>10</code>, while setting the section chiefs to <code>9</code>.'
+              localizable: false
+      -
+        display: Deceased
+        collapsible: true
+        collapsed: true
+        fields:
+          -
+            handle: death_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is this person deceased?'
+              localizable: false
+              default: false
+              validate:
+                - required
+                - sometimes
+          -
+            handle: death_date
+            field:
+              type: partial_date
+              display: 'Death Date'
+              if:
+                death_query: 'equals true'
+              localizable: false
+          -
+            handle: death_place_us_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is Death Place in U.S.?'
+              localizable: false
+              default: true
+              if:
+                death_query: 'equals true'
+          -
+            handle: death_place_us
+            field:
+              street_address_include: false
+              address_line_2_include: false
+              city_required: false
+              state_province_region_american_required: false
+              state_province_region_international_required: false
+              postal_code_include: false
+              postal_code_required: false
+              country_required: false
+              type: address
+              display: 'Death Place (U.S.)'
+              if:
+                death_query: 'equals true'
+                death_place_us_query: 'equals true'
+              localizable: false
+          -
+            handle: death_place_international
+            field:
+              preset: international
+              street_address_include: false
+              address_line_2_include: false
+              city_required: false
+              state_province_region_american_required: false
+              state_province_region_international_required: false
+              postal_code_include: false
+              postal_code_required: false
+              country_required: false
+              type: address
+              display: 'Death Place (International)'
+              if:
+                death_query: 'equals true'
+                death_place_us_query: 'equals false'
+              localizable: false
+  portraits:
+    display: Portraits
+    sections:
+      -
+        fields:
+          -
+            handle: portrait
+            field: uamsweb_common_images.image_1200x1600_3_4_recommended
+            config:
+              max_files: 1
+              container: portraits
+              display: Portrait
+              instructions: |-
+                The photo orientation must be portrait (i.e., vertical).
+
+                The photo must be high-resolution, preferably not having been resized at all.
+
+                The photo should be less than 10 years old.
+
+                The person should be in front of a white background.
+
+                The person should be facing to the right side of the frame (the person's left).
+
+                Recommended image dimensions: 2400x3200. Minimum image dimensions: 1200x1600. Recommended aspect ratio: 3:4.
+
+                Do not increase the size of a smaller image to these dimensions to meet the minimum size.
+              validate:
+                - 'dimensions:min_width=1200,min_height=1600'
+              localizable: false
+              allow_uploads: true
+              show_filename: false
+              show_set_alt: false
+              restrict: true
+              mode: grid
+          -
+            handle: portrait_wide
+            field: uamsweb_common_images.image_1200x675_16_9_recommended
+            config:
+              max_files: 1
+              container: portraits_wide
+              display: 'Wide Portrait'
+              instructions: |-
+                This image will be used for social sharing and as the cover photo for any Google Business Profiles.
+
+                Recommended image dimensions: 2400x1350. Minimum image dimensions: 1200x675. Recommended aspect ratio: 16:9.
+              localizable: false
+              allow_uploads: true
+              show_filename: false
+              show_set_alt: false
+              restrict: true
+              mode: grid
+  hometown:
+    display: 'Hometown Details'
+    sections:
+      -
+        display: Hometown
+        fields:
+          -
+            handle: home_country_query
+            field:
+              type: radio
+              display: 'Home Country'
+              options:
+                -
+                  key: us
+                  value: 'United States of America'
+                -
+                  key: canada
+                  value: Canada
+                -
+                  key: other
+                  value: Other
+              validate:
+                - sometimes
+                - required
+              if_any:
+                resident_query: 'equals true'
+                fellow_query: 'equals true'
+              localizable: false
+          -
+            handle: hometown_us
+            field:
+              type: address
+              display: Hometown
+              street_address_include: false
+              address_line_2_include: false
+              postal_code_include: false
+              if:
+                home_country_query: 'equals us'
+              validate:
+                - sometimes
+                - required
+              localizable: false
+          -
+            handle: hometown_canada
+            field:
+              type: address
+              display: Hometown
+              preset: canadian
+              street_address_include: false
+              address_line_2_include: false
+              postal_code_include: false
+              if:
+                home_country_query: 'equals canada'
+              validate:
+                - sometimes
+                - required
+              localizable: false
+          -
+            handle: hometown_international
+            field:
+              type: address
+              display: Hometown
+              preset: international
+              street_address_include: false
+              address_line_2_include: false
+              postal_code_include: false
+              state_province_region_international_required: false
+              if:
+                home_country_query: 'equals other'
+              validate:
+                - sometimes
+                - required
+              localizable: false
+  bio:
+    display: Bio
+    sections:
+      -
+        display: 'General Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full General Biography'
+              localizable: false
+          -
+            handle: bio_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short General Biography'
+              localizable: false
+      -
+        display: 'Institutional Role Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio_institutional
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full Institutional Role Biography'
+              localizable: false
+          -
+            handle: bio_institutional_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short Institutional Role Biography'
+              localizable: false
+      -
+        display: 'Patient-Focused Clinical Role Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio_clinical
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full Patient-Focused Clinical Role Biography'
+              localizable: false
+          -
+            handle: bio_clinical_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short Patient-Focused Clinical Role Biography'
+              localizable: false
+      -
+        display: 'Academic Role Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio_academic
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full Academic Role Biography'
+              localizable: false
+          -
+            handle: bio_academic_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short Academic Role Biography'
+              localizable: false
+      -
+        display: 'Research Role Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio_research
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full Research Role Biography'
+              localizable: false
+          -
+            handle: bio_research_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short Research Role Biography'
+              localizable: false
+      -
+        display: 'Creator Biography'
+        collapsible: true
+        fields:
+          -
+            handle: bio_creator
+            field: uamsweb_common.bard_simple_lists_links
+            config:
+              display: 'Full Creator Biography'
+              localizable: false
+              instructions: 'The bio that may be included with entries (e.g., posts and knowledge base articles) where this person is marked as a creator of the entry.'
+          -
+            handle: bio_creator_short
+            field: uamsweb_common.excerpt
+            config:
+              display: 'Short Creator Biography'
+              localizable: false
+  associated_media:
+    display: 'Associated Media'
+    sections:
+      -
+        display: 'Featured Videos'
+        collapsible: true
+        fields:
+          -
+            handle: clinical_video_url
+            field: uamsweb_common_video.video_url
+            config:
+              display: 'Clinical Featured Video'
+              instructions: 'Choose a video from the UAMS YouTube or Vimeo accounts that showcases this individual in their clinical role. Make sure to include the full URL, starting with <code>https://</code>.'
+              if:
+                clinical_role_query: 'equals true'
+              localizable: false
+          -
+            handle: clinical_video_link_text
+            field:
+              type: text
+              display: 'Clinical Video Link Text'
+              instructions: 'Text to display for the link to the clinical video URL.'
+              if:
+                clinical_role_query: 'equals true'
+                clinical_video_url: 'not empty'
+              localizable: false
+          -
+            handle: academic_video_url
+            field: uamsweb_common_video.video_url
+            config:
+              display: 'Academic Featured Video'
+              instructions: 'Choose a video from the UAMS YouTube or Vimeo accounts that showcases this individual in their academic role. Make sure to include the full URL, starting with <code>https://</code>.'
+              localizable: false
+          -
+            handle: academic_video_link_text
+            field:
+              type: text
+              display: 'Academic Video Link Text'
+              instructions: 'Text to display for the link to the academic video URL.'
+              if:
+                academic_video_url: 'not empty'
+              localizable: false
+          -
+            handle: research_video_url
+            field: uamsweb_common_video.video_url
+            config:
+              display: 'Research Featured Video'
+              instructions: 'Choose a video from the UAMS YouTube or Vimeo accounts that showcases this individual in their research role. Make sure to include the full URL, starting with <code>https://</code>.'
+              localizable: false
+          -
+            handle: research_video_link_text
+            field:
+              type: text
+              display: 'Research Video Link Text'
+              instructions: 'Text to display for the link to the research video URL.'
+              if:
+                research_video_url: 'not empty'
+              localizable: false
+          -
+            handle: institutional_video_url
+            field: uamsweb_common_video.video_url
+            config:
+              display: 'Institutional Featured Video'
+              instructions: 'Choose a video from the UAMS YouTube or Vimeo accounts that showcases this individual in their institutional role. Make sure to include the full URL, starting with <code>https://</code>.'
+              localizable: false
+          -
+            handle: institutional_video_link_text
+            field:
+              type: text
+              display: 'Institutional Video Link Text'
+              instructions: 'Text to display for the link to the institutional video URL.'
+              if:
+                institutional_video_url: 'not empty'
+              localizable: false
+      -
+        display: 'UAMS Health Talk Podcast'
+        collapsible: true
+        fields:
+          -
+            handle: podcast_guest_name_uams_health_talk
+            field: uamsweb_common_fad.podcast_guest_name_uams_health_talk
+            config:
+              localizable: false
+      -
+        display: 'Reference Webpages'
+        collapsible: true
+        fields:
+          -
+            handle: same_as
+            field: uamsweb_schema.same_as
+            config:
+              display: 'Reference Webpage(s) About This Person'
+              localizable: false
+  contact:
+    display: 'Contact Information'
+    sections:
+      -
+        fields:
+          -
+            handle: email
+            field: uamsweb_common_contact.email_address
+            config:
+              localizable: false
+              instructions: 'Contact email'
+          -
+            handle: telephone
+            field: uamsweb_common_contact.phone
+            config:
+              display: 'Office Phone Number'
+              localizable: false
+          -
+            handle: mitel_extension
+            field: uamsweb_common_contact.mitel_extension
+            config:
+              display: 'Office Mitel Extension'
+              localizable: false
+          -
+            handle: telephone_mobile
+            field: uamsweb_common_contact.phone
+            config:
+              display: 'Mobile Phone Number'
+              localizable: false
+          -
+            handle: fax
+            field: uamsweb_common_contact.phone
+            config:
+              display: 'Office Fax Number'
+              localizable: false
+          -
+            handle: location
+            field:
+              type: text
+              display: 'Office Location'
+              instructions: 'Location, origin or address'
+              localizable: false
+  links:
+    display: Links
+    sections:
+      -
+        display: 'Other Profiles'
+        collapsible: true
+        fields:
+          -
+            handle: clinical_profile_url
+            field: uamsweb_common.url
+            config:
+              display: 'UAMS Health Provider Profile URL'
+              localizable: false
+              instructions: |-
+                Add a link to their clinical provider profile on the UAMS Health website.
+
+                Include <code>http://</code> or <code>https://</code> at the beginning of the URL (e.g., <code>https://uamshealth.com/provider/provider-name/</code>).
+          -
+            handle: clinical_profile_link_text
+            field:
+              placeholder: 'UAMS Health Provider Profile'
+              type: text
+              display: 'UAMS Health Provider Profile Link Text'
+              instructions: 'Text to display for the link to their clinical provider profile on the UAMS Health website. If left blank, the default link text will be used ("UAMS Health Provider Profile").'
+              if:
+                clinical_profile_url: 'not empty'
+              localizable: false
+          -
+            handle: academic_profile_url
+            field:
+              type: link
+              display: 'Academic Profile URL'
+              instructions: 'Add a link to their academic profile on the relevant UAMS academic department website. Include <code>http://</code> or <code>https://</code> at the beginning of the URL.'
+              localizable: false
+          -
+            handle: academic_profile_link_text
+            field:
+              placeholder: 'UAMS Academic Profile'
+              type: text
+              display: 'Academic Profile Link Text'
+              instructions: 'Text to display for the link to their academic profile on the relevant UAMS academic department website. If left blank, the default link text will be used ("UAMS Academic Profile").'
+              if:
+                academic_profile_url: 'not empty'
+              localizable: false
+          -
+            handle: research_profile_url
+            field: aether-people::uamsweb_common_people_research.research_profile_url
+            config:
+              localizable: false
+          -
+            handle: research_profile_link_text
+            field:
+              placeholder: 'UAMS Research Profile'
+              type: text
+              display: 'UAMS TRI Research Profile Link Text'
+              instructions: 'Text to display for the link to their UAMS TRI research profile. If left blank, the default link text will be used ("UAMS Research Profile").'
+              if:
+                research_profile_url: 'not empty'
+              localizable: false
+      -
+        display: 'Social Media'
+        collapsible: true
+        fields:
+          -
+            handle: twitter
+            field:
+              placeholder: 'e.g., uamshealth'
+              type: text
+              display: 'X (formerly Twitter)'
+              instructions: 'Account name on X (formerly Twitter). Example: <code>uamshealth</code>, not <code>https://twitter.com/uamshealth/</code>.'
+              localizable: false
+  professional_background:
+    display: 'Professional Background'
+    sections:
+      -
+        display: 'Education and Training'
+        collapsible: true
+        fields:
+          -
+            handle: education
+            field: aether-people::uamsweb_common_people_background.education
+            config:
+              localizable: false
+          -
+            handle: training
+            field: aether-people::uamsweb_common_people_background.training
+            config:
+              localizable: false
+      -
+        display: Certifications
+        collapsible: true
+        fields:
+          -
+            handle: certifications
+            field: aether-people::uamsweb_common_people_background.certifications
+            config:
+              localizable: false
+      -
+        display: 'Professional and Leadership Development Activities'
+        collapsible: true
+        fields:
+          -
+            handle: professional_and_leadership_development_activities
+            field: aether-people::uamsweb_common_people_background.professional_and_leadership_development_activities
+            config:
+              localizable: false
+      -
+        display: 'Professional Memberships'
+        fields:
+          -
+            handle: member_of
+            field: aether-people::uamsweb_common_people_background.member_of
+            config:
+              localizable: false
+  resident_role:
+    display: 'Resident Role'
+    sections:
+      -
+        display: 'Residency Program Details'
+        fields:
+          -
+            handle: resident_academic_department
+            field:
+              create: false
+              type: entries
+              display: 'Academic Department for Current Residency'
+              if:
+                resident_query: 'equals true'
+              max_items: 1
+              collections:
+                - organizations
+              query_scopes:
+                - entries_by_organization_role_department_academic
+                - entries_by_organization_role_division_academic
+              select_across_sites: true
+              localizable: false
+          -
+            handle: resident_chief_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Chief Resident?'
+              localizable: false
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                resident_query: 'equals true'
+          -
+            handle: resident_academic_year
+            field:
+              mode: select
+              create: false
+              type: terms
+              display: 'Current Residency Year'
+              max_items: 1
+              taxonomies:
+                - residency_years
+              if:
+                resident_query: 'equals true'
+                resident_chief_query: 'equals false'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              localizable: false
+  fellow_role:
+    display: 'Fellow Role'
+    sections:
+      -
+        display: 'Fellowship Program Details'
+        fields:
+          -
+            handle: fellow_academic_department
+            field:
+              type: entries
+              display: 'Academic Department for Current Fellowship'
+              collections:
+                - organizations
+              query_scopes:
+                - entries_by_organization_role_department_academic
+                - entries_by_organization_role_division_academic
+              select_across_sites: true
+              create: false
+              max_items: 1
+              if:
+                fellow_query: 'equals true'
+              localizable: false
+  institutional_role:
+    display: 'Institutional Role'
+    sections:
+      - {  }
+  clinical_role:
+    display: 'Clinical Role'
+    sections:
+      -
+        display: 'Clinical Role Determination'
+        fields:
+          -
+            handle: clinical_role_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Clinical Role?'
+              localizable: false
+              instructions: 'Is the person involved in patient care activities?'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: direct_patient_care_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Direct Patient Care?'
+              localizable: false
+              instructions: "Does the person's clinical role have a direct influence on the care of a specific patient?"
+              if:
+                clinical_role_query: 'equals true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: appointments_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Scheduled Appointments?'
+              localizable: false
+              instructions: "Does the person's clinical role provide direct patient care through scheduled appointments?"
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: appointments_individual_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Patients Appointed to the Individual Person?'
+              localizable: false
+              instructions: 'Are those patients appointed to the person as an _individual provider_, not as a _resource_ (e.g., a shared clinic or team)?'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                appointments_query: 'equals true'
+          -
+            handle: clinical_profile_disable_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Disable Clinical Provider Profile?'
+              localizable: false
+              default: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: hidden_from_provider_list_query
+            field:
+              type: hidden
+              display: 'Excluded from Provider List? (Deprecated)'
+              instructions: 'Should the person be excluded from the clinical provider list at https://uamshealth.com/provider/?'
+              localizable: false
+      -
+        display: 'Clinical Provider Details'
+        fields:
+          -
+            handle: npi_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Does the person have a National Provider Identifier (NPI)?'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              validate:
+                - required
+                - sometimes
+              instructions: |-
+                This value may be found in the person's UAMS Health Epic SER record. It would be in the "Related Group 9300" item. Look for "Provider NPI" in the column for "9300 - MPI ID TYPE" and copy the value from that row under the "9301 - MPI ID" column.
+
+                It may also be found in the <a href='http://echo.uams.edu/echonet/payerportal/DrListing.asp' target='_blank'>UAMS Provider Enrollment Participation Portal</a>, which is only accessible on the UAMS network or by connecting to the UAMS virtual private network.
+
+                It may also be found by searching for the person in the <a href='https://npiregistry.cms.hhs.gov/search' target='_blank'>NPPES NPI Registry</a>.
+          -
+            handle: npi
+            field: uamsweb_common_identifiers.npi
+            config:
+              localizable: false
+              validate:
+                - required
+                - sometimes
+                - 'unique_identifier:people,{id},npi'
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                npi_query: 'equals true'
+          -
+            handle: epic_ser_id_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Does the person have a UAMS Health Epic SER ID?'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              validate:
+                - required
+                - sometimes
+          -
+            handle: epic_ser_id
+            field: uamsweb_common_identifiers.epic_ser_id
+            config:
+              validate:
+                - required
+                - sometimes
+                - 'regex:/^\d+$/D'
+                - 'unique_identifier:people,{id},epic_ser_id'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                epic_ser_id_query: 'equals true'
+          -
+            handle: clinical_specializations
+            field: uamsweb_common_fad.clinical_specializations
+            config:
+              display: 'Clinical Specialization'
+              instructions: |-
+                The person's clinical occupation title is defined based on the person's clinical specialization.
+
+                The person's clinical specialization should be defined according to the primary taxonomy code currently defined by the person on their National Provider Identifier record in the National Plan and Provider Enumeration System.
+
+                The person's NPI record can be found at <a href='https://npiregistry.cms.hhs.gov/search' target='_blank'>https://npiregistry.cms.hhs.gov/search</a>. The taxonomy code(s) will be found at the bottom of the person's record. The primary taxonomy code will be indicated with a "Yes" in the "Primary Taxonomy" column.
+
+                If the primary taxonomy does not reflect the person's current classification or specialization, contact UAMS Provider Enrollment at <a href='mailto:enrollment@uams.edu'>enrollment@uams.edu</a>.
+
+                Copy the 10-character code for the primary taxonomy from the "Selected Taxonomy" column. Switch back to this person profile editor. Click this field to open the dropdown. Click the text input area at the top of the dropdown. Paste the primary taxonomy code into that input. Select the clinical specialization that is returned.
+
+                If no clinical specialization is returned using the primary taxonomy code, it may be that the primary taxonomy is not valid for our purposes (e.g., it is the taxonomy for a student or for a hospital). Contact UAMS Web Services for guidance.
+
+                <a href='https://communications.uams.edu/web/kb/provider-titles/#clinical-title' target='_blank' title='UAMS Web Services Knowledge Base, Provider Titles, Clinical Title'>Find more information about the Clinical Specialization and Occupation Title.</a>
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                resident_query: 'not true'
+                fellow_query: 'not true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: service_line
+            field: uamsweb_common_fad.service_line
+            config:
+              instructions: 'If the provider does not belong to a UAMS Health service line, select the relevant option that begins with "None."'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                resident_query: 'not true'
+                fellow_query: 'not true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: clinical_focus
+            field: uamsweb_common.article
+            config:
+              display: 'Clinical Focus'
+              buttons:
+                - italic
+                - unorderedlist
+                - removeformat
+              localizable: false
+              instructions: |-
+                This is displayed alongside the content from the Patient-Focused Clinical Biography. It allows you to include a quick glimpse of the person's main clinical focus in case the content in the Patient-Focused Clinical Biography is so long that users may not read the whole thing. This should not be an outline of their services (that is covered by Conditions Treated and Treatments & Procedures).
+
+                If you are including the information as a list, use a single-level bulleted list. If you are not including the information as a list, use full sentences in a single paragraph of less than 344 characters.
+
+                Do not simply repeat the content of the Patient-Focused Clinical Biography.
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              character_limit: 344
+      -
+        display: 'Patient Details'
+        fields:
+          -
+            handle: accepting_patients_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is the person accepting new patients?'
+              localizable: false
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                appointments_query: 'equals true'
+                appointments_individual_query: 'equals true'
+          -
+            handle: referral_required
+            field: uamsweb_common.true_false
+            config:
+              display: 'Does the person require a referral for new patients?'
+              localizable: false
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                appointments_query: 'equals true'
+                appointments_individual_query: 'equals true'
+                accepting_patients_query: 'equals true'
+          -
+            handle: second_opinions_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Does the person offer second opinions?'
+              localizable: false
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                appointments_query: 'equals true'
+                appointments_individual_query: 'equals true'
+          -
+            handle: patient_types
+            field:
+              type: entries
+              collections:
+                - patient_types
+              select_across_sites: true
+              display: 'Patient Type(s)'
+              instructions: "This is displayed on the person's clinical provider profile. This also enables users to filter the main clinical provider list at <a href='https://uamshealth.com/provider/' target='_blank'>https://uamshealth.com/provider/</a> by each patient type."
+              create: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              localizable: false
+              mode: select
+      -
+        display: Locations
+        fields:
+          -
+            handle: clinical_locations
+            field: uamsweb_common_fad.clinical_locations
+            config:
+              instructions: "These locations will be displayed in the order they are arranged. You may click and drag to rearrange. Put the person's primary location first."
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+          -
+            handle: clinical_hospital_affiliation
+            field:
+              create: false
+              type: terms_search_index
+              search_index: affiliations_hospital
+              display: 'Hospital Affiliations'
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              taxonomies:
+                - affiliations_hospital
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              localizable: false
+      -
+        display: 'Areas of Expertise'
+        fields:
+          -
+            handle: primary_care_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Is the person a primary care provider?'
+              localizable: false
+              validate:
+                - 'required_unless:clinical_separated_query,true'
+                - sometimes
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                appointments_query: 'equals true'
+                appointments_individual_query: 'equals true'
+          -
+            handle: expertise
+            field: uamsweb_common_fad.expertise
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: special_interest_clinical_conditions
+            field: uamsweb_common_fad.special_interest_clinical_conditions
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: special_interest_clinical_services
+            field: uamsweb_common_fad.special_interest_clinical_services
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+      -
+        display: Conditions
+        fields:
+          -
+            handle: conditions
+            field: uamsweb_common_fad.conditions
+            config:
+              display: 'Conditions Treated'
+              instructions: 'Select any conditions this person treats or diagnoses. These items will be displayed in the order they are entered. You may click and drag to rearrange.'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+      -
+        display: 'Treatments and Procedures'
+        fields:
+          -
+            handle: treatments
+            field: uamsweb_common_fad.treatments
+            config:
+              display: 'Treatments and Procedures'
+              instructions: 'Select any treatments or procedures this person performs or prescribes. These items will be displayed in the order they are entered. You may click and drag to rearrange.'
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+      -
+        display: 'Clinical Resources'
+        fields:
+          -
+            handle: clinical_resources
+            field: uamsweb_common_fad.clinical_resources
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+      -
+        display: 'Google Business Profile (Clinical Provider)'
+        collapsible: true
+        fields:
+          -
+            handle: google_business_profile_clinical_query
+            field: aether-people::uamsweb_common_people_google_clinical.google_business_profile_clinical_query
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: google_business_profile_clinical_cid
+            field: aether-people::uamsweb_common_people_google_clinical.google_business_profile_clinical_cid
+            config:
+              localizable: false
+              if:
+                google_business_profile_clinical_query: 'equals true'
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: google_business_profile_clinical_exclude_query
+            field: aether-people::uamsweb_common_people_google_clinical.google_business_profile_clinical_exclude_query
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: google_business_profile_clinical_category
+            field: aether-people::uamsweb_common_people_google_clinical.google_business_profile_clinical_category
+            config:
+              if:
+                google_business_profile_clinical_exclude_query: 'equals false'
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+              localizable: false
+      -
+        display: 'Continuity of Care Details'
+        instructions: "The Arkansas Patient Right-to-Know Act (Act 754 of 2017, amended by Act 830 of 2023) ensures patients can maintain continuity of care by securing access to their healthcare provider's new contact information when the provider leaves a practice."
+        collapsible: true
+        fields:
+          -
+            handle: clinical_separated_query
+            field: aether-people::uamsweb_common_people_continuity.clinical_separated_query
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+          -
+            handle: separated_new_location
+            field: aether-people::uamsweb_common_people_continuity.separated_new_location
+            config:
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                clinical_separated_query: 'equals true'
+              localizable: false
+          -
+            handle: separated_start_date
+            field: aether-people::uamsweb_common_people_continuity.separated_start_date
+            config:
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                clinical_separated_query: 'equals true'
+              localizable: false
+          -
+            handle: separated_end_date
+            field: aether-people::uamsweb_common_people_continuity.separated_end_date
+            config:
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                clinical_separated_query: 'equals true'
+              localizable: false
+          -
+            handle: separated_active_query
+            field: aether-people::uamsweb_common_people_continuity.separated_active_query
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                clinical_separated_query: 'equals true'
+          -
+            handle: separated_unpublish_query
+            field: aether-people::uamsweb_common_people_continuity.separated_unpublish_query
+            config:
+              localizable: false
+              if:
+                clinical_role_query: 'equals true'
+                direct_patient_care_query: 'equals true'
+                clinical_separated_query: 'equals true'
+  academic_role:
+    display: 'Academic Role'
+    sections:
+      -
+        display: 'New Section'
+  research:
+    display: 'Research Role'
+    sections:
+      -
+        display: 'Research Interests'
+        collapsible: true
+        fields:
+          -
+            handle: research_interests
+            field: aether-people::uamsweb_common_people_research.research_interests
+            config:
+              localizable: false
+          -
+            handle: research_interests_free_text
+            field: aether-people::uamsweb_common_people_research.research_interests_free_text
+            config:
+              localizable: false
+      -
+        display: 'Research Author IDs'
+        collapsible: true
+        fields:
+          -
+            handle: pubmed_author_id
+            field: uamsweb_common_identifiers.pubmed_author_id
+            config:
+              localizable: false
+          -
+            handle: orcid_id
+            field: uamsweb_common_identifiers.orcid_id
+            config:
+              localizable: false
+          -
+            handle: researcherid
+            field: uamsweb_common_identifiers.researcherid
+            config:
+              localizable: false
+          -
+            handle: scopus_author_id
+            field: uamsweb_common_identifiers.scopus_author_id
+            config:
+              localizable: false
+          -
+            handle: google_scholar_author_id
+            field: uamsweb_common_identifiers.google_scholar_author_id
+            config:
+              localizable: false
+      -
+        display: Publications
+        instructions: 'Displaying publications from PubMed'
+        collapsible: true
+        fields:
+          -
+            handle: research_publication_display_count
+            field: aether-people::uamsweb_common_people_research.research_publication_display_count
+            config:
+              localizable: false
+          -
+            handle: research_publication_exclude
+            field: aether-people::uamsweb_common_people_research.research_publication_exclude
+            config:
+              localizable: false
+          -
+            handle: research_publication_select
+            field: aether-people::uamsweb_common_people_research.research_publication_select
+            config:
+              localizable: false
+  recognition_and_awards:
+    display: 'Recognition and Awards'
+    sections:
+      -
+        display: 'Recognition Lists'
+        collapsible: true
+        fields:
+          -
+            handle: recognition_lists
+            field: aether-people::uamsweb_common_people.recognition_lists
+            config:
+              localizable: false
+      -
+        display: Awards
+        collapsible: true
+        fields:
+          -
+            handle: awards
+            field: aether-people::uamsweb_common_people.awards
+            config:
+              localizable: false
+  computed_fields:
+    display: 'Computed Fields'
+    sections:
+      -
+        display: 'Computed Fields'
+        instructions: 'The value of these fields are automatically defined.'
+        fields:
+          -
+            import: aether-people::uamsweb_computed_person
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        display: 'Status and Visibility'
+        fields:
+          -
+            handle: profile_page_query
+            field: uamsweb_common.true_false
+            config:
+              display: 'Create a profile page for this person?'
+              localizable: false
+              default: true
+              validate:
+                - required
+                - sometimes
+          -
+            handle: status_and_visibility
+            field: uamsweb_common_status.status_and_visibility
+            config:
+              localizable: false
+              options:
+                -
+                  key: draft
+                  value: "Draft\_— Not ready to publish"
+                -
+                  key: pending
+                  value: "Pending\_— Waiting for review before publishing"
+                -
+                  key: private
+                  value: "Private\_— Only visible to site admins and editors"
+                -
+                  key: published
+                  value: "Published\_— Visible to everyone"
+          -
+            handle: publish_at
+            field:
+              type: date
+              display: 'Publish At'
+              instructions: 'Optional. Leave the status as Draft or Pending, and this person is published automatically once this time passes. Cleared once it has been applied.'
+              mode: single
+              time_enabled: true
+              localizable: false
+          -
+            handle: unpublish_at
+            field:
+              type: date
+              display: 'Unpublish At'
+              instructions: 'Optional. This person is unpublished (set back to Draft) automatically once this time passes. Cleared once it has been applied.'
+              mode: single
+              time_enabled: true
+              localizable: false
+          -
+            handle: password_protected
+            field: uamsweb_common_status.password_protected
+            config:
+              localizable: false
+              if:
+                profile_page_query: 'equals true'
+          -
+            handle: visibility_password
+            field: uamsweb_common_status.visibility_password
+            config:
+              localizable: false
+          -
+            handle: is_password_hashed
+            field: uamsweb_common_status.is_password_hashed
+            config:
+              localizable: false
+      -
+        display: 'Sitemap'
+        fields:
+          -
+            import: uamsweb_entry_sitemap
+      -
+        display: Meta
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'

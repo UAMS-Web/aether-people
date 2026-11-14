@@ -1,0 +1,4 @@
+title: 'UAMSWeb Bard Set, People'
+fields:
+  -
+    import: aether-people::uamsweb_common_people_block_set

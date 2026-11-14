@@ -1,0 +1,10 @@
+title: 'uamsweb_common_address (stand-in for the host fieldset)'
+fields:
+  -
+    handle: country_iso31661_alpha2
+    field:
+      type: text
+  -
+    handle: regions
+    field:
+      type: text

@@ -1,0 +1,22 @@
+title: 'uamsweb_common_block_footer_link (stand-in for the host fieldset)'
+fields:
+  -
+    handle: more_button_link_description
+    field:
+      type: text
+  -
+    handle: more_button_target
+    field:
+      type: text
+  -
+    handle: more_button_text
+    field:
+      type: text
+  -
+    handle: more_button_url
+    field:
+      type: text
+  -
+    handle: more_heading
+    field:
+      type: text

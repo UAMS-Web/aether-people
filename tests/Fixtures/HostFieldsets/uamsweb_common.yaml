@@ -1,0 +1,26 @@
+title: 'uamsweb_common (stand-in for the host fieldset)'
+fields:
+  -
+    handle: article
+    field:
+      type: text
+  -
+    handle: bard_simple_lists_links
+    field:
+      type: text
+  -
+    handle: excerpt
+    field:
+      type: text
+  -
+    handle: language
+    field:
+      type: text
+  -
+    handle: true_false
+    field:
+      type: text
+  -
+    handle: url
+    field:
+      type: text

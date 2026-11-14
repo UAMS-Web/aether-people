@@ -1,0 +1,18 @@
+title: 'uamsweb_common_google (stand-in for the host fieldset)'
+fields:
+  -
+    handle: google_business_profile_category
+    field:
+      type: text
+  -
+    handle: google_business_profile_cid
+    field:
+      type: text
+  -
+    handle: google_business_profile_exclude_query
+    field:
+      type: text
+  -
+    handle: google_business_profile_query
+    field:
+      type: text

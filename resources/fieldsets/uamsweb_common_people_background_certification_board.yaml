@@ -1,0 +1,48 @@
+title: 'UAMSWeb Common Reusable Fields, People, Professional Background, Certification, Board'
+fields:
+  -
+    handle: activity
+    field: aether-people::uamsweb_common_people_background_certification.activity
+    config:
+      display: 'Board Certification'
+      query_scopes:
+        - board_certifications
+      validate:
+        - required
+        - board_certification_term
+      localizable: false
+  -
+    handle: activity_id
+    field: aether-people::uamsweb_common_people_background_certification.activity_id
+    config:
+      localizable: false
+  -
+    handle: activity_date_issued
+    field: aether-people::uamsweb_common_people_background_certification.activity_date_issued
+    config:
+      localizable: false
+  -
+    handle: activity_date_audit
+    field: aether-people::uamsweb_common_people_background_certification.activity_date_audit
+    config:
+      localizable: false
+  -
+    handle: activity_date_expires
+    field: aether-people::uamsweb_common_people_background_certification.activity_date_expires
+    config:
+      localizable: false
+  -
+    handle: activity_valid_for
+    field: aether-people::uamsweb_common_people_background_certification.activity_valid_for
+    config:
+      localizable: false
+  -
+    handle: activity_active_query
+    field: aether-people::uamsweb_common_people_background_certification.activity_active_query
+    config:
+      localizable: false
+  -
+    handle: notes
+    field: aether-people::uamsweb_common_people_background.activity_notes
+    config:
+      localizable: false

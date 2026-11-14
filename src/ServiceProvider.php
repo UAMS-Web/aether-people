@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace UAMSWeb\Aether\People;
 
 use Illuminate\Contracts\Foundation\Application;
+use Statamic\Facades\Blueprint;
 use Statamic\Providers\AddonServiceProvider;
 
 /**
@@ -17,6 +18,21 @@ use Statamic\Providers\AddonServiceProvider;
  */
 class ServiceProvider extends AddonServiceProvider
 {
+    /**
+     * The collections whose blueprints this add-on serves, each from its own
+     * directory under `resources/collection-blueprints/`.
+     *
+     * The person-only fieldsets need no registration: Statamic serves the add-on's
+     * `resources/fieldsets/` as `aether-people::<handle>`.
+     *
+     * @var list<string>
+     */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its
+    // mutants and reports them uncovered. Removing either entry, applied by hand, fails that
+    // collection's case of "serves each collection blueprint under the collection's own namespace".
+    // @pest-mutate-ignore: RemoveArrayItem
+    public const array COLLECTION_BLUEPRINT_DIRECTORIES = ['people', 'people_groups'];
+
     /**
      * The Vite build of the Control Panel assets. `input` and `publicDirectory`
      * must match `vite.config.js`; the built files are committed under
@@ -65,6 +81,29 @@ class ServiceProvider extends AddonServiceProvider
      */
     public function bootAddon(): void
     {
-        // Register the add-on's behavior here
+        // Serve the people blueprints as the collections' own, with their handles unchanged
+        foreach (self::COLLECTION_BLUEPRINT_DIRECTORIES as $collection) {
+            Blueprint::addNamespace("collections.{$collection}", self::collectionBlueprintPath($collection));
+        }
+    }
+
+    /**
+     * The directory holding a collection's blueprints in this add-on.
+     *
+     * A collection's blueprints are read from here in place of the host's
+     * `resources/blueprints/collections/<collection>/`, which Statamic then no
+     * longer reads. Saving one in the Control Panel writes an override to the
+     * host's `resources/blueprints/vendor/collections/<collection>/`, which wins
+     * (UAMS-Web/uams-statamic#281).
+     *
+     * Listing them needs the `statamic/cms` patch UAMS-Web/patches-statamic-cms#6
+     * adds: on 6.40.0 unpatched, a collection listing its blueprints from an added
+     * namespace fails with "Undefined array key 0".
+     *
+     * @param  string  $collection  The collection handle.
+     */
+    public static function collectionBlueprintPath(string $collection): string
+    {
+        return \dirname(__DIR__)."/resources/collection-blueprints/{$collection}";
     }
 }

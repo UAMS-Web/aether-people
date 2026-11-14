@@ -1,0 +1,10 @@
+title: 'uamsweb_computed (stand-in for the host fieldset)'
+fields:
+  -
+    handle: text_phonetic_pair
+    field:
+      type: text
+  -
+    handle: text_phonetic_pair_grid
+    field:
+      type: text

@@ -1,0 +1,503 @@
+title: 'UAMSWeb Common Reusable Fields, People'
+fields:
+  -
+    handle: credentials
+    field:
+      type: terms_search_index
+      search_index: credentials
+      display: Credentials
+      instructions: |-
+        Select the credentials held by this person. Select multiple if necessary.
+
+        The display order of the items in the person's name is based on the order of the selected items here. You may click and drag to rearrange the selected items in this field.
+
+        Every selected credential appears after the person's name wherever the name is displayed.
+
+        Do not select a fellowship designation here. Record a fellowship under Professional Memberships, or under Certifications when it is earned by examination or training.
+      taxonomies:
+        - credentials
+      create: false
+      localizable: false
+  -
+    handle: person_alternate_name_type_full
+    field:
+      options:
+        -
+          key: former_name
+          value: 'Former Name'
+        -
+          key: professional_name
+          value: 'Professional Name'
+        -
+          key: other
+          value: 'Other Name'
+      type: radio
+      display: 'Type of Alternate Name (Full Name)'
+      clearable: true
+      validate:
+        - required
+      localizable: false
+  -
+    handle: person_alternate_name_type_nickname
+    field:
+      type: radio
+      display: 'Type of Alternate Name (Nickname)'
+      options:
+        -
+          key: nickname
+          value: Nickname
+      localizable: false
+  -
+    handle: person_alternate_name
+    field:
+      button_label: 'Add Alternate Name'
+      type: replicator
+      display: 'Alternate Person Names'
+      localizable: false
+      sets:
+        alternate_name_set_group:
+          display: 'Alternate Name Set Group'
+          sets:
+            alternate_name_set:
+              display: 'Alternate Full Name'
+              icon: text-formatting-type-cursor
+              fields:
+                -
+                  handle: alternate_name_type
+                  field: aether-people::uamsweb_common_people.person_alternate_name_type_full
+                  config:
+                    display: 'Type of Alternate Name'
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: person_name
+                  field:
+                    type: person_name
+                    display: 'Alternate Name'
+                    include_display_format: false
+                    include_phonetic_instructions: false
+                    include_nickname: false
+                    validate:
+                      - required
+                    localizable: false
+            nickname_set:
+              display: 'Alternate Nickname'
+              icon: text-formatting-type-cursor
+              fields:
+                -
+                  handle: alternate_name_type
+                  field: aether-people::uamsweb_common_people.person_alternate_name_type_nickname
+                  config:
+                    display: 'Type of Alternate Name'
+                    visibility: hidden
+                    default: nickname
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: nickname
+                  field:
+                    type: text_phonetic_pair
+                    display: 'Alternate Nickname'
+                    text_label: 'Nickname (Text)'
+                    phonetic_label: 'Nickname (Phonetic Text)'
+                    include_phonetic_instructions: false
+                    quote_straight_on_text: true
+                    validate:
+                      - required
+                    localizable: false
+            free_text:
+              display: 'Free Text'
+              hide: true
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: 'Alternate Name'
+                    localizable: false
+                    validate:
+                      - required
+                      - sometimes
+  -
+    handle: gender
+    field:
+      type: radio
+      display: Gender
+      options:
+        -
+          key: Female
+          value: null
+        -
+          key: Male
+          value: null
+        -
+          key: Other
+          value: null
+      validate:
+        - required_unless:clinical_separated_query,true
+        - sometimes
+      localizable: false
+  -
+    handle: workday_gender
+    field:
+      type: text
+      display: 'Gender in Workday'
+      instructions: 'The gender Workday last sent. Only the Workday sync changes it.'
+      visibility: read_only
+      localizable: false
+  -
+    handle: pronouns
+    field:
+      type: terms_search_index
+      display: 'Personal Pronouns'
+      taxonomies:
+        - pronouns
+      create: false
+      mode: select
+      max_items: 1
+      localizable: false
+  -
+    handle: work_location
+    field:
+      collections:
+        - geographic_locations
+      type: entries
+      select_across_sites: true
+      search_index: geographic_locations
+      display: 'All Geographic Locations Where the Person Works'
+      localizable: false
+      create: false
+  -
+    handle: language
+    field: uamsweb_common.language
+    config:
+      default:
+        - en
+      validate:
+        - required_unless:clinical_separated_query,true
+        - sometimes
+      localizable: false
+  -
+    handle: job_title
+    field:
+      collapse: true
+      button_label: 'Add Role/Title'
+      type: replicator
+      display: Role/Title
+      instructions: 'The job title, position, role, or functions of this person'
+      localizable: false
+      sets:
+        academic_roles:
+          display: 'Academic Roles'
+          sets:
+            faculty_role_title:
+              display: 'Faculty Role'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: role_title
+                    display: Title
+                    replicator_preview: false
+                    localizable: false
+                    enabled_configurations:
+                      - faculty
+                    scope_unit_row_link: department
+                    validate:
+                      - required
+                      - sometimes
+                    enabled_title_structures:
+                      - structured
+                -
+                  handle: department
+                  field:
+                    type: entries
+                    display: 'Academic Organizational Unit'
+                    collections:
+                      - organizations
+                    query_scopes:
+                      - entries_by_organization_role_academic_unit
+                    select_across_sites: true
+                    max_items: 1
+                    create: false
+                    localizable: false
+                -
+                  handle: role_work_location
+                  field:
+                    collections:
+                      - geographic_locations
+                    type: entries
+                    select_across_sites: true
+                    search_index: geographic_locations
+                    display: 'Specific Geographic Location(s) Where the Person Works in This Role'
+                    instructions: |-
+                      Set this value to narrow down the specific geographic location(s) where the person works in this role.
+
+                      If not set, the person's general work location(s) will be used.
+                    localizable: false
+                    create: false
+                    validate:
+                      - 'terms_subset_of:work_location'
+            academic_leadership_role:
+              display: 'Leadership Role'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: role_title
+                    display: Title
+                    replicator_preview: false
+                    enabled_configurations:
+                      - academic_leadership
+                    scope_unit_row_link: department
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                    enabled_title_structures:
+                      - structured
+                -
+                  handle: department
+                  field:
+                    type: entries
+                    display: 'Academic Organizational Unit'
+                    collections:
+                      - organizations
+                    query_scopes:
+                      - entries_by_organization_role_academic_unit
+                    select_across_sites: true
+                    max_items: 1
+                    create: false
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                -
+                  handle: role_work_location
+                  field:
+                    collections:
+                      - geographic_locations
+                    type: entries
+                    select_across_sites: true
+                    search_index: geographic_locations
+                    display: 'Specific Geographic Location(s) Where the Person Works in This Role'
+                    instructions: |-
+                      Set this value to narrow down the specific geographic location(s) where the person works in this role.
+
+                      If not set, the person's general work location(s) will be used.
+                    localizable: false
+                    create: false
+                    validate:
+                      - 'terms_subset_of:work_location'
+        clinical_roles:
+          display: 'Clinical Roles'
+          sets:
+            clinical_leadership_role:
+              display: 'Leadership Role'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: role_title
+                    display: Title
+                    replicator_preview: false
+                    enabled_configurations:
+                      - clinical_leadership
+                    scope_unit_row_link: service_line
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                    enabled_title_structures:
+                      - structured
+                -
+                  handle: service_line
+                  field:
+                    type: entries
+                    display: 'UAMS Health Service Line'
+                    instructions: 'The UAMS Health service line over which this person holds the leadership role.'
+                    collections:
+                      - organizations
+                    query_scopes:
+                      - entries_by_organization_role_service_line
+                    select_across_sites: true
+                    max_items: 1
+                    create: false
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                -
+                  handle: role_work_location
+                  field:
+                    collections:
+                      - geographic_locations
+                    type: entries
+                    select_across_sites: true
+                    search_index: geographic_locations
+                    display: 'Specific Geographic Location(s) Where the Person Works in This Role'
+                    instructions: |-
+                      Set this value to narrow down the specific geographic location(s) where the person works in this role.
+
+                      If not set, the person's general work location(s) will be used.
+                    localizable: false
+                    create: false
+                    validate:
+                      - 'terms_subset_of:work_location'
+        institutional_roles:
+          display: 'Institutional Roles'
+          sets:
+            institutional_leadership_role:
+              display: 'Leadership Role'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: role_title
+                    display: Title
+                    replicator_preview: false
+                    enabled_configurations:
+                      - institutional_leadership
+                    scope_unit_row_link: department
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                    enabled_title_structures:
+                      - structured
+                -
+                  handle: department
+                  field:
+                    type: entries
+                    display: 'Institutional Organizational Unit'
+                    collections:
+                      - organizations
+                    query_scopes:
+                      - entries_by_organization_role_department_institutional
+                    select_across_sites: true
+                    max_items: 1
+                    create: false
+                    localizable: false
+                -
+                  handle: role_work_location
+                  field:
+                    collections:
+                      - geographic_locations
+                    type: entries
+                    select_across_sites: true
+                    search_index: geographic_locations
+                    display: 'Specific Geographic Location(s) Where the Person Works in This Role'
+                    instructions: |-
+                      Set this value to narrow down the specific geographic location(s) where the person works in this role.
+
+                      If not set, the person's general work location(s) will be used.
+                    localizable: false
+                    create: false
+                    validate:
+                      - 'terms_subset_of:work_location'
+            institutional_role:
+              display: 'Non-Leadership Role'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: role_title
+                    display: Title
+                    replicator_preview: false
+                    validate:
+                      - required
+                      - sometimes
+                    localizable: false
+                    enabled_title_structures:
+                      - unstructured
+                -
+                  handle: department
+                  field:
+                    type: entries
+                    display: 'Institutional Organizational Unit'
+                    collections:
+                      - organizations
+                    query_scopes:
+                      - entries_by_organization_role_department_institutional
+                    select_across_sites: true
+                    max_items: 1
+                    create: false
+                    localizable: false
+                -
+                  handle: role_work_location
+                  field:
+                    collections:
+                      - geographic_locations
+                    type: entries
+                    select_across_sites: true
+                    search_index: geographic_locations
+                    display: 'Specific Geographic Location(s) Where the Person Works in This Role'
+                    instructions: |-
+                      Set this value to narrow down the specific geographic location(s) where the person works in this role.
+
+                      If not set, the person's general work location(s) will be used.
+                    localizable: false
+                    create: false
+                    validate:
+                      - 'terms_subset_of:work_location'
+            free_text:
+              display: 'Free Text'
+              hide: true
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: text
+                    display: Title
+                    localizable: false
+                    validate:
+                      - required
+                      - sometimes
+  -
+    handle: recognition_lists
+    field:
+      type: entries
+      display: 'Recognition Lists'
+      instructions: 'The recognition lists (or categories within a list) this person appears on. Kept in two-way sync with each list''s Members field, so a person can be added from either end.'
+      collections:
+        - recognition_lists
+      localizable: false
+  -
+    handle: awards
+    field:
+      type: replicator
+      display: Award(s)
+      collapse: true
+      localizable: false
+      button_label: 'Add Award'
+      sets:
+        awards:
+          display: Awards
+          sets:
+            award:
+              display: Award
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: text
+                    display: 'Award Title'
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: award_date
+                  field:
+                    type: partial_date
+                    display: 'Date Awarded'
+                    validate:
+                      - required
+                    localizable: false
+                -
+                  handle: notes
+                  field:
+                    type: text
+                    display: 'Award Notes'
+                    localizable: false

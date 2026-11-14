@@ -1,0 +1,10 @@
+title: 'uamsweb_common_images (stand-in for the host fieldset)'
+fields:
+  -
+    handle: image_1200x1600_3_4_recommended
+    field:
+      type: text
+  -
+    handle: image_1200x675_16_9_recommended
+    field:
+      type: text
