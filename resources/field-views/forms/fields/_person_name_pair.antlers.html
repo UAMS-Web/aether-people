@@ -1,0 +1,95 @@
+{{# Single text + phonetic-text pair inside the PersonName composite.
+
+    Caller provides:
+
+      handle             parent field handle (the form's composite key)
+      subfield           the subfield key under the parent (first_name etc.)
+      label              translated label for the text input
+      autocomplete       HTML autocomplete value for the text input
+      pair_value         the resolved subfield value (the caller does
+                            value.first_name etc. so the partial doesn't have
+                            to compute dynamic paths)
+      require_text       boolean, parent's require_text config
+      require_phonetic   boolean, parent's require_phonetic config
+      parent_required    boolean, parent's `validate: required`
+      hide_when_flag     optional, name of the scope-flag that hides this pair
+                            via Alpine `x-show` (e.g. "no_middle_name"). When
+                            set, the `required` attribute becomes
+                            Alpine-bound so the browser doesn't block submit
+                            on a field the user can't see. Always-visible
+                            pairs (first_name, last_name) leave it unset.
+
+    Required-attr semantics match PersonName::extraRules():
+      - text inputs are `required` when (parent_required OR require_text),
+        the same `$mustText = $required || $requireText` logic that the
+        server-side rules use (see PersonName::mergeTextRules).
+      - phonetic_text inputs are `required` only when require_phonetic is
+        true (independent of parent_required); see mergePhoneticRules.
+    Submission shape: `name="{handle}[{subfield}][text]"` / `[phonetic_text]`.
+
+    Each input also binds `x-model` to the exact nested scope path
+    (`<handle>.<subfield>.text` / `.phonetic_text`). This is targeted,
+    nothing like the parent-clobbering `x-model="form.<handle>"` that
+    Statamic's Alpine driver emits by default and that UAMS-Web/uams-statamic-archive#670 dropped for
+    composites. The targeted binding writes to the right nested slot, so the
+    public-form Alpine engines (calculation_*, person-name display_format,
+    field-conditions referencing composite subfields) see name part edits
+    reactively. #}}
+{{# `???` keeps a literal `false` instead of falling through to the default,
+	unlike `??`. See person_name.antlers.html for the same workaround. #}}
+{{ row_required_text = parent_required || ( require_text ??? true ) }}
+{{ row_required_phonetic = ( require_phonetic ??? false ) }}
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group mb-2">
+			<label for="{{ id }}-{{ subfield }}-text" class="small text-muted mb-1">
+				{{ label }}
+			</label>
+			<input
+				type="text"
+				id="{{ id }}-{{ subfield }}-text"
+				class="form-control"
+				name="{{ handle }}[{{ subfield }}][text]"
+				value="{{ (pair_value.text ?? '') | sanitize }}"
+				autocomplete="{{ autocomplete }}"
+				x-model="{{ handle }}.{{ subfield }}.text"
+				{{ if hide_when_flag && row_required_text }}
+					:required="! {{ handle }}.{{ hide_when_flag }}"
+				{{ else }}
+					{{ row_required_text | attribute:required }}
+				{{ /if }}
+				{{# `visibility: read_only`: see the host's forms/fields README. #}}
+				{{ if visibility == 'read_only' }}
+					readonly
+					aria-readonly="true"
+				{{ /if }}
+			>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="form-group mb-2">
+			<label for="{{ id }}-{{ subfield }}-phonetic" class="small text-muted mb-1">
+				{{ label }} ({{ trans key="phonetic" }})
+			</label>
+			<input
+				type="text"
+				id="{{ id }}-{{ subfield }}-phonetic"
+				class="form-control"
+				name="{{ handle }}[{{ subfield }}][phonetic_text]"
+				value="{{ (pair_value.phonetic_text ?? '') | sanitize }}"
+				lang="ipa"
+				x-model="{{ handle }}.{{ subfield }}.phonetic_text"
+				{{ if hide_when_flag && row_required_phonetic }}
+					:required="! {{ handle }}.{{ hide_when_flag }}"
+				{{ else }}
+					{{ row_required_phonetic | attribute:required }}
+				{{ /if }}
+				{{# `visibility: read_only`: see the host's forms/fields README. #}}
+				{{ if visibility == 'read_only' }}
+					readonly
+					aria-readonly="true"
+				{{ /if }}
+			>
+		</div>
+	</div>
+</div>
