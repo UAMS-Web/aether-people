@@ -36,7 +36,7 @@ export default {
 	},
 	computed: {
 		fieldId() {
-			// Statamic's id carries the publish container, and its label points at it (#327).
+			// Statamic's id carries the publish container, and its label points at it (UAMS-Web/uams-statamic#327).
 			return String(this.id || `field_${this.handle}`).replace(/\./g, '_');
 		},
 		current() {

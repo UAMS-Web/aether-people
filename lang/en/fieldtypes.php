@@ -26,7 +26,6 @@ return [
     'person_name.field.no_generational_suffix' => 'No Generational Suffix',
     'person_name.field.no_middle_name' => 'No Middle Name',
     'person_name.field.no_nickname' => 'No Nickname',
-    'person_name.field.phonetic_alert_heading' => 'Phonetic Text Transcription Instructions',
     'person_name.field.preferred_display_format' => 'Preferred Display Format',
     'person_name.checklist.before_display_format' => 'Before you can select a display format, complete the following fields:',
     'person_name.checklist.first_name' => 'First name',

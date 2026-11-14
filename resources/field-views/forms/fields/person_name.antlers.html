@@ -1,0 +1,217 @@
+{{# PersonName fieldtype (UAMSWeb\Aether\People\Fieldtypes\PersonName): a structured name with
+    text + phonetic-text pair subfields, no_* skip toggles, optional nickname,
+    generational suffix select, and an optional preferred display-format select.
+
+    `PersonName::extraRenderableFieldData()` surfaces `generational_suffix_options`
+    and `display_format_options`. The per-pair markup (text + phonetic-text
+    side by side) lives in `_person_name_pair.antlers.html`; this template
+    calls it once per name part, wrapping in an Alpine show/hide block when
+    the part has a `no_*` skip toggle.
+
+    Conditional hide via no_* toggles uses Alpine's reactive form scope. The
+    form's x-data, emitted by Statamic\Forms\JsDrivers\Alpine, already
+    initializes `<handle>.no_middle_name` / `<handle>.no_nickname` /
+    `<handle>.no_generational_suffix` to false (per PersonName::emptyValue()).
+    Each checkbox binds `:checked` to that scope variable and writes its new
+    state back through `@change` (boolean, not the value attr). Dependent
+    inputs use `x-show` to hide. Server submission stays standard HTML:
+    `name="<handle>[no_middle_name]" value="1"` posts "1" when checked, omits
+    the key when unchecked, and PersonName::normalizeStored casts whatever
+    it sees to bool. Avoid `$root.<handle>.<flag>` here: `$root` is the DOM
+    element, not the scope, so dot access against it always reads as
+    undefined and the toggle silently no-ops in Alpine.
+
+    Required-attr semantics match PersonName::extraRules(); see the partial. #}}
+
+{{ parent_required = ( validate | contains:required ) }}
+
+{{# Antlers `??` is Elvis-style (falsy-coalescing) so `include_X ?? true` would
+	always fall through when the blueprint sets `include_X: false`. Antlers
+	`???` is the strict null-coalescing variant: it only triggers on null, keeps
+	a literal `false`. Use it for every include_*-with-default check below. #}}
+
+<div class="person-name">
+	{{ if include_phonetic_instructions ??? true }}
+		<div class="alert alert-info small mb-3" role="note">
+			{{ trans key="Phonetic text fields use the International Phonetic Alphabet (IPA)." }}
+		</div>
+	{{ /if }}
+
+	{{# First name: always shown, no skip toggle. #}}
+	<div class="person-name-section mb-3">
+		{{ partial:statamic::forms/fields/_person_name_pair
+			:handle="handle"
+			:id="id"
+			subfield="first_name"
+			label="First Name"
+			autocomplete="given-name"
+			:pair_value="value.first_name"
+			:require_text="require_text"
+			:require_phonetic="require_phonetic"
+			:parent_required="parent_required"
+		}}
+	</div>
+
+	{{# Middle name: no_middle_name toggle hides the pair when checked. #}}
+	<div class="person-name-section mb-3">
+		<div class="form-check mb-2">
+			<input
+				type="checkbox"
+				class="form-check-input"
+				id="{{ id }}-no_middle_name"
+				name="{{ handle }}[no_middle_name]"
+				value="1"
+				:checked="{{ handle }}.no_middle_name"
+				@change="{{ handle }}.no_middle_name = $event.target.checked"
+				{{# `visibility: read_only`: see the host's forms/fields README. #}}
+				{{ ( visibility == 'read_only' ) | attribute:disabled }}
+			>
+			<label class="form-check-label small" for="{{ id }}-no_middle_name">
+				{{ trans key="No middle name" }}
+			</label>
+		</div>
+		<div x-show="! {{ handle }}.no_middle_name">
+			{{ partial:statamic::forms/fields/_person_name_pair
+				:handle="handle"
+				:id="id"
+				subfield="middle_name"
+				label="Middle Name"
+				autocomplete="additional-name"
+				:pair_value="value.middle_name"
+				:require_text="require_text"
+				:require_phonetic="require_phonetic"
+				:parent_required="parent_required"
+				hide_when_flag="no_middle_name"
+			}}
+		</div>
+	</div>
+
+	{{# Nickname: the entire section gated by include_nickname config; toggle
+		applies the same hide/show pattern when the section is included. #}}
+	{{ if include_nickname ??? true }}
+		<div class="person-name-section mb-3">
+			<div class="form-check mb-2">
+				<input
+					type="checkbox"
+					class="form-check-input"
+					id="{{ id }}-no_nickname"
+					name="{{ handle }}[no_nickname]"
+					value="1"
+					:checked="{{ handle }}.no_nickname"
+					@change="{{ handle }}.no_nickname = $event.target.checked"
+					{{# `visibility: read_only`: see the host's forms/fields README. #}}
+					{{ ( visibility == 'read_only' ) | attribute:disabled }}
+				>
+				<label class="form-check-label small" for="{{ id }}-no_nickname">
+					{{ trans key="No nickname" }}
+				</label>
+			</div>
+			<div x-show="! {{ handle }}.no_nickname">
+				{{ partial:statamic::forms/fields/_person_name_pair
+					:handle="handle"
+					:id="id"
+					subfield="nickname"
+					label="Nickname"
+					autocomplete="nickname"
+					:pair_value="value.nickname"
+					:require_text="require_text"
+					:require_phonetic="require_phonetic"
+					:parent_required="parent_required"
+					hide_when_flag="no_nickname"
+				}}
+			</div>
+		</div>
+	{{ /if }}
+
+	{{# Last name: always shown, no skip toggle. #}}
+	<div class="person-name-section mb-3">
+		{{ partial:statamic::forms/fields/_person_name_pair
+			:handle="handle"
+			:id="id"
+			subfield="last_name"
+			label="Last Name"
+			autocomplete="family-name"
+			:pair_value="value.last_name"
+			:require_text="require_text"
+			:require_phonetic="require_phonetic"
+			:parent_required="parent_required"
+		}}
+	</div>
+
+	{{# Generational suffix: <select> sourced from
+		PersonNameDisplayFormats::generationalSuffixSelectOptions() with a
+		no_generational_suffix toggle that hides the select when checked. #}}
+	<div class="person-name-section mb-3">
+		<div class="form-check mb-2">
+			<input
+				type="checkbox"
+				class="form-check-input"
+				id="{{ id }}-no_generational_suffix"
+				name="{{ handle }}[no_generational_suffix]"
+				value="1"
+				:checked="{{ handle }}.no_generational_suffix"
+				@change="{{ handle }}.no_generational_suffix = $event.target.checked"
+				{{# `visibility: read_only`: see the host's forms/fields README. #}}
+				{{ ( visibility == 'read_only' ) | attribute:disabled }}
+			>
+			<label class="form-check-label small" for="{{ id }}-no_generational_suffix">
+				{{ trans key="No generational suffix" }}
+			</label>
+		</div>
+		<div x-show="! {{ handle }}.no_generational_suffix" class="form-group mb-0">
+			<label for="{{ id }}-generational_suffix" class="small text-muted mb-1">
+				{{ trans key="Generational Suffix" }}
+			</label>
+			{{ suffix_value = value.generational_suffix ?? '' }}
+			<select
+				id="{{ id }}-generational_suffix"
+				class="form-control"
+				name="{{ handle }}[generational_suffix]"
+				x-model="{{ handle }}.generational_suffix"
+				{{# `visibility: read_only`: see the host's forms/fields README. #}}
+				{{ ( visibility == 'read_only' ) | attribute:disabled }}
+			>
+				<option value="">{{ trans key="Please select..." }}</option>
+				{{ foreach:generational_suffix_options as="opt" }}
+					<option value="{{ opt.value }}" {{ if suffix_value == opt.value }}selected{{ /if }}>{{ opt.label }}</option>
+				{{ /foreach:generational_suffix_options }}
+			</select>
+		</div>
+	</div>
+
+	{{# Display format <select>: rendered when the blueprint sets
+		include_display_format=true. The options list is reactive on the public
+		side through the add-on's `resources/js/forms/personNameDisplayFormatField.js`,
+		which the host's front-end bundle registers. It imports the same
+		`buildDisplayFormatOptions` module the Control Panel component uses, so
+		the option set stays the same on both surfaces.
+
+		The server-rendered <option> elements act as a graceful-degradation
+		fallback for the brief moment before Alpine mounts (and for the no-JS
+		case). The `data-person-name-*` attributes are how the engine finds
+		this select and what config it should pass into the JS module. #}}
+	{{ if include_display_format ??? true }}
+		<div class="person-name-section mb-3">
+			<div class="form-group mb-0">
+				<label for="{{ id }}-display_format" class="small text-muted mb-1">
+					{{ trans key="Preferred Display Format" }}
+				</label>
+				{{ display_format_value = value.display_format ?? '' }}
+				<select
+					id="{{ id }}-display_format"
+					class="form-control"
+					name="{{ handle }}[display_format]"
+					data-person-name-handle="{{ handle }}"
+					data-person-name-include-nickname="{{ ( include_nickname ??? true ) ? 'true' : 'false' }}"
+					{{# `visibility: read_only`: see the host's forms/fields README. #}}
+					{{ ( visibility == 'read_only' ) | attribute:disabled }}
+				>
+					<option value="">{{ trans key="Please select..." }}</option>
+					{{ foreach:display_format_options as="opt" }}
+						<option value="{{ opt.key }}" {{ if display_format_value == opt.key }}selected{{ /if }}>{{ opt.label }}</option>
+					{{ /foreach:display_format_options }}
+				</select>
+			</div>
+		</div>
+	{{ /if }}
+</div>
