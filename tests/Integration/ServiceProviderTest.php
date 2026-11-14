@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Addon;
 use Statamic\Facades\Blueprint;
 use UAMSWeb\Aether\People\ServiceProvider;
@@ -88,12 +89,11 @@ it('serves each collection blueprint directory under the collection namespace', 
 })->with(ServiceProvider::COLLECTION_BLUEPRINT_DIRECTORIES);
 
 it('adds the field views, search views and templates to the view finder', function (): void {
-    $finder = View::getFinder();
-    $statamic = array_map(realpath(...), $finder->getHints()['statamic'] ?? []);
-    $search = array_map(realpath(...), $finder->getHints()['aether-search'] ?? []);
-    $paths = array_map(realpath(...), $finder->getPaths());
+    $finder = mustBe(FileViewFinder::class, View::getFinder(), 'the view finder');
+    $realPaths = fn (array $paths): array => array_map(realpath(...), array_values(array_filter($paths, is_string(...))));
+    $hints = $finder->getHints();
 
-    expect($statamic)->toContain(realpath(__DIR__.'/../../resources/field-views'))
-        ->and($search)->toContain(realpath(__DIR__.'/../../resources/search-views'))
-        ->and($paths)->toContain(realpath(__DIR__.'/../../resources/views'));
+    expect($realPaths($hints['statamic'] ?? []))->toContain(realpath(__DIR__.'/../../resources/field-views'))
+        ->and($realPaths($hints['aether-search'] ?? []))->toContain(realpath(__DIR__.'/../../resources/search-views'))
+        ->and($realPaths($finder->getPaths()))->toContain(realpath(__DIR__.'/../../resources/views'));
 });
