@@ -10,10 +10,14 @@
             "Drop the parallel runner's options (--passthru-php, --processes and the rest) from each mutant child so a parallel run given one cannot score every mutant killed (temporary; see #2926, #2947)": "vendor/uams-web/patches-pest-plugin-mutate/patches/pest-plugin-mutate-drop-parallel-runner-options.patch"
         },
         "orchestra/testbench-core": {
-            "Give each parallel test worker its own service manifest (temporary; see UAMS-Web/patches-orchestra-testbench-core#1)": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-services-manifest.patch"
+            "Give each parallel test worker its own service manifest (temporary; see UAMS-Web/patches-orchestra-testbench-core#1)": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-services-manifest.patch",
+            "Give each parallel test worker its own package manifest under Pest (temporary; see UAMS-Web/patches-orchestra-testbench-core#5)": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-packages-manifest.patch"
         },
         "statamic/cms": {
             "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch"
+        },
+        "laravel/framework": {
+            "Tolerate a lost facade stub rename on Windows (temporary; see UAMS-Web/patches-orchestra-testbench-core#6)": "vendor/uams-web/patches-orchestra-testbench-core/patches/laravel-facade-stub-rename.patch"
         }
     }
 }

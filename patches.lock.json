@@ -1,5 +1,5 @@
 {
-    "_hash": "cfd1520d29b74e2559d3daf29fc808eec95af0ed049033c124174e97373ea407",
+    "_hash": "4134c486ea923c62dbb8416a6b172db5bcceafb7e9385eea5578fb551f1950ef",
     "patches": {
         "pestphp/pest-plugin-mutate": [
             {
@@ -78,7 +78,17 @@
                 "package": "orchestra/testbench-core",
                 "description": "Give each parallel test worker its own service manifest (temporary; see UAMS-Web/patches-orchestra-testbench-core#1)",
                 "url": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-services-manifest.patch",
-                "sha256": "0b2c164aa2bf3a27c69db0e3c067f001479324e409035ffeb9a1fee36eb03be1",
+                "sha256": "3b11ccf5e85002a2f2255f727806684e764e1c887698c65ebc2266c74e3bff46",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "orchestra/testbench-core",
+                "description": "Give each parallel test worker its own package manifest under Pest (temporary; see UAMS-Web/patches-orchestra-testbench-core#5)",
+                "url": "vendor/uams-web/patches-orchestra-testbench-core/patches/testbench-parallel-packages-manifest.patch",
+                "sha256": "dbcb949848fb6bf9cd010f13b0b4224c4b9f067a988d603798cdef7d2884eb72",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"
@@ -91,6 +101,18 @@
                 "description": "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)",
                 "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch",
                 "sha256": "0b15638367a8a3fc3a6bd95ac840edea2c07887234d36e06cdca1ef91379ae11",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            }
+        ],
+        "laravel/framework": [
+            {
+                "package": "laravel/framework",
+                "description": "Tolerate a lost facade stub rename on Windows (temporary; see UAMS-Web/patches-orchestra-testbench-core#6)",
+                "url": "vendor/uams-web/patches-orchestra-testbench-core/patches/laravel-facade-stub-rename.patch",
+                "sha256": "0b71155dab700763aaa6a32156adbe2c1ab2ab4381744d9277e2213905a25163",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"
