@@ -1,0 +1,229 @@
+{{#
+	@name People entry page
+	@desc The People entry page template.
+	@set people.show
+#}}
+{{
+	partial:layout/article
+	title_options="none"
+	article_class="person-profile"
+}}
+	{{
+		partial:layout/entry-content
+		content_width="false"
+	}}
+		<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white">
+			<div class="row mx-0 mx-xs-n4 mx-sm-n8">
+				<div class="col-12 col-xs p-4 py-xs-0 px-xs-4 px-sm-8 order-2 text">
+					<h1 class="page-title">
+						<span class="name">{{ ( display_name_full_with_credentials.text ?? title ) | strip_tags }}</span>
+						{{ if job_title }}
+							{{ if job_title | is_iterable }}
+								{{ job_title }}
+									{{ $job_title_name = '' }}
+									{{ if title | is_iterable }}
+										{{ if title.value }}
+											{{ $job_title_name = title.value }}
+										{{ /if }}
+									{{ else }}
+										{{ $job_title_name = title }}
+									{{ /if }}
+									{{
+										partial:people/components/job_title
+										:job_title_name="$job_title_name"
+										:job_title_department="department.name"
+									}}
+								{{ /job_title }}
+							{{ elseif job_title }}
+								{{
+									partial:people/components/job_title
+									:job_title_name="job_title"
+									:job_title_department=""
+								}}
+							{{ /if }}
+						{{ /if }}
+					</h1>
+					{{ if (
+						email
+						|| telephone
+						|| telephone_mobile
+						|| mitel_extension
+						|| fax
+						|| location
+						|| clinical_profile_url
+						|| academic_profile_url
+						|| research_profile_url
+					) }}
+						<h2 class="h3">Overview</h2>
+						<dl>
+							{{ if email }}
+								<dt>Email</dt>
+								<dd><a href="mailto:{{ email }}" rel="noopener">{{ email }}</a></dd>
+							{{ /if }}
+							{{ if telephone }}
+								<dt>Office Telephone Number</dt>
+								<dd><a href="tel:{{ telephone }}" rel="noopener">{{ telephone | format_phone }}</a></dd>
+							{{ /if }}
+							{{ if telephone_mobile }}
+								<dt>Mobile Telephone Number</dt>
+								<dd><a href="tel:{{ telephone_mobile }}" rel="noopener">{{ telephone_mobile | format_phone }}</a></dd>
+							{{ /if }}
+							{{ if mitel_extension }}
+								<dt>Office Mitel Extension</dt>
+								<dd>{{ mitel_extension }}</dd>
+							{{ /if }}
+							{{ if fax }}
+								<dt>Office Fax Number</dt>
+								<dd>{{ fax | format_phone }}</dd>
+							{{ /if }}
+							{{ if location }}
+								<dt>Office Location</dt>
+								<dd>{{ location }}</dd>
+							{{ /if }}
+							{{ $other_profiles_count = [(clinical_profile_url | trim), (academic_profile_url | trim), (research_profile_url | trim)] | filter_empty | count }}
+							{{ if ( $other_profiles_count > 0 ) }}
+								<dt>Other {{ 'Profile' | plural($other_profiles_count) }}</dt>
+								{{ if clinical_profile_url }}
+									{{ clinical_profile_link_text = ( clinical_profile_link_text ?? 'UAMS Health Provider Profile' ) | strip_tags | trim }}
+									{{# Editor/importer-controlled URL: `sanitize_url` neutralizes a dangerous scheme (javascript:/data:) AND HTML-encodes for the attribute - the href XSS sink (UAMS-Web/uams-statamic-archive#1500 pattern). #}}
+									<dd><a href="{{ clinical_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ clinical_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ clinical_profile_link_text }}</a></dd>
+								{{ /if }}
+								{{ if academic_profile_url }}
+									{{ academic_profile_link_text = ( academic_profile_link_text ?? 'UAMS Academic Profile' ) | strip_tags | trim }}
+									<dd><a href="{{ academic_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ academic_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ academic_profile_link_text }}</a></dd>
+								{{ /if }}
+								{{ if research_profile_url }}
+									{{ research_profile_link_text = ( research_profile_link_text ?? 'UAMS Research Profile' ) | strip_tags | trim }}
+									<dd><a href="{{ research_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ research_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ research_profile_link_text }}</a></dd>
+								{{ /if }}
+							{{ /if }}
+						</dl>
+					{{ /if }}
+				</div>
+				{{ if portrait:permalink }}
+					<div class="col-12 col-xs px-0 px-xs-4 px-sm-8 order-1 image">
+						<picture>
+							<source
+								srcset="{{ glide :src="portrait:permalink" w="389" h="519" fit="crop_focal" }}"
+								media="(min-width: 1200px)">
+							<source
+								srcset="{{ glide :src="portrait:permalink" w="306" h="408" fit="crop_focal" }}"
+								media="(min-width: 992px)">
+							<source
+								srcset="{{ glide :src="portrait:permalink" w="182" h="243" fit="crop_focal" }}"
+								media="(min-width: 768px)">
+							<source
+								srcset="{{ glide :src="portrait:permalink" w="86" h="115" fit="crop_focal" }}"
+								media="(min-width: 576px)">
+							<source
+								srcset="{{ glide :src="portrait:permalink" w="380" h="507" fit="crop_focal" }}"
+								media="(min-width: 1px)">
+							<img src="{{ glide :src="portrait:permalink" w="778" h="1038" fit="crop_focal" }}"
+								alt="{{ display_name_full_with_credentials.text | strip_tags | sanitize }}"
+								width="778"
+								height="1038"
+								loading="eager"
+								fetchpriority="high"
+								decoding="async">
+						</picture>
+					</div>
+				{{ /if }}
+			</div>
+		</section>
+		{{
+			partial:page_builder/uamsweb_block
+			block_id="profile-bio"
+			block_class="profile-bio"
+			:when="bio"
+		}}
+			{{ partial:page_builder/components/container_row }}
+				{{
+					partial:page_builder/components/block_header
+					heading="{{ 'About ' + display_name_short_with_prefix.text }}"
+					block_id="profile-bio"
+				}}
+				<div class="module-body">
+					{{ bio }}
+					{{ if clinical_video_url }}
+						{{
+							partial:sets/video
+							:video_url="clinical_video_url"
+							:video_link_text="clinical_video_link_text"
+							caption_hide="true"
+							align="alignwide"
+						}}
+					{{ /if }}
+				</div>
+			{{ /partial:page_builder/components/container_row }}
+		{{ /partial:page_builder/uamsweb_block }}
+
+		{{
+			partial:page_builder/uamsweb_block
+			block_id="profile-professional-background"
+			block_class="profile-professional-background"
+			:when="education || certifications || professional_and_leadership_development_activities || member_of"
+		}}
+			{{ partial:page_builder/components/container_row }}
+				{{
+					partial:page_builder/components/block_header
+					heading="Professional Background"
+					block_id="profile-professional-background"
+				}}
+				<div class="col-12">
+					<div class="grid grid-cols-1 gap-8 sm:gap-9">
+						{{# Education Sub-Section#}}
+						{{
+							partial:people/components/professional_background_list
+							heading="Education"
+							:activities_list="education"
+							variant="education"
+							:when="education"
+						}}
+
+						{{# Training Sub-Section#}}
+						{{
+							partial:people/components/professional_background_list
+							heading="Training"
+							:activities_list="training"
+							variant="training"
+							:when="training"
+						}}
+
+						{{# Certifications Sub-Section#}}
+						{{
+							partial:people/components/professional_background_list
+							heading="Certifications"
+							:activities_list="certifications | certifications_by_kind"
+							variant="certifications"
+							:when="certifications"
+						}}
+
+						{{# Professional and Leadership Development Activities Sub-Section#}}
+						{{
+							partial:people/components/professional_background_list
+							heading="Continuing Professional Development"
+							:activities_list="professional_and_leadership_development_activities"
+							variant="professional_and_leadership_development_activities"
+							:when="professional_and_leadership_development_activities"
+						}}
+
+						{{# Professional Memberships Sub-Section #}}
+						{{
+							partial:people/components/professional_background_list
+							heading="Professional Memberships"
+							:activities_list="member_of"
+							variant="member_of"
+							:when="member_of"
+						}}
+					</div>
+				</div>
+			{{ /partial:page_builder/components/container_row }}
+		{{ /partial:page_builder/uamsweb_block }}
+
+		{{# Provider awards (UAMS-Web/uams-statamic-archive#1170) - listed in entered order, section absent when the provider has none. #}}
+		{{ partial:people/components/awards }}
+
+		{{# Referral-requirement disclaimer (UAMS-Web/uams-statamic-archive#1190) - shown only when the provider explicitly does not require a referral. #}}
+		{{ partial:people/components/referral_disclaimer }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

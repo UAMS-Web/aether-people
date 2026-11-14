@@ -1,0 +1,50 @@
+{{#
+	@name UAMS Health Areas of Expertise List
+	@desc The UAMS Health Areas of Expertise List page builder block - a list-only
+	      card grid of Areas of Expertise with no reader facets (UAMS-Web/uams-statamic-archive#62). Renders the
+	      editor-curated `expertise` selection when any Areas are picked, otherwise
+	      every Area of Expertise (the `clinical_expertise`-blueprint entries only -
+	      content-page descendants are excluded), each via the shared
+	      `clinical_expertise/_card` partial linking to the Area page.
+
+	      No `fadFilter` root / filter bar: `clinical_expertise` is a live render
+	      surface (Wave 71) and its facet switches all resolve to false, so the block
+	      ships a real visible card grid rather than a stub or an empty filter bar.
+	      The AJAX facet mechanism (UAMS-Web/uams-statamic-archive#1242) is owned by the providers/resources blocks.
+	@set page.page_builder.uamsweb_block_fad_expertise
+#}}
+
+{{# Only render if required fields (and conditionals) have values. #}}
+{{ $block_valid = block_heading && block_description && background_color && more_query != null }}
+{{ if $block_valid && more_query }}
+	{{ $block_valid = more_heading && more_button_text && more_button_url }}
+{{ /if }}
+
+{{ if $block_valid }}
+	{{ partial:page_builder/uamsweb_block_fad
+		fad_block_class="expertise-list"
+		fad_block_title_plural="Areas of Expertise"
+	}}
+		{{ if expertise }}
+			{{# Editor-curated selection - render exactly the picked Areas of Expertise. #}}
+			<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+				{{ expertise }}
+					{{ partial:clinical_expertise/card }}
+				{{ /expertise }}
+			</div>
+		{{ else }}
+			{{# No curation → every Area of Expertise, alphabetical. #}}
+			{{ collection:clinical_expertise blueprint:is="clinical_expertise" sort="title:asc" as="areas" }}
+				{{ if no_results }}
+					<p class="expertise-empty">No areas of expertise found.</p>
+				{{ else }}
+					<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+						{{ areas }}
+							{{ partial:clinical_expertise/card }}
+						{{ /areas }}
+					</div>
+				{{ /if }}
+			{{ /collection:clinical_expertise }}
+		{{ /if }}
+	{{ /partial:page_builder/uamsweb_block_fad }}
+{{ /if }}

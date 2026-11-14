@@ -1,0 +1,48 @@
+{{#
+	@name UAMS Health Locations List
+	@desc The UAMS Health Locations List page builder block (UAMS-Web/uams-statamic-archive#63) - the site's
+	      clinical_locations as a directory of cards (featured image or 3:4
+	      fallback, name, address) linking to each location profile, reusing the
+	      shared `clinical_locations/_list_body`. The region / location-type filter
+	      UI is gated pending the shared reader-facing AJAX facet engine, which is
+	      built on the provider block first (UAMS-Web/uams-statamic-archive#1242); each card still carries the
+	      facet data-* that engine consumes.
+	@set page.page_builder.uamsweb_block_fad_locations
+#}}
+
+{{# Only render if required fields (and conditionals) have values #}}
+
+	{{ $block_valid = block_heading && block_description && background_color && more_query != null }}
+	{{ if $block_valid && more_query }}
+		{{ $block_valid = more_heading && more_button_text && more_button_url }}
+	{{ /if }}
+
+{{# Render the Block #}}
+
+{{ if $block_valid }}
+	{{ partial:page_builder/uamsweb_block_fad
+		fad_block_class="location-list"
+		fad_block_title_plural="Locations"
+	}}
+		{{#
+			Filter UI gate: the region / location-type controls are wired to the
+			shared reader-facing AJAX facet engine, which is built on the provider
+			block first (UAMS-Web/uams-statamic-archive#1242). Until it lands, gate the filter UI so no inert
+			controls ship - the card listing below renders regardless, and each card
+			carries the facet data-* the engine consumes. Flip to true (or remove)
+			once UAMS-Web/uams-statamic-archive#1242 wires the location facets.
+		#}}
+		{{ $fad_locations_filter_implemented = false }}
+		{{ if $fad_locations_filter_implemented }}
+			{{ partial:page_builder/components/block_fad_filter
+				fad_filter_collection="clinical_locations"
+				fad_filter_title_plural="Locations"
+			}}
+		{{ /if }}
+
+		{{# The live card directory. `fad_facet` has each card emit its facet data-*. #}}
+		{{ collection:clinical_locations sort="title:asc" paginate="12" as="locations" }}
+			{{ partial:clinical_locations/list_body fad_facet="true" }}
+		{{ /collection:clinical_locations }}
+	{{ /partial:page_builder/uamsweb_block_fad }}
+{{ /if }}

@@ -1,0 +1,19 @@
+{{#
+	@name Clinical Providers Index
+	@desc The clinical-provider directory (UAMS-Web/uams-statamic-archive#1070). Statamic serves this collection
+	      `index` view at the `people` mount (`/providers`): the eligible, searchable
+	      provider subset as a card grid in the standard article shell. The
+	      per-provider routed `/{section}` subpages + subbrand/breadcrumb chrome are a
+	      scoped follow-up (#160), not part of this core.
+#}}
+
+{{ partial:layout/article }}
+	{{
+		partial:layout/entry-content
+		content_width="true"
+	}}
+		{{# Patient-safety 911 disclaimer above the provider directory listing (UAMS-Web/uams-statamic-archive#1466). #}}
+		{{ partial:components/emergency_disclaimer_911 }}
+		{{ partial:people/provider/listing }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

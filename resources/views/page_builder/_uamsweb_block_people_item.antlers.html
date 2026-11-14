@@ -1,0 +1,157 @@
+{{#
+	@name UAMS People
+	@desc The UAMS People page builder block.
+	@set page.page_builder.uamsweb_block_people
+#}}
+
+{{# Define the Variables #}}
+
+	{{# Block Display Detail Keys #}}
+
+		{{ $display_detail_keys = display_detail | pluck('key') }}
+
+	{{# Single Profile Link #}}
+
+		{{ if block:entry_link_query }}
+			{{# If the block is configured to include single profile URLs #}}
+
+			{{# Get the Destination URL. The default arm links to the person's own
+			   profile page (`url`); honor `profile_page_query` so a person flagged
+			   "no profile page" (non-routable - see App\Entries\PersonEntry, whose
+			   `url` is unset) renders an unlinked heading instead of linking to a
+			   page that 404s. The guard is LOOSE (`!= false`), NOT strict: here
+			   `profile_page_query` is the AUGMENTED value - a `LabeledValue`, never
+			   a raw bool - so `!== false` is always true and would never suppress.
+			   Loose `!=` coerces, so only an explicit opt-out (`false`) suppresses;
+			   the field's `default: true` means `true`, `null`, and legacy/unset
+			   entries all augment to `true` and keep linking. (PersonEntry::route()
+			   uses strict `=== false` because it reads RAW data, where null is
+			   genuinely null - a different representation; don't "mirror" it here.)
+			   An explicit profile-type override still wins. #}}
+
+				{{ $item_heading_link_url = switch(
+					(block:entry_link_url == 'clinical_profile') => clinical_profile_url,
+					(block:entry_link_url == 'academic_profile') => academic_profile_url,
+					(block:entry_link_url == 'research_profile') => research_profile_url,
+					(block:entry_link_url == 'video') => clinical_video_url,
+					() => (profile_page_query != false ? url : '')
+				) }}
+
+			{{# Construct the Item Heading #}}
+
+				{{ if $item_heading_link_url }}
+					{{# If the URL exists #}}
+
+					{{# Link Attributes #}}
+
+						{{ $item_heading_link_href = 'href="' + $item_heading_link_url + '"' }}
+						{{ $item_heading_link_target = block:entry_link_target ? 'target="_blank" rel="noopener noreferrer"' : '' }}
+
+						{{ $item_heading_link_attr = [
+							$item_heading_link_href,
+							$item_heading_link_target
+						] | filter_empty | join(' ') }}
+
+					{{# When the profile link opens in a new window, append the WCAG 3.2.5 indicator (UAMS-Web/uams-statamic-archive#702). #}}
+					{{ if block:entry_link_target }}
+						{{ $item_heading_indicator = {partial:components/new_window_indicator} }}
+					{{ else }}
+						{{ $item_heading_indicator = '' }}
+					{{ /if }}
+
+					{{ $item_heading = '<a ' + $item_heading_link_attr + '>' + title + $item_heading_indicator + '</a>' }}
+
+				{{ else }}
+					{{# If the URL does not exist #}}
+					{{ $item_heading = title }}
+
+				{{ /if }}
+
+		{{ else }}
+			{{# If the block is configured to not include single profile URLs #}}
+			{{ $item_heading = title }}
+
+		{{ /if }}
+
+{{# Render the Item #}}
+<div class="uamspeople-box ps-float-left ps-col_1">
+	<div class="uamspeople-inner-box ps-float-left">
+		{{ if portrait:url }}
+			{{# Render the portrait box only when the person has a photo. A photoless
+			   profile shows no placeholder image; omitting the whole fixed-width photo
+			   column lets the info column (flex: 1 1 0) reflow to fill the row
+			   (UAMS-Web/uams-statamic-archive#1183). #}}
+			<div class="uamspeople-box-photo ps-square ps-img-left">
+				<img
+					src="{{ glide :src="portrait:url" w="128" h="171" fit="crop_focal" }}"
+					srcset="{{ glide :src="portrait:url" w="128" h="171" fit="crop_focal" }} 1x, {{ glide :src="portrait:url" w="256" h="342" fit="crop_focal" }} 2x"
+					width="128"
+					height="171"
+					alt="{{ title }}">
+			</div>
+		{{ /if }}
+		<div class="uamspeople-box-info ps-align-left">
+			<h3 class="uamspeople-box-title">{{ $item_heading | widont }}</h3>
+			<div class="uamspeople-box-details">
+				{{ if job_title && ($display_detail_keys | contains('position')) }}
+					{{ if job_title | is_iterable }}
+						{{# Render each enabled role/title in the replicator as its own jobTitle line #}}
+						{{ job_title }}
+							{{ $position_title = '' }}
+							{{ if title | is_iterable }}
+								{{ if title.value }}
+									{{ $position_title = title.value }}
+								{{ /if }}
+							{{ else }}
+								{{ $position_title = title }}
+							{{ /if }}
+							{{ if $position_title }}
+								{{ $position_name = $position_title | strip_tags | trim | title }}
+								{{ $position_department = department.name | strip_tags | trim | title }}
+								{{ if $position_department }}
+									<p class="uamspeople-single-position"><span itemprop="https://schema.org/jobTitle">{{ $position_name }}</span> &mdash; {{ $position_department | widont }}</p>
+								{{ else }}
+									<p class="uamspeople-single-position"><span itemprop="https://schema.org/jobTitle">{{ $position_name | widont }}</span></p>
+								{{ /if }}
+							{{ /if }}
+						{{ /job_title }}
+					{{ else }}
+						{{# Legacy scalar job_title #}}
+						<p class="uamspeople-single-position"><span itemprop="https://schema.org/jobTitle">{{ job_title | strip_tags | trim | title | widont }}</span></p>
+					{{ /if }}
+				{{ /if }}
+				{{ if email && ( $display_detail_keys | contains('email') ) }}
+					<div class="uamspeople-single-email" itemprop="https://schema.org/email"><span class="label">Email:</span> <a href="mailto:{{ email }}">{{ email }}</a></div>
+				{{ /if }}
+				{{ if telephone && ( $display_detail_keys | contains('telephone') ) }}
+					<div class="uamspeople-single-telephone"><span class="label">Phone:</span> <a href="tel:{{ telephone }}">{{ telephone }}</a></div>
+				{{ /if }}
+				{{ if fax && ( $display_detail_keys | contains('fax') ) }}
+					<div class="ps-fax"><span class="label">Fax:</span> {{ fax }}</div>
+				{{ /if }}
+				{{ if location && ( $display_detail_keys | contains('location') ) }}
+					<div class="uamspeople-single-location"><span class="label">Location:</span> {{ location }}</div>
+				{{ /if }}
+				{{ if clinical_profile_url && ( $display_detail_keys | contains('website') ) }}
+					{{ $clinical_profile_link_text = clinical_profile_link_text ?? 'UAMS Health Provider Profile' }}
+					<div class="uamspeople-single-website"><span class="label">Website:</span> <a href="{{ clinical_profile_url }}" aria-label="{{ $clinical_profile_link_text }}, {{ title }}">{{ $clinical_profile_link_text }}</a></div>
+				{{ /if }}
+				{{ if ( academic_profile_url == true ) && ( $display_detail_keys | contains('deptweb') ) }}
+					{{ $academic_profile_link_text = academic_profile_link_text ?? 'UAMS Academic Profile' }}
+					<div class="uamspeople-single-website"><span class="label">Website:</span> <a href="{{ academic_profile_url }}" aria-label="{{ $academic_profile_link_text }}, {{ title }}">{{ $academic_profile_link_text }}</a></div>
+				{{ /if }}
+				{{ if research_profile_url && ( $display_detail_keys | contains('triweb') ) }}
+					{{ $research_profile_link_text = research_profile_link_text ?? 'UAMS Research Profile' }}
+					<div class="uamspeople-single-website"><span class="label">Website:</span> <a href="{{ research_profile_url }}" aria-label="{{ $research_profile_link_text }}, {{ title }}">{{ $research_profile_link_text }}</a></div>
+				{{ /if }}
+				{{ if clinical_video_url && ( $display_detail_keys | contains('youtube') ) }}
+					{{ $video_link_text = clinical_video_link_text ?? ( 'Video Referencing ' + title ) }}
+					<div class="uamspeople-single-__"><span class="label">Video:</span> <a href="{{ clinical_video_url }}" aria-label="{{ $video_link_text }}, {{ title }}">{{ $video_link_text }}</a></div>
+				{{ /if }}
+				{{ if bio_short && ( $display_detail_keys | contains('freehtml') ) }}
+					<div class="uamspeople-single-freehtml">{{ bio_short }}</div>
+				{{ /if }}
+			</div>
+		</div>
+	</div>
+</div>

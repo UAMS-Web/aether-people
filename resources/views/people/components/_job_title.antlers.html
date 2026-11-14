@@ -1,0 +1,11 @@
+{{ job_title_name = job_title_name | strip_tags | trim | title }}
+{{ job_title_department = job_title_department | strip_tags | trim | title }}
+{{ if job_title_name }}{{ if job_title_department }}
+<span class="subtitle font-weight-thin">
+	<span class="job-title-name font-weight-normal">{{ job_title_name }}</span> — <span class="department-name font-weight-thin font-italic letter-spacing-tight">{{ job_title_department | widont }}</span>
+</span>
+{{ else }}
+<span class="subtitle font-weight-normal">
+	<span class="job-title-name">{{ job_title_name | widont }}</span>
+</span>
+{{ /if }}{{ /if }}

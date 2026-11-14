@@ -1,0 +1,93 @@
+{{#
+	@name Institutional people lens body
+	@desc The institutional lens's OWN curated field selection (UAMS-Web/uams-statamic-archive#1667) - no longer the
+	      shared neutral body. For a departmental-staff audience: a contact overview
+	      (email, telephone, office location), the institutional bio (falling back to the
+	      general bio), and professional memberships. The scholarly professional
+	      background and external research/academic profiles are intentionally omitted here
+	      - those belong to the academic and researcher lenses. Antlers is raw by default,
+	      so editor-entered names are `strip_tags`-escaped and the email/tel hrefs use the
+	      `url`/`rawurlencode` filters.
+	@set people.institutional.profile
+#}}
+{{ partial:people/components/identity_header lens="institutional" }}
+
+{{ if ( email || telephone || telephone_mobile || mitel_extension || fax || location ) }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white">
+		<h2 class="h3">Contact</h2>
+		<dl>
+			{{# Editor/importer-controlled contact fields: `sanitize` HTML-encodes each href value so a `"`-breakout payload cannot escape the attribute (Antlers is raw by default). The `mailto:`/`tel:` scheme is a literal prefix, so there is no scheme-injection sink. #}}
+			{{ if email }}
+				<dt>Email</dt>
+				<dd><a href="mailto:{{ email | sanitize }}" rel="noopener">{{ email | strip_tags }}</a></dd>
+			{{ /if }}
+			{{ if telephone }}
+				<dt>Office Telephone Number</dt>
+				<dd><a href="tel:{{ telephone | sanitize }}" rel="noopener">{{ telephone | format_phone }}</a></dd>
+			{{ /if }}
+			{{ if telephone_mobile }}
+				<dt>Mobile Telephone Number</dt>
+				<dd><a href="tel:{{ telephone_mobile | sanitize }}" rel="noopener">{{ telephone_mobile | format_phone }}</a></dd>
+			{{ /if }}
+			{{ if mitel_extension }}
+				<dt>Office Mitel Extension</dt>
+				<dd>{{ mitel_extension | strip_tags }}</dd>
+			{{ /if }}
+			{{ if fax }}
+				<dt>Office Fax Number</dt>
+				<dd>{{ fax | format_phone }}</dd>
+			{{ /if }}
+			{{ if location }}
+				<dt>Office Location</dt>
+				<dd>{{ location | strip_tags }}</dd>
+			{{ /if }}
+		</dl>
+	</section>
+{{ /if }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="institutional-bio"
+	block_class="profile-bio"
+	:when="bio_institutional || bio"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="{{ 'About ' + display_name_short_with_prefix.text }}"
+			block_id="institutional-bio"
+		}}
+		<div class="module-body">
+			{{ if bio_institutional }}{{ bio_institutional }}{{ else }}{{ bio }}{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="institutional-memberships"
+	block_class="profile-professional-background"
+	:when="member_of"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="Professional Background"
+			block_id="institutional-memberships"
+		}}
+		<div class="col-12">
+			<div class="grid grid-cols-1 gap-8 sm:gap-9">
+				{{
+					partial:people/components/professional_background_list
+					heading="Professional Memberships"
+					:activities_list="member_of"
+					variant="member_of"
+					:when="member_of"
+				}}
+			</div>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Provider awards (UAMS-Web/uams-statamic-archive#1170) - shared component, absent when the person has none. #}}
+{{ partial:people/components/awards }}

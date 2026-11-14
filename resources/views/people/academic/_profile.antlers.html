@@ -1,0 +1,99 @@
+{{#
+	@name Academic people lens body
+	@desc The academic lens's OWN curated field selection (UAMS-Web/uams-statamic-archive#1667) - no longer the shared
+	      neutral body. For a faculty audience: academic + research external profiles, the
+	      academic bio (falling back to the general bio), and the full scholarly
+	      professional background (education, training, certifications, continuing
+	      development). Contact details and clinical chrome are intentionally omitted here
+	      - those belong to the institutional and clinical lenses. Antlers is raw by
+	      default, so editor-entered names are `strip_tags`-escaped and profile-URL hrefs
+	      are `sanitize_url`-escaped (the UAMS-Web/uams-statamic-archive#1500 pattern).
+	@set people.academic.profile
+#}}
+{{ partial:people/components/identity_header lens="academic" }}
+
+{{ $academic_profiles_count = [(academic_profile_url | trim), (research_profile_url | trim)] | filter_empty | count }}
+{{ if ( $academic_profiles_count > 0 ) }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white">
+		{{# Editor/importer-controlled profile URLs: `sanitize_url` neutralizes a dangerous scheme (javascript:/data:) AND HTML-encodes each href for the attribute - the XSS sink (UAMS-Web/uams-statamic-archive#1500 pattern). #}}
+		<dl class="lens-profiles">
+			<dt>{{ 'Profile' | plural($academic_profiles_count) }}</dt>
+			{{ if academic_profile_url }}
+				{{ academic_profile_link_text = ( academic_profile_link_text ?? 'UAMS Academic Profile' ) | strip_tags | trim }}
+				<dd><a href="{{ academic_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ academic_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ academic_profile_link_text }}</a></dd>
+			{{ /if }}
+			{{ if research_profile_url }}
+				{{ research_profile_link_text = ( research_profile_link_text ?? 'UAMS Research Profile' ) | strip_tags | trim }}
+				<dd><a href="{{ research_profile_url | sanitize_url }}" rel="noopener" aria-label="{{ research_profile_link_text | sanitize }}, {{ display_name_full_with_credentials.text | strip_tags | sanitize }}">{{ research_profile_link_text }}</a></dd>
+			{{ /if }}
+		</dl>
+	</section>
+{{ /if }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="academic-bio"
+	block_class="profile-bio"
+	:when="bio_academic || bio"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="{{ 'About ' + display_name_short_with_prefix.text }}"
+			block_id="academic-bio"
+		}}
+		<div class="module-body">
+			{{ if bio_academic }}{{ bio_academic }}{{ else }}{{ bio }}{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="academic-professional-background"
+	block_class="profile-professional-background"
+	:when="education || training || certifications || professional_and_leadership_development_activities"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="Professional Background"
+			block_id="academic-professional-background"
+		}}
+		<div class="col-12">
+			<div class="grid grid-cols-1 gap-8 sm:gap-9">
+				{{
+					partial:people/components/professional_background_list
+					heading="Education"
+					:activities_list="education"
+					variant="education"
+					:when="education"
+				}}
+				{{
+					partial:people/components/professional_background_list
+					heading="Training"
+					:activities_list="training"
+					variant="training"
+					:when="training"
+				}}
+				{{
+					partial:people/components/professional_background_list
+					heading="Certifications"
+					:activities_list="certifications"
+					variant="certifications"
+					:when="certifications"
+				}}
+				{{
+					partial:people/components/professional_background_list
+					heading="Continuing Professional Development"
+					:activities_list="professional_and_leadership_development_activities"
+					variant="professional_and_leadership_development_activities"
+					:when="professional_and_leadership_development_activities"
+				}}
+			</div>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Provider awards (UAMS-Web/uams-statamic-archive#1170) - shared component, absent when the person has none. #}}
+{{ partial:people/components/awards }}

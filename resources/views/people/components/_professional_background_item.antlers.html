@@ -1,0 +1,26 @@
+{{ partial:page_builder/components/card_item }}
+	<dl class="unstyled">
+		{{ partial:page_builder/components/card_body }}
+			{{
+				partial:page_builder/components/card_title
+				:heading="item_heading"
+				element="dt"
+				:subtitle="item_subtitle"
+				subtitle_element="dd"
+			}}
+			{{ if item_location }}<dd>{{ item_location | strip_tags | widont }}</dd>{{ /if }}
+			{{ if item_notes }}<dd class="small mt-5 pt-5 border-t border-r-0 border-b-0 border-l-0 border-solid border-gray-200">{{ item_notes | widont | strip_tags }}</dd>{{ /if }}
+		{{ /partial:page_builder/components/card_body }}
+		{{ if item_date || (item_start_date && item_end_date) }}
+			{{ partial:page_builder/components/card_footer }}
+				<dd class="small">
+					{{ if item_date }}
+						{{ item_date_prepend ? ( ( item_date_prepend | trim ) + ' ' ) : '' }}<time datetime="{{ item_date | format('c') }}">{{ item_date | ap_style_date }}</time>
+					{{ elseif item_start_date && item_end_date }}
+						{{ item_date_range_prepend ? ( ( item_date_range_prepend | trim ) + ' ' ) : '' }}<time datetime="{{ item_start_date | format('c') }}">{{ item_start_date | ap_style_date }}</time> &ndash; <time datetime="{{ item_end_date | format('c') }}">{{ item_end_date | ap_style_date }}</time>
+					{{ /if }}
+				</dd>
+			{{ /partial:page_builder/components/card_footer }}
+		{{ /if }}
+	</dl>
+{{ /partial:page_builder/components/card_item }}

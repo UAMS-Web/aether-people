@@ -1,0 +1,20 @@
+{{#
+	@name UAMS Health Find-a-Doc Ontology List
+	@desc The general block wrapper for a UAMS Health Find-a-Doc ontology list page builder block.
+	@set page.page_builder.uamsweb_block_fad*
+#}}
+
+{{ block_id = {page_builder_block_auto_id} }}
+{{
+	partial:page_builder/uamsweb_block
+	auto_block_id="true"
+	:block_class="fad_block_class"
+	:block_aria_label="block_heading"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{ partial:page_builder/components/block_header }}
+		<div class="col-12">
+			{{ slot }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}

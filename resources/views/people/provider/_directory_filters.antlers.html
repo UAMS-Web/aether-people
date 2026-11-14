@@ -1,0 +1,174 @@
+{{#
+	@name Clinical Provider Directory Filters
+	@desc The reader-facing filter chrome for the shipped `/providers` provider
+	      directory (UAMS-Web/uams-statamic-archive#570) - WP `archive-physicians.php` facet parity minus ratings.
+	      Rendered inside the `fadProviderDirectory` Alpine root (people/provider/_listing), it
+	      feeds the shared UAMS-Web/uams-statamic-archive#1242 facet contract: a name search (`data-fad-search`), an
+	      A–Z last-name bar (`data-fad-alpha`), the WP-parity facet `<select>`s (each
+	      `data-fad-facet="<key>"` + `x-model="filters.<key>"`, matching the card's
+	      `data-<key>` slugs), and a name sort (`data-fad-sort`). Option labels are
+	      `sanitize`d because Antlers output is raw by default; option values are
+	      URL-safe entry/taxonomy slugs (or the controlled gender/primary-care tokens).
+	      Without JavaScript the controls are inert and the full list stays static.
+#}}
+
+<div class="ajax-filter provider-directory-filter" id="provider-directory-ajax-filter">
+	<h2 class="sr-only">Filter the providers</h2>
+
+	{{# Alpine drives filtering client-side (fadProviderDirectory, UAMS-Web/uams-statamic-archive#570/UAMS-Web/uams-statamic-archive#1242); the
+	    submit is neutralized so pressing Enter never reloads the page. #}}
+	<form action="" @submit.prevent>
+
+		{{# Name search - a client-side substring match on the provider's display name
+		    (UAMS-Web/uams-statamic-archive#815 site search shipped, unblocking this). #}}
+		<div class="form-row justify-content-center mb-3">
+			<div class="col-12 col-md-8 col-lg-6">
+				<label class="sr-only" for="provider_directory_search">Search providers by name</label>
+				<input
+					type="search"
+					id="provider_directory_search"
+					class="form-control form-control-lg"
+					placeholder="Search by name"
+					autocomplete="off"
+					data-fad-search
+					x-model="search">
+			</div>
+		</div>
+
+		{{# A–Z last-name bar. The engine disables a letter no rendered provider carries
+		    (pruneAlpha); a second click on the active letter clears it (setAlpha). #}}
+		{{ directory_alpha_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] }}
+		<div class="provider-directory-alpha btn-group btn-group-sm flex-wrap justify-content-center d-flex mb-3" data-fad-alpha role="group" aria-label="Filter by last name initial">
+			{{ directory_alpha_letters }}
+				<button
+					type="button"
+					class="btn btn-outline-primary"
+					data-fad-alpha-letter="{{ value }}"
+					@click="setAlpha('{{ value }}')"
+					:class="{ active: alpha === '{{ value }}' }"
+					:aria-pressed="alpha === '{{ value }}' ? 'true' : 'false'">{{ value }}</button>
+			{{ /directory_alpha_letters }}
+		</div>
+
+		<div class="form-row align-items-end justify-content-center">
+
+			{{# Areas of Expertise - entries → `clinical_expertise`. #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_expertise">Area of Expertise</label>
+				<select id="provider_directory_expertise" class="form-control" data-fad-facet="expertise" x-model="filters.expertise">
+					<option value="">Any Area of Expertise</option>
+					{{ collection:clinical_expertise sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /collection:clinical_expertise }}
+				</select>
+			</div>
+
+			{{# Conditions - entries → `clinical_conditions` (WP `physician_conditions_cpt`). #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_conditions">Condition</label>
+				<select id="provider_directory_conditions" class="form-control" data-fad-facet="conditions" x-model="filters.conditions">
+					<option value="">Any Condition</option>
+					{{ collection:clinical_conditions sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /collection:clinical_conditions }}
+				</select>
+			</div>
+
+			{{# Treatments & Procedures - entries → `clinical_services` (WP `physician_treatments_cpt`). #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_treatments">Treatment or Procedure</label>
+				<select id="provider_directory_treatments" class="form-control" data-fad-facet="treatments" x-model="filters.treatments">
+					<option value="">Any Treatment or Procedure</option>
+					{{ collection:clinical_services sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /collection:clinical_services }}
+				</select>
+			</div>
+
+			{{# Patient Types - the `patient_types` collection, read from `default`, the one site it lives on (UAMS-Web/uams-statamic-archive#2598). #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_patient_types">Patient Type</label>
+				<select id="provider_directory_patient_types" class="form-control" data-fad-facet="patient_types" x-model="filters.patient_types">
+					<option value="">Any Patient Type</option>
+					{{ collection:patient_types site="default" sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /collection:patient_types }}
+				</select>
+			</div>
+
+			{{# Gender - the controlled `gender` radio; the card lower-cases its value. #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_gender">Gender</label>
+				<select id="provider_directory_gender" class="form-control" data-fad-facet="gender" x-model="filters.gender">
+					<option value="">Any Gender</option>
+					<option value="female">Female</option>
+					<option value="male">Male</option>
+					<option value="other">Other</option>
+				</select>
+			</div>
+
+			{{# Language - the distinct BCP-47 codes providers carry, via the tag; the
+			    `{{ if value }}` guard drops the empty row a tag pair renders when the
+			    directory has no languages at all. #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_language">Language</label>
+				<select id="provider_directory_language" class="form-control" data-fad-facet="language" x-model="filters.language">
+					<option value="">Any Language</option>
+					{{# The option value is the tag's raw stored code (unlike the entry/taxonomy
+					    slugs above, which are URL-safe by construction), so it is sanitized -
+					    Antlers output is raw by default and this is a content-derived attribute. #}}
+					{{ provider_language_facet_options }}
+						{{ if value }}<option value="{{ value | sanitize }}">{{ label | sanitize }}</option>{{ /if }}
+					{{ /provider_language_facet_options }}
+				</select>
+			</div>
+
+			{{# Location(s) - entries → `clinical_locations`. #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_location">Location</label>
+				<select id="provider_directory_location" class="form-control" data-fad-facet="location" x-model="filters.location">
+					<option value="">Any Location</option>
+					{{ collection:clinical_locations sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /collection:clinical_locations }}
+				</select>
+			</div>
+
+			{{# Region - taxonomy `regions` (aggregated from the provider's locations). #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_region">Region</label>
+				<select id="provider_directory_region" class="form-control" data-fad-facet="region" x-model="filters.region">
+					<option value="">Any Region</option>
+					{{ taxonomy:regions sort="title:asc" }}
+						<option value="{{ slug }}">{{ title | sanitize }}</option>
+					{{ /taxonomy:regions }}
+				</select>
+			</div>
+
+			{{# Primary Care - the `primary_care_query` toggle; the card emits `yes`. #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_primary_care">Primary Care</label>
+				<select id="provider_directory_primary_care" class="form-control" data-fad-facet="primary_care" x-model="filters.primary_care">
+					<option value="">Any Provider</option>
+					<option value="yes">Primary care providers</option>
+				</select>
+			</div>
+
+			{{# Name sort - reorders the visible cards client-side (Name A–Z / Z–A). #}}
+			<div class="col-12 mb-3 col-md-6 col-lg-4">
+				<label class="sr-only" for="provider_directory_sort">Sort</label>
+				<select id="provider_directory_sort" class="form-control" data-fad-sort x-model="sort">
+					<option value="">Sort by</option>
+					<option value="name-asc">Name (A&ndash;Z)</option>
+					<option value="name-desc">Name (Z&ndash;A)</option>
+				</select>
+			</div>
+
+			{{# Reset - clears every facet, the search, and the alpha letter (reset()). #}}
+			<div class="col-auto mb-3">
+				<input type="button" value="Reset" class="btn btn-outline-primary" @click="reset()">
+			</div>
+		</div>
+	</form>
+</div>
+<hr>

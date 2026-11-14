@@ -1,0 +1,74 @@
+{{#
+	@name Find-a-Doc Provider Card
+	@desc A single Find-a-Doc provider card - responsive portrait (or the shared 3:4 "no image available" fallback), name with only its regulatory-designation credentials (`display_name_full_with_clinical_credentials`, UAMS-Web/uams-statamic#344), patient-facing clinical title, and a "View Profile" CTA. Rendered once per provider inside the Providers block's collection loop (UAMS-Web/uams-statamic-archive#64). Editor- and taxonomy-controlled text is escaped with `sanitize` because Antlers output is raw by default.
+
+	Pass `fad_facet="true"` (the Providers block sets it when reader filtering is enabled, UAMS-Web/uams-statamic-archive#1242) to emit the card's facet anchor: `data-fad-card` plus space-delimited term/entry slugs in `data-expertise` / `data-specialty` / `data-region`, the contract the `fadFilter` Alpine engine reads. The slugs come from the provider's `expertise` (entries → `clinical_expertise`), `clinical_specializations` (terms), and computed `regions` (terms, aggregated from the provider's locations). Unlike the free-text values below, these need no `sanitize`: Statamic slugs are URL-safe (`[a-z0-9-]`), so they cannot carry HTML special characters or break out of the attribute.
+
+	Pass `profile_url="…"` to point the "View Profile" CTA somewhere other than the provider's own permalink - the `/providers` directory passes the clinical lens URL (`/provider/{slug}`, UAMS-Web/uams-statamic-archive#571) so a card leads to the clinical profile rather than the base people page. Falls back to `{{ url }}` when absent or empty, which is what the Find-a-Doc Providers block (UAMS-Web/uams-statamic-archive#64) still relies on.
+
+	Pass `fad_directory="true"` as well (the UAMS-Web/uams-statamic-archive#570 `/providers` directory sets both) to emit the wider WP-parity facet set the `fadProviderDirectory` engine reads: `data-conditions` / `data-treatments` / `data-patient_types` / `data-location` (entry/taxonomy slugs - URL-safe like the three above), `data-gender` / `data-primary_care` (controlled `radio`/`toggle` values), and `data-language` (the BCP-47 codes - the `language` select augments to `{value,label}` rows, so we `pluck:'value'` the codes; a bare `join` over the rows would emit `Array`). The `select`/`radio`-derived values are `sanitize`d for defense-in-depth. Then `data-alpha` (last-name initial, the A–Z bar), `data-sort-name` (last-then-first name sort key), and `data-name` (the searchable display name). The last three carry editor-entered name text, so - like the visible name below - they are `strip_tags`/`sanitize`d so they cannot break out of the attribute.
+	@set page.page_builder.uamsweb_block_fad_providers
+#}}
+
+<div class="card"{{ if fad_facet }} data-fad-card data-expertise="{{ expertise | pluck:'slug' | join:' ' }}" data-specialty="{{ clinical_specializations | pluck:'slug' | join:' ' }}" data-region="{{ regions | pluck:'slug' | join:' ' }}"{{ if fad_directory }} data-conditions="{{ conditions | pluck:'slug' | join:' ' }}" data-treatments="{{ treatments | pluck:'slug' | join:' ' }}" data-patient_types="{{ patient_types | pluck:'slug' | join:' ' }}" data-location="{{ clinical_locations | pluck:'slug' | join:' ' }}" data-gender="{{ gender | lower | sanitize }}" data-language="{{ language | pluck:'value' | join:' ' | sanitize }}" data-primary_care="{{ if primary_care_query }}yes{{ /if }}" data-alpha="{{ person_name:last_name:text | substr:0:1 | upper | sanitize }}" data-sort-name="{{ person_name:last_name:text | lower | sanitize }} {{ person_name:first_name:text | lower | sanitize }}" data-name="{{ display_name_full_with_clinical_credentials:text | lower | strip_tags | sanitize }}"{{ /if }}{{ /if }}>
+	{{ if portrait:url }}
+		{{# Provider portrait: 3:4 crop_focal renditions with a 2x density source, a
+		    larger crop on wide viewports, and the smaller crop as the default. #}}
+		<picture>
+			<source
+				srcset="{{ glide :src="portrait:url" w="306" h="408" fit="crop_focal" }} 1x, {{ glide :src="portrait:url" w="612" h="816" fit="crop_focal" }} 2x"
+				media="(min-width: 992px)">
+			<img
+				src="{{ glide :src="portrait:url" w="256" h="342" fit="crop_focal" }}"
+				srcset="{{ glide :src="portrait:url" w="256" h="342" fit="crop_focal" }} 1x, {{ glide :src="portrait:url" w="512" h="684" fit="crop_focal" }} 2x"
+				width="256"
+				height="342"
+				itemprop="https://schema.org/image"
+				class="card-img-top"
+				alt="{{ display_name_full_with_clinical_credentials.text | strip_tags | sanitize }}"
+				loading="lazy"
+				decoding="async">
+		</picture>
+	{{ else }}
+		{{# No portrait on the profile: the shared 3:4 "no image available" fallback (UAMS-Web/uams-statamic-archive#64). #}}
+		<div class="card-img-top">{{ partial:components/no-image-available_3-4 }}</div>
+	{{ /if }}
+	<div class="card-body">
+		<h3 class="card-title h6">
+			<span class="name">{{ display_name_full_with_clinical_credentials.text | sanitize }}</span>
+			{{ if clinical_title }}
+				<span class="subtitle">{{ clinical_title | sanitize }}</span>
+			{{ /if }}
+		</h3>
+		{{# Where the provider practices (UAMS-Web/uams-statamic-archive#1225). The city comes from the location's
+		    `resolved_city` computed, never from `address.city`: only a STANDALONE location
+		    stores an address at all, so a location contained within a facility or nested
+		    under a parent location would read blank - which is most of them. The computed
+		    resolves all three routes.
+
+		    Gated on a count: this is a raw augmented `entries` value, a query builder
+		    that is truthy even when empty, and `| count` counts the published entries
+		    the loop emits (UAMS-Web/uams-statamic-archive#1693, UAMS-Web/uams-statamic-archive#2422).
+
+		    The separator sits inside the city conditional so a location with no resolvable
+		    city renders its name alone, with nothing trailing it. #}}
+		{{ if clinical_locations | count }}
+			<ul class="card-locations">
+				{{ clinical_locations }}
+					<li class="card-location">
+						<span class="location-name">{{ title | sanitize }}</span>{{ if resolved_city }}<span class="location-separator" aria-hidden="true"> &#8212; </span><span class="location-city">{{ resolved_city | sanitize }}</span>{{ /if }}
+					</li>
+				{{ /clinical_locations }}
+			</ul>
+		{{ /if }}
+	</div>
+	<div class="btn-container">
+		<div class="inner-container">
+			{{# The CTA target: the caller-supplied lens URL when there is one, else the
+			    provider's own permalink. Both are app-generated paths, not editor text. #}}
+			<a href="{{ if profile_url }}{{ profile_url }}{{ else }}{{ url }}{{ /if }}" class="btn btn-primary stretched-link"
+				aria-label="View profile for {{ display_name_short_with_prefix.text | strip_tags | sanitize }}"
+				data-itemtitle="{{ display_name_full_with_clinical_credentials.text | strip_tags | sanitize }}">View Profile</a>
+		</div>
+	</div>
+</div>

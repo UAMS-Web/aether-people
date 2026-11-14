@@ -1,0 +1,52 @@
+{{#
+	@name UAMS People
+	@desc The UAMS People page builder block.
+	@set page.page_builder.uamsweb_block_people
+#}}
+
+{{# Define the Variables #}}
+
+	{{# collection:people sort value #}}
+
+		{{ $people_sort = switch(
+			(order_by == 'modified') => 'updated_at:asc',
+			(order_by == 'none') => 'order',
+			(order_by == 'sortpriority') => 'priority:desc|sort_text_alpha:asc',
+			(order_by == 'sorttext') => 'sort_text_alpha:asc',
+			(order_by == 'title') => 'title',
+			() => 'order'
+		) }}
+
+		{{# Check if Multiple Groups Selection is enabled #}}
+		{{ if multiple_groups_selection }}
+			{{# Use multiple groups field and extract raw value from Statamic field object #}}
+			{{ $group_field = group_multiple | raw }}
+
+		{{# Otherwise #}}
+		{{ else }}
+			{{# Use single group field and extract raw value from Statamic field object #}}
+			{{ $group_field = group_single | raw }}
+
+		{{ /if }}
+
+		{{# Outer wrapper class - overridable by callers (the page-builder block passes `module-body`) #}}
+
+			{{ $people_wrapper_class = people_wrapper_class ?? 'span-md' }}
+
+{{# Render the Block #}}
+
+	{{# `people_groups` is a structured collection, not a taxonomy (UAMS-Web/uams-statamic-archive#1863), so the
+		group filter is an entries-reference lookup via the `people_in_groups`
+		scope rather than a `:taxonomy:` parameter. `$group_field` is already the
+		raw id (or list of ids) - the `| raw` above keeps it out of augmented form. #}}
+	{{ collection:people query_scope="people_in_groups" :groups="$group_field" as="items" :sort="$people_sort" }}
+		<div class="{{ $people_wrapper_class }}">
+			<div class="uamspeople">
+				<div class="ps-theme-white-card-style">
+					{{ items }}
+						{{ partial:page_builder/uamsweb_block_people_item }}
+					{{ /items }}
+				</div>
+			</div>
+		</div>
+	{{ /collection:people }}

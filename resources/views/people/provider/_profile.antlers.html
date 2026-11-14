@@ -1,0 +1,451 @@
+{{#
+	@name Clinical provider profile body
+	@desc The clinical provider lens body (UAMS-Web/uams-statamic-archive#571): ONE canonical `people` entry rendered
+	      for the UAMS Health patient audience. Its field selection is deliberately
+	      CLINICAL - what a patient choosing a provider needs - and diverges from the
+	      academic, institutional, and researcher lens bodies (UAMS-Web/uams-statamic-archive#1667), which curate their
+	      own. Scholarly detail (faculty appointments, publications, research interests)
+	      belongs to those lenses and is intentionally absent here; the shared identity
+	      header is the only chrome in common.
+
+	      Section order mirrors the WordPress `single-physicians.php` clinical
+	      arrangement, minus the sections owned elsewhere: at-a-glance scheduling facts,
+	      clinical bio, clinical focus, areas of expertise, conditions, treatments,
+	      locations, credentials, awards, referral disclaimer.
+
+	      Antlers output is raw by default, so editor-entered text is `strip_tags`/
+	      `sanitize`-escaped and every editor-controlled href is `sanitize_url`-escaped
+	      (the UAMS-Web/uams-statamic-archive#1500 pattern). Entry and term titles come from related entries the CP
+	      controls, and are escaped on the same footing.
+
+	      A `true_false` field augments to a `LabeledValue`, never a raw bool, so the
+	      scheduling facts test `field:value === true` / `=== false`. A bare
+	      `{{ if accepting_patients_query }}` would be truthy even for an explicit "No"
+	      (the object is truthy), which is the trap UAMS-Web/uams-statamic-archive#1190 documents on the referral
+	      disclaimer.
+	@set people.provider.profile
+#}}
+{{#
+	The subtitle is the patient-facing CLINICAL title, not the person's Workday
+	`job_title` (UAMS-Web/uams-statamic-archive#1680) - the register a patient reads, and the same string the
+	Find-a-Doc provider card renders (`clinical_title`, resolved by
+	`ClinicalTitleResolver`), so a card and the profile it links to can never describe
+	the same provider differently.
+
+	The resident override is WordPress parity: `single-physicians.php` resolves the
+	subtitle through `class.fad-custom-post.php`, which short-circuits to the literal
+	"Resident Physician" when `physician_resident` is set and never consults the
+	specialization. Our blueprint agrees - `clinical_specializations` is gated
+	`resident_query: 'not true'`, so a resident has no specialization to resolve and
+	`clinical_title` would be '' anyway; the override supplies the title WordPress
+	shows instead of falling through to the employment title.
+
+	`clinical_title` resolves to '' for a provider with no primary specialization, and
+	then the `<h1>` carries no subtitle (UAMS-Web/uams-statamic-archive#2600). `subtitle_only` stops the shared header
+	falling back to `job_title`: WordPress printed an empty subtitle there, never the
+	employment title. That supersedes UAMS-Web/uams-statamic-archive#1680's fallback for this lens only.
+#}}
+{{ if resident_query:value === true }}
+	{{ partial:people/components/identity_header lens="provider" :identity_name="display_name_full_with_clinical_credentials.text" subtitle="Resident Physician" }}
+{{ else }}
+	{{ partial:people/components/identity_header lens="provider" :identity_name="display_name_full_with_clinical_credentials.text" :subtitle="clinical_title" subtitle_only="true" }}
+{{ /if }}
+
+{{# The primary appointment location, immediately under the `<h1>` as WordPress has
+    it - the first published entry in the provider's locations, with the heading word
+    that tells a patient whether it is somewhere they can book (UAMS-Web/uams-statamic-archive#1676). #}}
+{{ partial:people/provider/primary_location }}
+
+{{#
+	No `clinical_profile_url` link here, deliberately. That field is the bridge FROM the
+	non-clinical lenses TO the clinical profile - `people/show` renders it in an "Other
+	Profiles" list beside `academic_profile_url` and `research_profile_url`. Inside the
+	clinical lens it points at this page's own predecessor, so surfacing it would put two
+	competing canonical claims on the patient-facing profile and send the reader back to
+	the legacy WordPress page this route replaces. The placeholder body carried it because
+	the placeholder was not yet the canonical profile; this is.
+#}}
+
+{{#
+	At-a-glance facts - what a patient checks before choosing a provider: specialties,
+	whether they take new patients, primary care, second opinions, patient types. Each
+	row renders only when the provider answered it, so an UNSET field is absent rather
+	than reported as "No".
+
+	Taxonomy and entry fields are gated on `| count`, not on the bare field, for the same
+	reason the ontology list is: an augmented relation is a query-builder OBJECT that is
+	truthy even when it resolves to nothing.
+
+	Every relation in this block is an `entries` relation: `clinical_locations`,
+	`clinical_resources`, `patient_types` since UAMS-Web/uams-statamic-archive#2598 made it a collection, and
+	`clinical_specializations` since UAMS-Web/uams-statamic-archive#2596 did. `| count` counts the published entries
+	of each, so a draft patient type or specialization opens no row (UAMS-Web/uams-statamic-archive#1693, UAMS-Web/uams-statamic-archive#2422).
+
+	Deliberately NOT an appointment CTA. UAMS-Web/uams-statamic-archive#571's acceptance criteria name a
+	"scheduling/appointment CTA", which needs the real locations component (the
+	appointment-phone fallback chain in `clinical_locations/_card` and the WordPress
+	portal-URL invariant), not a field-selection edit - deferred to its own slice, which
+	is why this block is headed "At a Glance" rather than "Appointments".
+
+	The language clause in the gate below is deliberately the VISIBLE-row condition, not
+	`language | count` (UAMS-Web/uams-statamic-archive#1681). `language` defaults to `['en']` on the blueprint, so
+	gating on the bare count would open an "At a Glance" block for nearly every provider
+	whose only row is the `sr-only` English one - a heading over nothing.
+	`( language | pluck:'value' | join:',' ) != 'en'` is true for a multi-language
+	provider and for a single non-English one, and false for English-only; the `| count`
+	beside it keeps an unset field from opening the block on the empty-string compare.
+#}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-at-a-glance"
+	block_class="profile-at-a-glance"
+	:when="accepting_patients_query:value === true || second_opinions_query:value === true || primary_care_query:value === true || ( patient_types | count ) || ( clinical_specializations | count ) || ( ( language | count ) && ( language | pluck:'value' | join:',' ) != 'en' )"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="At a Glance"
+			block_id="provider-at-a-glance"
+		}}
+		<div class="col-12">
+			<dl class="provider-at-a-glance-list">
+				{{ if clinical_specializations | count }}
+					<dt>Specialties</dt>
+					{{ clinical_specializations }}
+						<dd class="provider-specialization">{{ title | sanitize }}</dd>
+					{{ /clinical_specializations }}
+				{{ /if }}
+				{{#
+					There is deliberately no NEGATIVE row here (UAMS-Web/uams-statamic-archive#1676). The appointment CTA
+					opens with "This provider is not currently accepting new patients." in
+					exactly that state, and the page must not say it twice; the CTA owns the
+					statement because it is the sentence the rest of that block is
+					predicated on.
+
+					Nor does the row reappear for a provider who gets no CTA. WordPress
+					renders its whole "Accepting New Patients" row only when the provider is
+					appointment-eligible - and `accepting_patients_query` is itself
+					blueprint-gated on that eligibility, so an ineligible provider has no
+					answer to report. Claiming "not accepting new patients" for someone who
+					does not take scheduled appointments at all would be misleading, not
+					informative.
+
+					The affirmative row duplicates nothing and always renders.
+				#}}
+				{{ if accepting_patients_query:value === true }}
+					<dt>New patients</dt>
+					<dd class="provider-accepting-patients">Accepting new patients</dd>
+				{{ /if }}
+				{{ if primary_care_query:value === true }}
+					<dt>Primary care</dt>
+					<dd class="provider-primary-care">Provides primary care</dd>
+				{{ /if }}
+				{{ if second_opinions_query:value === true }}
+					<dt>Second opinions</dt>
+					<dd class="provider-second-opinions">Offers second opinions</dd>
+				{{ /if }}
+				{{ if patient_types | count }}
+					<dt>Patient types</dt>
+					{{ patient_types }}
+						<dd class="provider-patient-type">{{ title | sanitize }}</dd>
+					{{ /patient_types }}
+				{{ /if }}
+				{{#
+					Languages (UAMS-Web/uams-statamic-archive#1681). A patient can filter the directory by language, so
+					the profile they land on has to say it. WordPress emits the row
+					`sr-only` when the provider's only language is English - present in
+					the accessibility tree, hidden visually, on the reasoning that
+					"speaks English" is not something a patient needs to read at a UAMS
+					clinic but is still worth exposing programmatically. We key that off
+					the BCP-47 VALUE rather than WordPress's `$language_list == 'English'`
+					label compare, which would silently start rendering visibly if the
+					label text ever changed.
+
+					`language` is a multiple `select`, so it augments to `{value,label}`
+					rows: a bare `{{ language }}` emits `Array`. One `<dd>` per language,
+					matching the specialties and patient-type rows above - and NOT a
+					comma-joined string like WordPress's, because the BCP-47 labels
+					contain commas of their own ("Spanish, Castilian"), which a joined
+					list renders indistinguishable from two separate languages.
+				#}}
+				{{ if language | count }}
+					{{ if ( language | pluck:'value' | join:',' ) == 'en' }}
+						<dt class="sr-only">Language</dt>
+						{{ language }}
+							<dd class="sr-only provider-language">{{ label | sanitize }}</dd>
+						{{ /language }}
+					{{ else }}
+						<dt>{{ 'Language' | plural( language | count ) }}</dt>
+						{{ language }}
+							<dd class="provider-language">{{ label | sanitize }}</dd>
+						{{ /language }}
+					{{ /if }}
+				{{ /if }}
+			</dl>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Appointment CTA, first of two (UAMS-Web/uams-statamic-archive#1676). WordPress renders the block twice - once
+    high on the page, once at the foot - and both instances carry an instance number in
+    their ids and analytics attributes. #}}
+{{ partial:people/provider/appointment_cta instance="1" }}
+
+{{# Clinical biography, falling back to the general bio when no clinical one is written -
+    the same fallback the academic lens uses for `bio_academic`. #}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-bio"
+	block_class="profile-bio"
+	:when="bio_clinical || bio"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			{{# `block_header` emits `{{ heading | widont }}` with NO escaping, and the
+			    short-name computed value is a bare `sprintf()` over the stored name, so
+			    the name must be escaped HERE or an editor/importer-supplied
+			    `<svg/onload=…>` renders live on this public page. `widont` only swallows
+			    the last space, so a space-free payload would survive intact. #}}
+			heading="{{ 'About ' + ( display_name_short_with_prefix.text | strip_tags ) }}"
+			block_id="provider-bio"
+		}}
+		<div class="module-body">
+			{{ if bio_clinical }}{{ bio_clinical }}{{ else }}{{ bio }}{{ /if }}
+			{{#
+				The clinical video (UAMS-Web/uams-statamic-archive#1682), rendered exactly as `people/show` renders it
+				so the two profiles cannot drift.
+
+				It lives INSIDE this block on purpose. The block's `:when="bio_clinical
+				|| bio"` gate stands: a provider with a video and no bio renders no About
+				section and therefore no video. That is intended behavior confirmed by
+				the team - read the WordPress source alone and it looks otherwise (the
+				section gate is `$physician_clinical_bio || !empty($video)` and the two
+				renders are independent sibling `if` blocks), so do not "correct" the
+				gate to match that reading. A test pins it.
+			#}}
+			{{ if clinical_video_url }}
+				{{
+					partial:sets/video
+					:video_url="clinical_video_url"
+					:video_link_text="clinical_video_link_text"
+					caption_hide="true"
+					align="alignwide"
+				}}
+			{{ /if }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-clinical-focus"
+	block_class="profile-clinical-focus"
+	:when="clinical_focus"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="Clinical Focus"
+			block_id="provider-clinical-focus"
+		}}
+		<div class="module-body">
+			{{ clinical_focus }}
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Clinical ontology sections. Each is a list of related entries the CP controls; the
+    titles are still escaped and the hrefs still `sanitize_url`ed, because an entry URL
+    is app-generated but an entry title is editor text.
+
+    Areas of Expertise additionally honors the Find-a-Doc **Remove Medical Ontology**
+    rules (UAMS-Web/uams-statamic-archive#1687) via the `hide_medical_ontology` computed. Only this section does:
+    `clinical_expertise` is the one routable ontology collection, so it is the only one
+    whose suppression removes links rather than plain text. `conditions` and `treatments`
+    render unconditionally, and the flag is honored on this profile render only - a
+    suppressed provider still appears in Find-a-Doc listings and on the Areas of
+    Expertise pages themselves.
+
+    The gate is a wrapper rather than a `:when` on the partial: `uamsweb_block`'s own
+    `:when` already carries the "does this relation resolve to anything" test, and
+    folding a second condition into it would put two unrelated questions in one
+    expression. #}}
+{{ if !hide_medical_ontology }}
+	{{
+		partial:people/provider/ontology_list
+		heading="Areas of Expertise"
+		block_id="provider-expertise"
+		block_class="profile-expertise"
+		:entries_list="expertise"
+	}}
+{{ /if }}
+
+{{
+	partial:people/provider/ontology_list
+	heading="Conditions Treated"
+	block_id="provider-conditions"
+	block_class="profile-conditions"
+	:entries_list="conditions"
+}}
+
+{{
+	partial:people/provider/ontology_list
+	heading="Treatments and Services"
+	block_id="provider-treatments"
+	block_class="profile-treatments"
+	:entries_list="treatments"
+}}
+
+{{#
+	Locations are REAL location detail, not the generic ontology list (UAMS-Web/uams-statamic-archive#1676): the
+	shared `clinical_locations/card` already carries the address, the parent, the
+	contact-number precedence (UAMS-Web/uams-statamic-archive#1185 / UAMS-Web/uams-statamic-archive#1167), and Get Directions, so a patient sees
+	where and how to reach the clinic rather than a list of names. The relation's own
+	order is the entered order, which puts the primary location first.
+
+	The `#locations` id is the anchor the appointment CTA's "contacting the clinic
+	directly" fragment and the primary-location block's "View All Locations" button
+	both target for a multi-location provider, so it has to exist whenever the section
+	does.
+#}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="locations"
+	block_class="profile-locations"
+	:when="clinical_locations | count"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="{{ 'Locations Where ' + ( display_name_short_with_prefix.text | strip_tags ) + ' Practices' }}"
+			block_id="locations"
+		}}
+		<div class="col-12">
+			<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+				{{ clinical_locations }}
+					{{ partial:clinical_locations/card }}
+				{{ /clinical_locations }}
+			</div>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# UAMS Health Talk podcast (UAMS-Web/uams-statamic-archive#1683 / UAMS-Web/uams-statamic-archive#1688) - shown only for a provider carrying a
+    podcast guest name, and only while the Find-a-Doc global's toggle allows it.
+    WordPress places it between the locations and the related resources. #}}
+{{ partial:people/provider/podcast }}
+
+{{#
+	Resources related to this provider (UAMS-Web/uams-statamic-archive#1684) - WordPress puts them between the podcast
+	and the academic background, headed with the possessive form of the shared resources
+	block, so this sits in the same place.
+
+	Reuses `clinical_resources/card`, the component the resource index, the Find-a-Doc
+	resources block, and site search all render, rather than a provider-specific card.
+
+	The "more" CTA carries the provider into the resources archive as WordPress's does
+	(UAMS-Web/uams-statamic-archive#1692), now that `clinical_resources_for_provider` gives it somewhere to land.
+	`provider_resources_url` reads the archive root from the collection's MOUNT rather
+	than hard-coding `/health/resources`, and resolves to '' when the collection is
+	unmounted or its landing unpublished - in which case no CTA renders at all, which
+	is the same "no link beats a broken link" call UAMS-Web/uams-statamic-archive#1684 made when the filter did not
+	yet exist.
+
+	Gated on `| count`, for the reason the ontology list documents: an `entries` field
+	augments to a truthy query-builder object even when it resolves to nothing. The count
+	is of published entries, so a provider whose only related resource is unpublished
+	gets no empty heading (UAMS-Web/uams-statamic-archive#1693, UAMS-Web/uams-statamic-archive#2422). Publication filtering itself comes from that
+	augmentation (`StatusQueryBuilder`), not from anything here.
+#}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-resources"
+	block_class="profile-resources"
+	:when="clinical_resources | count"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="{{ 'Resources Related to ' + ( display_name_short_with_prefix.text | strip_tags ) }}"
+			block_id="provider-resources"
+		}}
+		<div class="col-12">
+			<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+				{{ clinical_resources }}
+					{{ partial:clinical_resources/card }}
+				{{ /clinical_resources }}
+			</div>
+		</div>
+		{{ if provider_resources_url }}
+			<div class="col-12 more">
+				<div class="cta-container">
+					<a class="btn btn-primary provider-resources-more" href="{{ provider_resources_url | sanitize_url }}">More Resources From {{ display_name_short_with_prefix.text | strip_tags | sanitize }}</a>
+				</div>
+			</div>
+		{{ /if }}
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Credentials a patient reads as clinical assurance. Education and training are the
+    academic lens's business; board certifications and professional memberships are the
+    clinical one's, so a fellowship reads here in words rather than as letters after the
+    name (UAMS-Web/uams-statamic#304, UAMS-Web/uams-statamic#307). #}}
+{{
+	partial:page_builder/uamsweb_block
+	block_id="provider-credentials"
+	block_class="profile-credentials"
+	:when="certifications || member_of"
+}}
+	{{ partial:page_builder/components/container_row }}
+		{{
+			partial:page_builder/components/block_header
+			heading="Credentials"
+			block_id="provider-credentials"
+		}}
+		<div class="col-12">
+			<div class="grid grid-cols-1 gap-8 sm:gap-9">
+				{{
+					partial:people/components/professional_background_list
+					heading="Certifications"
+					:activities_list="certifications | certifications_by_kind"
+					variant="certifications"
+					:when="certifications"
+				}}
+				{{
+					partial:people/components/professional_background_list
+					heading="Professional Memberships"
+					:activities_list="member_of"
+					variant="member_of"
+					:when="member_of"
+				}}
+			</div>
+		</div>
+	{{ /partial:page_builder/components/container_row }}
+{{ /partial:page_builder/uamsweb_block }}
+
+{{# Provider awards (UAMS-Web/uams-statamic-archive#1170) - shared component, absent when the provider has none. #}}
+{{ partial:people/components/awards }}
+
+{{#
+	Appointment CTA, second of two (UAMS-Web/uams-statamic-archive#1676) - the foot-of-page repeat, so a reader who
+	has scrolled the whole profile does not have to scroll back to book.
+
+	Gated on something having rendered BETWEEN the two (UAMS-Web/uams-statamic-archive#1695), matching WordPress,
+	which sets `$appointment_block_instance = 2` only when an intervening section
+	rendered. Without the gate a provider with an appointment CTA and nothing else -
+	no bio, clinical focus, expertise, conditions, treatments, locations, podcast,
+	resources, credentials, or awards - got the same block twice, back to back.
+
+	`provider_profile_body_rendered` is a computed rather than a restatement of the
+	ten section conditions here, which is the duplication that drifts the moment a
+	section is added or re-gated. `ProviderProfileBodyResolver` is the one place that
+	list lives, and `ProviderProfileBodyResolverTest` counts the sections rendered
+	between the two CTAs so adding one here reddens the suite until that list follows.
+#}}
+{{ if provider_profile_body_rendered }}
+	{{ partial:people/provider/appointment_cta instance="2" }}
+{{ /if }}
+
+{{# Referral-requirement disclaimer (UAMS-Web/uams-statamic-archive#1190) - shared component, shown only when set. #}}
+{{ partial:people/components/referral_disclaimer }}

@@ -1,0 +1,69 @@
+{{#
+	@name UAMS Health Clinical Resources List
+	@desc The UAMS Health Clinical Resources List page builder block - a uniform card
+	      grid of clinical resources with a client-side resource-type facet (UAMS-Web/uams-statamic-archive#61,
+	      reusing the shared UAMS-Web/uams-statamic-archive#1242 fadFilter engine). Renders the editor-curated
+	      `clinical_resources` selection when set, otherwise every resource, each via
+	      the shared `clinical_resources/_card` partial (with `fad_facet` so each card
+	      emits its `data-type` blueprint slug for the filter to narrow the grid
+	      client-side). Cards link to their per-type detail pages.
+
+	      The type facet offers the five public subtypes (article/audio/document/
+	      infographic/video, the entry blueprint handles - matching the UAMS-Web/uams-statamic-archive#1468 index
+	      control); the engine prunes any option no rendered card carries. The block's
+	      `module-<id>` namespaces the filter so two filtering blocks on one page can't
+	      collide (UAMS-Web/uams-statamic-archive#1481).
+	@set page.page_builder.uamsweb_block_fad_clinical_resources
+#}}
+
+{{# Only render if required fields (and conditionals) have values. #}}
+{{ $block_valid = block_heading && block_description && background_color && more_query != null }}
+{{ if $block_valid && more_query }}
+	{{ $block_valid = more_heading && more_button_text && more_button_url }}
+{{ /if }}
+
+{{ if $block_valid }}
+	{{# The block's stable per-instance id, namespacing the filter (UAMS-Web/uams-statamic-archive#1481). #}}
+	{{ $fad_namespace = {page_builder_block_auto_id} }}
+	{{ partial:page_builder/uamsweb_block_fad
+		fad_block_class="clinical-resource-list"
+		fad_block_title_plural="Clinical Resources"
+	}}
+		<div x-data="fadFilter(['type'], 'resource', 'resources')" data-fad-namespace="{{ $fad_namespace }}">
+			{{ partial:page_builder/components/block_fad_filter
+				fad_filter_collection="clinical_resources"
+				fad_filter_title_plural="Clinical Resources"
+				fad_filter_namespace="{{ $fad_namespace }}"
+			}}
+			{{ if clinical_resources }}
+				{{# Editor-curated selection - render exactly the picked resources. #}}
+				<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+					{{ clinical_resources }}
+						{{ partial:clinical_resources/card fad_facet="true" }}
+					{{ /clinical_resources }}
+				</div>
+			{{ else }}
+				{{# No curation → every clinical resource, newest first. #}}
+				{{ collection:clinical_resources sort="date:desc" as="resources" }}
+					{{ if no_results }}
+						<p class="resources-empty">No clinical resources found.</p>
+					{{ else }}
+						<div class="card-list card-list-left" itemscope itemtype="https://schema.org/ItemList">
+							{{ resources }}
+								{{ partial:clinical_resources/card fad_facet="true" }}
+							{{ /resources }}
+						</div>
+					{{ /if }}
+				{{ /collection:clinical_resources }}
+			{{ /if }}
+			{{# Empty state shown by the engine when no card matches the active facet.
+			    Inline `display: none` (not x-cloak) hides it until Alpine takes over. #}}
+			<p class="ajax-filter-message" role="status" x-show="visibleCount === 0" style="display: none;">
+				No clinical resources match the selected filters.
+				<button type="button" class="btn btn-link p-0 align-baseline" @click="reset()">Reset the filters</button>
+			</p>
+			{{# Polite live region announcing the visible count on each change. #}}
+			<div class="sr-only" aria-live="polite" x-text="announcement"></div>
+		</div>
+	{{ /partial:page_builder/uamsweb_block_fad }}
+{{ /if }}

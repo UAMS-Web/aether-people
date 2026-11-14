@@ -1,0 +1,120 @@
+{{#
+	@name Clinical provider appointment CTA
+	@desc The "Make an Appointment With {short name}" section of the clinical provider
+	      lens (UAMS-Web/uams-statamic-archive#1676), ported from the WordPress `blocks/appointment-provider.php`.
+
+	      It is PROSE, not a button. One or two sentences assembled from three reusable
+	      link fragments - a patient portal, the clinic itself, and a system appointment
+	      line - chosen by four booleans the `appointment_context` computed resolves.
+
+	      Pass `instance` (1 or 2): WordPress renders the block twice, once under the
+	      jump links and once at the foot of the page, and both instances need distinct
+	      element ids.
+
+	      Every fragment call carries its own trailing punctuation via `tail`, never the
+	      call site - see the fragments partial, which explains why: a partial's output
+	      is not trimmed, so `{{ partial:… }}.` shipped a space before the period.
+
+	      The branch table below is WordPress's, reproduced condition-for-condition
+	      rather than refactored into a tidier truth table, because two things make the
+	      real behavior smaller and stranger than the four booleans suggest:
+
+	      - `show_portal` IMPLIES `location_valid` (the resolver gates it on a primary
+	        published location), so every combination with a portal and no location is
+	        unreachable and is simply absent here.
+	      - The final `else` is NOT a tidy default. Its inline comment in WordPress
+	        claims one specific combination, but it absorbs every combination the eight
+	        explicit conditions miss - including *referral required AND not accepting
+	        new patients*, which therefore renders the not-accepting sentence and DROPS
+	        the referral sentence entirely. That is reproduced, not "fixed": #89 owns
+	        any revision to this copy.
+
+	      The three no-valid-location branches offer the main line REGARDLESS of the
+	      site-wide `provider_mainline` toggle. WordPress carries an explicit comment
+	      saying why - with no location there would otherwise be no way to make an
+	      appointment at all - and it is the branch most easily lost in a port.
+
+	      Antlers is raw by default. The portal name and the appointment-line name are
+	      editor text and are `sanitize`d; the portal URL is editor-entered and is
+	      `sanitize_url`ed; the location URL is app-generated and escaped on the same
+	      footing (the UAMS-Web/uams-statamic-archive#1500 pattern).
+	@set people.provider.appointment_cta
+#}}
+{{ if appointment_context:eligible }}
+	<section class="uams-module cta-bar cta-bar-1 bg-auto profile-appointments" id="appointment-info-{{ instance ?? '1' }}">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-12">
+					<h2>Make an Appointment With {{ display_name_short_with_prefix.text | strip_tags | sanitize }}</h2>
+
+					{{ if appointment_context:location_valid && appointment_context:referral_required && appointment_context:accepting_patients && appointment_context:show_portal }}
+						{{ partial:people/provider/appointment_fragments variant="referral" }}
+						<p>Existing patients can make an appointment by {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="portal" tail="," instance="{{ instance ?? '1' }}" }} {{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="portal" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+
+					{{ elseif !appointment_context:location_valid && appointment_context:referral_required && appointment_context:accepting_patients }}
+						{{# No valid location: the main line is offered whatever the toggle says. #}}
+						{{ partial:people/provider/appointment_fragments variant="referral" }}
+						<p>Existing patients can make an appointment {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}</p>
+
+					{{ elseif appointment_context:location_valid && appointment_context:referral_required && appointment_context:accepting_patients }}
+						{{ partial:people/provider/appointment_fragments variant="referral" }}
+						<p>Existing patients can make an appointment {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+
+					{{ elseif appointment_context:location_valid && !appointment_context:referral_required && appointment_context:accepting_patients && appointment_context:show_portal }}
+						<p>New patients can make an appointment {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+						<p>Existing patients also have the option of {{ partial:people/provider/appointment_fragments variant="portal" tail="." instance="{{ instance ?? '1' }}" }}</p>
+
+					{{ elseif !appointment_context:location_valid && !appointment_context:referral_required && appointment_context:accepting_patients }}
+						{{# No valid location: the main line is offered whatever the toggle says. #}}
+						<p>New and existing patients can make an appointment {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}</p>
+
+					{{ elseif appointment_context:location_valid && !appointment_context:referral_required && appointment_context:accepting_patients }}
+						<p>New and existing patients can make an appointment {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+
+					{{ elseif appointment_context:location_valid && !appointment_context:referral_required && !appointment_context:accepting_patients && appointment_context:show_portal }}
+						<p>This provider is not currently accepting new patients.</p>
+						<p>Existing patients can make an appointment by {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="portal" tail="," instance="{{ instance ?? '1' }}" }} {{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="portal" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+
+					{{ elseif !appointment_context:location_valid && !appointment_context:referral_required && !appointment_context:accepting_patients }}
+						{{# No valid location: the main line is offered whatever the toggle says. #}}
+						<p>This provider is not currently accepting new patients.</p>
+						<p>Existing patients can make an appointment {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}</p>
+
+					{{ elseif !appointment_context:location_valid && appointment_context:referral_required && !appointment_context:accepting_patients }}
+						{{#
+							No valid location: the main line is offered whatever the toggle says.
+
+							WordPress has no branch for this combination - it falls into the
+							same catch-all as the others below, which emits the `direct`
+							fragment. That fragment links `#locations` for any provider who is
+							not at exactly one location, and with NO published location the
+							Locations section does not render, so WordPress ships a link to an
+							anchor that is not on the page (UAMS-Web/uams-statamic-archive#1695).
+
+							This is the ONLY combination that reaches the catch-all with no
+							valid location, so it is split out rather than patched inside it -
+							the catch-all's own behavior for the location-carrying cases is
+							untouched. The copy still drops the referral sentence, exactly as
+							the catch-all does; only the dead link is replaced, with the main
+							line the three other no-location branches already offer on
+							WordPress's own stated reasoning that there would otherwise be no
+							way to make an appointment at all.
+						#}}
+						<p>This provider is not currently accepting new patients.</p>
+						<p>Existing patients can make an appointment {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}</p>
+
+					{{ else }}
+						{{# The catch-all, reproduced as WordPress wrote it: it absorbs every
+						    combination the eight above miss, INCLUDING referral-required and
+						    not-accepting - which therefore gets the not-accepting sentence
+						    and no referral sentence at all. Every combination that still
+						    reaches it carries a valid location, so its `direct` link always
+						    has a destination (UAMS-Web/uams-statamic-archive#1695). #}}
+						<p>This provider is not currently accepting new patients.</p>
+						<p>Existing patients can make an appointment {{ if appointment_context:main_line_enabled }}{{ partial:people/provider/appointment_fragments variant="direct" instance="{{ instance ?? '1' }}" }} or {{ partial:people/provider/appointment_fragments variant="main" tail="." instance="{{ instance ?? '1' }}" }}{{ else }}{{ partial:people/provider/appointment_fragments variant="direct" tail="." instance="{{ instance ?? '1' }}" }}{{ /if }}</p>
+					{{ /if }}
+				</div>
+			</div>
+		</div>
+	</section>
+{{ /if }}

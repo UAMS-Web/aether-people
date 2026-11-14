@@ -1,0 +1,71 @@
+{{#
+	@name Primary appointment location block
+	@desc The provider's primary location, surfaced high on the clinical lens -
+	      immediately under the `<h1>`, before the at-a-glance facts (UAMS-Web/uams-statamic-archive#1676). WordPress
+	      puts it there, and we rendered no equivalent.
+
+	      The primary location is simply the FIRST PUBLISHED entry in the provider's
+	      `clinical_locations` - not a flagged one, first-published-wins. The augmented
+	      relation already filters to published, so `limit="1"` over it is that rule.
+
+	      The heading switches on appointment eligibility: an appointment-eligible
+	      provider gets "Primary Appointment Location", everyone else "Primary
+	      Location". That one word is the page telling a patient whether this address is
+	      somewhere they can book, and it is the detail most easily lost in a port.
+
+	      "View All Locations" appears only when the provider has more than one
+	      published location; "View Location" always does.
+
+	      The address, parent ("Part of …"), and contact-number precedence mirror
+	      `clinical_locations/card` (UAMS-Web/uams-statamic-archive#1465 / UAMS-Web/uams-statamic-archive#1185 / UAMS-Web/uams-statamic-archive#1167) - the shared number wins,
+	      then the dedicated appointment number, then the general-information line. This
+	      is the LOCATION's own number, unlike the system appointment line in the CTA
+	      above it.
+
+	      Antlers is raw by default, so every editor-controlled string here is
+	      `sanitize`d and every href `sanitize_url`ed (the UAMS-Web/uams-statamic-archive#1500 pattern).
+	@set people.provider.primary_location
+#}}
+{{ if clinical_locations | count }}
+	<section class="container-fluid p-0 p-xs-8 p-sm-10 person-info bg-white profile-primary-location" data-sectiontitle="Primary Location">
+		<div class="row mx-0 mx-xs-n4 mx-sm-n8">
+			<div class="col-12 p-4 py-xs-0 px-xs-4 px-sm-8">
+				<h2 class="h3">{{ if appointment_context:eligible }}Primary Appointment Location{{ else }}Primary Location{{ /if }}</h2>
+
+				{{ clinical_locations limit="1" }}
+					{{# Capture the entry url before any asset pair inside can rebind it. #}}
+					{{ $primary_location_url = url }}
+					{{ $primary_location_name = generic_name ? generic_name : title }}
+
+					{{# The address parts are the `resolved_*` computeds, as on the location card, so a
+					    child location shows the address groups it inherits (UAMS-Web/uams-statamic-archive#2608). #}}
+					{{ $primary_region = resolved_state }}
+
+					{{ $primary_shared_number = shared_phone_number ? shared_phone : '' }}
+					{{ $primary_phone = $primary_shared_number ? $primary_shared_number : ( phone_appointment_new ? phone_appointment_new : phone ) }}
+
+					<p class="primary-location-address" itemscope itemtype="https://schema.org/PostalAddress">
+						<strong class="primary-location-name">{{ $primary_location_name | sanitize }}</strong><br>
+						{{ if parent_location_name }}
+							(Part of {{ if parent_location_url }}<a href="{{ parent_location_url | sanitize_url }}" data-categorytitle="Parent Name">{{ parent_location_name | sanitize }}</a>{{ else }}{{ parent_location_name | sanitize }}{{ /if }})<br>
+						{{ /if }}
+						{{ if resolved_street_address }}<span itemprop="https://schema.org/streetAddress">{{ resolved_street_address | sanitize }}</span><br>{{ /if }}
+						{{ if resolved_address_line_2 }}<span class="primary-location-address-2">{{ resolved_address_line_2 | sanitize }}</span><br>{{ /if }}
+						{{ if resolved_city }}<span itemprop="https://schema.org/addressLocality">{{ resolved_city | sanitize }}</span>{{ /if }}{{ if resolved_city && $primary_region }}, {{ /if }}{{ if $primary_region }}<span itemprop="https://schema.org/addressRegion">{{ $primary_region | sanitize }}</span>{{ /if }}{{ if resolved_postal_code }} <span itemprop="https://schema.org/postalCode">{{ resolved_postal_code | sanitize }}</span>{{ /if }}
+					</p>
+
+					{{ if $primary_phone }}
+						<p class="primary-location-phone"><a href="tel:{{ $primary_phone | sanitize }}" itemprop="https://schema.org/telephone">{{ $primary_phone | format_phone | sanitize }}</a></p>
+					{{ /if }}
+
+					<div class="btn-container">
+						<a class="btn btn-primary" href="{{ $primary_location_url | sanitize_url }}" data-itemtitle="{{ $primary_location_name | strip_tags | sanitize }}" data-categorytitle="View Location">View Location</a>
+						{{ if appointment_context:location_count > 1 }}
+							<a class="btn btn-outline-primary" href="#locations" aria-label="Jump to list of locations for this provider" data-categorytitle="View All Locations">View All Locations</a>
+						{{ /if }}
+					</div>
+				{{ /clinical_locations }}
+			</div>
+		</div>
+	</section>
+{{ /if }}

@@ -1,0 +1,25 @@
+{{#
+	@name Clinical provider lens
+	@desc The clinical provider lens (UAMS-Web/uams-statamic-archive#571 / UAMS-Web/uams-statamic-archive#1636): ONE canonical `people` entry
+	      rendered for the UAMS Health provider audience at `/provider/{slug}` on the
+	      `health` site, gated by UAMS-Web/uams-statamic-archive#919 eligibility. This is the registry-reference lens
+	      the cross-site substrate (UAMS-Web/uams-statamic-archive#1635) renders - its own template under
+	      `people/provider/`, distinct from the base `people/show` (the design decision
+	      rejects reusing it), so the FULL clinical field selection + arrangement can be
+	      built out by UAMS-Web/uams-statamic-archive#571 without touching the general or org-derived lenses. The
+	      renderable body lives in the `people/provider/profile` partial so it is
+	      testable without the layout (mirroring `people/provider/index` → `people/provider/listing`).
+	@set people.provider.show
+#}}
+{{
+	partial:layout/article
+	title_options="none"
+	article_class="clinical-provider-profile"
+}}
+	{{
+		partial:layout/entry-content
+		content_width="false"
+	}}
+		{{ partial:people/provider/profile }}
+	{{ /partial:layout/entry-content }}
+{{ /partial:layout/article }}

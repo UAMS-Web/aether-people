@@ -1,0 +1,47 @@
+{{#
+	@name Appointment CTA sentence fragments
+	@desc The four reusable pieces the appointment CTA's nine branches assemble from
+	      (UAMS-Web/uams-statamic-archive#1676). One partial rather than four so a wording or escaping change lands in
+	      every branch at once - the WordPress block builds them as four `$appointment_
+	      reference_*` strings for exactly that reason.
+
+	      Pass `variant`:
+
+	      - `referral` - the standalone "Appointments for new patients are by referral
+	        only." lead sentence, a whole `<p>`, not an inline fragment.
+	      - `portal` - "requesting an appointment online through {portal}", linked to the
+	        portal's URL. Carries NO leading "by"; its call sites supply one, which is
+	        why the branches read "make an appointment by {portal}, {direct} …".
+	      - `direct` - "by contacting the clinic directly", linked to the single
+	        location, or to the on-page `#locations` anchor when the provider practices
+	        at more than one.
+	      - `main` - "by calling {line name} at {number}", a `tel:` link.
+
+	      Pass `tail` with the punctuation that FOLLOWS the fragment - `.` or `,` - and
+	      leave it off when the next thing is a word (" or ", " …"). This is not
+	      cosmetic. `Statamic\Tags\Partial::render()` does not trim a partial's output,
+	      so each inline branch body emits its surrounding newline and the file emits a
+	      final one; inside a `<p>` those collapse to a rendered space, and a call site
+	      that wrote `{{ partial:… }}.` shipped "contacting the clinic directly ." to
+	      every patient, in all nine branches, twice per profile. Punctuation attached
+	      HERE lands before that whitespace instead of after it.
+
+	      An EMPTY portal URL emits the text with no anchor rather than `<a href="">`,
+	      which is UAMS-Web/uams-statamic-archive#1676's stated acceptance criterion. (WordPress builds the whole
+	      portal fragment as '' in that state, dropping the phrase along with the link;
+	      keeping the phrase is a deliberate improvement on a sentence that would
+	      otherwise read "make an appointment by , by contacting…".)
+
+	      `instance` distinguishes the two renders of the CTA in the analytics
+	      attributes, mirroring `$appointment_block_instance`.
+	@set people.provider.appointment_fragments
+#}}
+{{ if variant == 'referral' }}
+	<p>Appointments for new patients are by referral only.</p>
+{{ elseif variant == 'portal' }}
+	{{ if appointment_context:portal_url }}<a href="{{ appointment_context:portal_url | sanitize_url }}" target="_blank" rel="noopener noreferrer" data-categorytitle="Make an Appointment | Block {{ instance ?? '1' }}" data-typetitle="Request an Appointment Online | {{ appointment_context:portal_name | strip_tags | sanitize }}">requesting an appointment online</a>{{ else }}requesting an appointment online{{ /if }} through {{ appointment_context:portal_name | strip_tags | sanitize }}{{ tail }}
+{{ elseif variant == 'direct' }}
+	by <a href="{{ appointment_context:direct_url | sanitize_url }}"{{ if appointment_context:direct_is_anchor }} aria-label="Jump to list of locations for this provider"{{ /if }} data-categorytitle="Make an Appointment | Block {{ instance ?? '1' }}" data-typetitle="Contact the Clinic Directly{{ if appointment_context:direct_is_anchor }} | Anchor Link{{ else }} | Direct Link | {{ appointment_context:primary_location_title | strip_tags | sanitize }}{{ /if }}">contacting the clinic&nbsp;directly</a>{{ tail }}
+{{ elseif variant == 'main' }}
+	by calling {{ appointment_context:phone_name | strip_tags | sanitize }} at <a href="tel:{{ appointment_context:phone_tel | sanitize }}" class="no-break" data-categorytitle="Make an Appointment | Block {{ instance ?? '1' }}" data-typetitle="Main Appointment Line | {{ appointment_context:phone_name | strip_tags | sanitize }}">{{ appointment_context:phone_display | sanitize }}</a>{{ tail }}
+{{ /if }}
