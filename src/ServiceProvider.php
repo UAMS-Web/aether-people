@@ -133,12 +133,17 @@ class ServiceProvider extends AddonServiceProvider
         // @pest-mutate-ignore: InstanceOfToTrue
         $hints = $finder instanceof FileViewFinder ? $finder->getHints()['statamic'] ?? [] : [];
 
-        // The override directories Laravel looks for under each of the host's view paths
+        // The override directories Laravel looks for under each of the host's view paths, resolved the way
+        // Laravel stores a hint (`realpath()` where the directory exists), so a symlinked or `..` path still matches
         $viewPaths = config('view.paths');
         $overrides = array_map(
-            // A view path that is not a string names no directory, so any text in its place matches no hint.
-            // @pest-mutate-ignore: EmptyStringToNotEmpty
-            static fn (mixed $viewPath): string => (\is_string($viewPath) ? $viewPath : '').'/vendor/statamic',
+            static function (mixed $viewPath): string {
+                // A view path that is not a string names no directory, so any text in its place matches no hint.
+                // @pest-mutate-ignore: EmptyStringToNotEmpty
+                $override = (\is_string($viewPath) ? $viewPath : '').'/vendor/statamic';
+
+                return realpath($override) ?: $override;
+            },
             \is_array($viewPaths) ? $viewPaths : [],
         );
 

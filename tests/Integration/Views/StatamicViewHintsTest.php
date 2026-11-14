@@ -65,3 +65,22 @@ it('reads no override directories from a view.paths that is not a list', functio
     expect(statamicViewHintsAfter(['/host/views/vendor/statamic', '/core/views'], '/host/views'))
         ->toBe(['/addon/field-views', '/host/views/vendor/statamic', '/core/views']);
 });
+
+it('finds a host override whose view path does not resolve as written', function (): void {
+    // A real directory reached through a `..` segment: Laravel stores the hint
+    // resolved, so the override has to be resolved before it is compared
+    $root = sys_get_temp_dir().'/aether-people-hints-'.bin2hex(random_bytes(4));
+    mkdir($root.'/views/vendor/statamic', 0777, true);
+
+    try {
+        $override = mustBeString(realpath($root.'/views/vendor/statamic'), 'override');
+
+        expect(statamicViewHintsAfter([$root.'/views/vendor/statamic', '/core/views'], [$root.'/views/../views']))
+            ->toBe([$override, '/addon/field-views', '/core/views']);
+    } finally {
+        rmdir($root.'/views/vendor/statamic');
+        rmdir($root.'/views/vendor');
+        rmdir($root.'/views');
+        rmdir($root);
+    }
+});
