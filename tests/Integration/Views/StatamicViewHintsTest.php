@@ -74,9 +74,37 @@ it('finds a host override whose view path does not resolve as written', function
 
     try {
         $override = mustBeString(realpath($root.'/views/vendor/statamic'), 'override');
+        $hints = statamicViewHintsAfter([$root.'/views/vendor/statamic', '/core/views'], [$root.'/views/../views']);
 
-        expect(statamicViewHintsAfter([$root.'/views/vendor/statamic', '/core/views'], [$root.'/views/../views']))
+        // A Laravel release that stores hints as given keeps the unresolved path, so compare it resolved
+        expect(array_map(static fn (string $hint): string => realpath($hint) ?: $hint, $hints))
             ->toBe([$override, '/addon/field-views', '/core/views']);
+    } finally {
+        rmdir($root.'/views/vendor/statamic');
+        rmdir($root.'/views/vendor');
+        rmdir($root.'/views');
+        rmdir($root);
+    }
+});
+
+it('finds a host override that a Laravel release stored unresolved', function (): void {
+    // Older Laravel releases keep a hint as given, so plant the `..` path in the finder directly
+    $root = sys_get_temp_dir().'/aether-people-hints-'.bin2hex(random_bytes(4));
+    mkdir($root.'/views/vendor/statamic', 0777, true);
+
+    try {
+        config(['view.paths' => [$root.'/views']]);
+        $finder = mustBe(FileViewFinder::class, View::getFinder(), 'view finder');
+        $hints = new ReflectionProperty(FileViewFinder::class, 'hints');
+        $hints->setValue($finder, [...$finder->getHints(), 'statamic' => [$root.'/views/../views/vendor/statamic', '/core/views']]);
+
+        $provider = new ServiceProvider(app());
+        new ReflectionMethod($provider, 'addStatamicViewsAfterHostOverrides')->invoke($provider, '/addon/field-views');
+
+        /** @var list<string> $after */
+        $after = array_values(mustBe(FileViewFinder::class, View::getFinder(), 'view finder')->getHints()['statamic']);
+
+        expect(array_map(static fn (string $hint): string => realpath($hint) ?: $hint, $after))->toBe([mustBeString(realpath($root.'/views/vendor/statamic'), 'override'), '/addon/field-views', '/core/views']);
     } finally {
         rmdir($root.'/views/vendor/statamic');
         rmdir($root.'/views/vendor');
