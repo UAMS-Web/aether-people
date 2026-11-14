@@ -39,23 +39,23 @@ final class ListNormalizer
             return $this->results($value);
         }
 
-        // Unwrap a collection, then expand any builder inside it
+        // Unwrap a collection, expanding any builder inside it
         if ($value instanceof Collection) {
-            return $this->flatten(array_values($value->all()));
+            return $this->flatten($value->all());
         }
 
-        // Reindex a plain array, then expand any builder inside it
+        // Reindex a plain array by expanding it, with any builder inside it
         if (\is_array($value)) {
-            return $this->flatten(array_values($value));
+            return $this->flatten($value);
         }
 
         return [$value];
     }
 
     /**
-     * Expand each query builder in a list to its results.
+     * Expand each query builder in a list to its results, reindexing the rest.
      *
-     * @param  list<mixed>  $items  The items to flatten.
+     * @param  array<array-key, mixed>  $items  The items to flatten, under any keys.
      * @return list<mixed> The items with each builder replaced by its results.
      */
     private function flatten(array $items): array

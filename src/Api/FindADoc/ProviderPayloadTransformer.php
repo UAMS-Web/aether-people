@@ -120,6 +120,8 @@ final class ProviderPayloadTransformer
 
             $slug = $specialization->slug();
 
+            // Statamic stores an empty slug as null, so the empty-string comparison is an equivalent mutant
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             if (\is_string($slug) && $slug !== '') {
                 $slugs[] = $slug;
             }

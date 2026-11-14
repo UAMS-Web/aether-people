@@ -59,6 +59,10 @@ final readonly class ProviderProfileBodyResolver
      *
      * @var list<string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its
+    // mutants and reports them uncovered. Removing any one content handle, applied by hand, fails
+    // the case of "reports a rendered body for each ... section in turn" that names it.
+    // @pest-mutate-ignore: RemoveArrayItem
     private const array CONTENT_HANDLES = [
         'bio_clinical',
         'bio',
@@ -74,6 +78,10 @@ final readonly class ProviderProfileBodyResolver
      *
      * @var list<string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its
+    // mutants and reports them uncovered. Removing any one relation handle, applied by hand, fails
+    // the case of "reports a rendered body for each ... section in turn" that names it.
+    // @pest-mutate-ignore: RemoveArrayItem
     private const array RELATION_HANDLES = [
         'expertise',
         'conditions',

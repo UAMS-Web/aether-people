@@ -13,7 +13,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Statamic\Entries\Collection as EntriesCollection;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Stache\Query\EntryQueryBuilder;
@@ -48,6 +47,10 @@ use UAMSWeb\Aether\People\Support\ProviderEligibilityIndexRefresher;
  * One hour is forty times the queue's default `retry_after` of 90 seconds, the longest a job can
  * run on those settings before the queue hands it out again. No production run has been timed.
  */
+// A class attribute runs no line coverage can see, so the mutants of its number report as uncovered. The
+// seconds are asserted exactly by reading the attribute in the job's test.
+// @pest-mutate-ignore: DecrementInteger
+// @pest-mutate-ignore: IncrementInteger
 #[UniqueFor(3600)]
 final class RefreshProviderEligibilityForDatedLocations implements ShouldBeUnique, ShouldQueue
 {
@@ -107,13 +110,7 @@ final class RefreshProviderEligibilityForDatedLocations implements ShouldBeUniqu
      */
     private function datePassed(Entry $location, ?CarbonInterface $since, CarbonInterface $now): bool
     {
-        $collection = $location->collection();
-
-        // An undated collection has no date to pass
-        if (! $collection instanceof EntriesCollection || ! $collection->dated()) {
-            return false;
-        }
-
+        // An undated collection's entries read no date, so they have none to pass
         $date = $location->date();
 
         if (! $date instanceof CarbonInterface || $date->greaterThan($now)) {

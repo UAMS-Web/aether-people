@@ -6,13 +6,9 @@ namespace UAMSWeb\Aether\People;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
-use Statamic\Events\EntryDeleted;
-use Statamic\Events\EntrySaved;
-use Statamic\Events\EntrySaving;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Providers\AddonServiceProvider;
@@ -25,8 +21,6 @@ use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowControlle
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
-use UAMSWeb\Aether\People\Listeners\RefreshProviderEligibilityForLocation;
-use UAMSWeb\Aether\People\Listeners\StripProviderPeopleVirtualFieldsOnEntrySaving;
 use UAMSWeb\Aether\People\Support\Features;
 
 /**
@@ -140,7 +134,7 @@ class ServiceProvider extends AddonServiceProvider
      * @param  Schedule  $schedule  The application's scheduler.
      */
     #[\Override]
-    public function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule): void
     {
         if (! Features::providerLayer() || config('clinical_provider_profile.location_date_refresh.enabled') !== true) {
             return;
@@ -152,20 +146,33 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Register the clinical provider layer: the computed values, the listeners that keep them
-     * current and the Find-a-Doc read API.
+     * Register the add-on's listeners, unless the host turned the provider layer off.
+     *
+     * Statamic finds every class under `src/Listeners` and subscribes it to the events its
+     * `handle()` method type-hints: the listener that strips the computed fields' virtual values
+     * before an entry is saved, and the one that re-indexes linked people's eligibility when a
+     * practice location is saved or deleted. Both belong to the provider layer, so with it off
+     * nothing is subscribed.
+     */
+    #[\Override]
+    public function bootEvents(): static
+    {
+        // Subscribe nothing with the layer off
+        if (Features::providerLayer()) {
+            parent::bootEvents();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Register the clinical provider layer: the computed values and the Find-a-Doc read API. Its
+     * listeners are subscribed by {@see self::bootEvents()}.
      */
     private function registerProviderLayer(): void
     {
         // Register the providers and people shared computeds
         $this->app->make(ProvidersPeopleSharedCollectionComputedsRegistrar::class)->register();
-
-        // Strip the computed fields' virtual values before an entry is saved
-        Event::listen(EntrySaving::class, StripProviderPeopleVirtualFieldsOnEntrySaving::class);
-
-        // Re-index linked people's eligibility when a practice location changes or is deleted
-        Event::listen(EntrySaved::class, RefreshProviderEligibilityForLocation::class);
-        Event::listen(EntryDeleted::class, RefreshProviderEligibilityForLocation::class);
 
         // Serve the Find-a-Doc read API under `/api/v1/find-a-doc`, as the host's API routes do
         $rateLimit = config('find_a_doc_api.rate_limit_per_minute', 60);

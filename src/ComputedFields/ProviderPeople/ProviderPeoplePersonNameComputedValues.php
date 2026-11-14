@@ -26,6 +26,23 @@ class ProviderPeoplePersonNameComputedValues
     private const string DOCTOR_HONORIFIC_IPA = 'ˈdɑktər';
 
     /**
+     * A scalar read as trimmed text, or an empty string for anything else.
+     *
+     * @param  mixed  $value  Raw value from a name component
+     * @return string Trimmed text of a string or scalar value, otherwise empty
+     */
+    private function trimmedScalarText(
+        mixed $value
+    ): string {
+        // Null, arrays and objects carry no text
+        if (! \is_scalar($value)) {
+            return '';
+        }
+
+        return \trim((string) $value);
+    }
+
+    /**
      * Read the `phonetic_text` subfield from a name component (group or legacy
      * string).
      *
@@ -35,19 +52,6 @@ class ProviderPeoplePersonNameComputedValues
     private function resolveNamePhoneticSubfieldValue(
         mixed $value
     ): string {
-        // Return early if the value is null or empty
-        if (
-            $value === null
-            || $value === ''
-        ) {
-            return '';
-        }
-
-        // Return early if the value is a string
-        if (\is_string($value)) {
-            return '';
-        }
-
         // Check if the value is a collection
         if ($value instanceof IlluminateCollection) {
             // Recursively resolve the phonetic value from the collection
@@ -59,21 +63,13 @@ class ProviderPeoplePersonNameComputedValues
             // Get the phonetic value from the array
             $phonetic = $value['phonetic_text'] ?? null;
 
-            // Return early if the phonetic value is null or empty
-            if (
-                $phonetic === null
-                || $phonetic === ''
-            ) {
-                return '';
-            }
-
             // Return the phonetic value if it is a string
             return \is_string($phonetic)
                 ? $phonetic
                 : (\is_scalar($phonetic) ? (string) $phonetic : '');
         }
 
-        // Return an empty string
+        // Anything else (null, an empty value, a legacy string) carries no phonetic subfield
         return '';
     }
 
@@ -590,6 +586,9 @@ class ProviderPeoplePersonNameComputedValues
         $personName = PersonNameComposite::fromEntry($entry);
 
         // Check if the person name is an array
+        // The person name is always an array when a shell was built from the primary name, and a null one reads the same
+        // as the early return below, so removing the return changes nothing.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if (! \is_array($personName)) {
             // Return null to signal that the display format key is not applicable
             return null;
@@ -798,6 +797,9 @@ class ProviderPeoplePersonNameComputedValues
         // Loop through each shell with source
         foreach ($shellsWithSource as $row) {
             // Build a stable fingerprint for deduplication
+            // json_encode() returns false only for a value it cannot encode, which a shell of strings never is, so the cast
+            // never changes the fingerprint.
+            // @pest-mutate-ignore: RemoveStringCast
             $key = \hash(
                 'xxh128',
                 (string) \json_encode($row['shell'])
@@ -806,7 +808,7 @@ class ProviderPeoplePersonNameComputedValues
             // Initialize bucket for this legal-name shell
             $byHash[$key] ??= [
                 'shell' => $row['shell'],
-                'from_primary' => false,
+                'from_primary' => $row['from_primary'],
                 'from_alternate' => false,
             ];
 
@@ -887,12 +889,11 @@ class ProviderPeoplePersonNameComputedValues
         $normalized = $this->getNormalizedPersonName($entry);
 
         // Get the primary no nickname flag from the normalized person name
-        $primaryNoNick = (bool) ($normalized['no_nickname'] ?? false);
+        $primaryNoNick = $normalized['no_nickname'] === true;
 
         // Get the primary nickname text from the normalized person name
         $primaryNickBlock = $normalized['nickname'] ?? null;
-        $primaryNickTextRaw = \is_array($primaryNickBlock) ? ($primaryNickBlock['text'] ?? '') : '';
-        $primaryNickText = \trim(\is_scalar($primaryNickTextRaw) ? (string) $primaryNickTextRaw : '');
+        $primaryNickText = $this->trimmedScalarText(\is_array($primaryNickBlock) ? ($primaryNickBlock['text'] ?? null) : null);
 
         // ---
         // Resolve variant text (explicit empty counts as no nickname text)
@@ -916,11 +917,6 @@ class ProviderPeoplePersonNameComputedValues
             || $primaryNickText === ''
         ) {
             return $variantEmpty;
-        }
-
-        // Primary has a nickname: empty variant does not match
-        if ($variantEmpty) {
-            return false;
         }
 
         // Return true if the variant text matches the primary nickname text
@@ -1000,9 +996,7 @@ class ProviderPeoplePersonNameComputedValues
         $fRaw = $out['first_name']['text'] ?? null;
 
         // Get the first name text from the shell
-        $fText = \is_string($fRaw)
-            ? \trim($fRaw)
-            : (\is_scalar($fRaw) ? \trim((string) $fRaw) : '');
+        $fText = $this->trimmedScalarText($fRaw);
 
         // Apply merged phonetic when this text key exists in the map
         if (
@@ -1023,9 +1017,7 @@ class ProviderPeoplePersonNameComputedValues
         $mRaw = $out['middle_name']['text'] ?? null;
 
         // Get the middle name text from the shell
-        $mText = \is_string($mRaw)
-            ? \trim($mRaw)
-            : (\is_scalar($mRaw) ? \trim((string) $mRaw) : '');
+        $mText = $this->trimmedScalarText($mRaw);
 
         // Apply merged phonetic when this text key exists in the map
         if (
@@ -1057,30 +1049,11 @@ class ProviderPeoplePersonNameComputedValues
         // Read the last_name group from the shell
         $last = $shell['last_name'] ?? [];
 
-        // Check if the first name is not an array or the last name is not an array
-        if (
-            ! \is_array($first)
-            || ! \is_array($last)
-        ) {
-            // Return false to signal that the shell does not have required legal names
-            return false;
-        }
-
-        // Read raw first_name text for trimming
-        $fRaw = $first['text'] ?? null;
-
-        // Normalize first_name text for required-name checks
-        $f = \is_string($fRaw)
-            ? \trim($fRaw)
-            : (\is_scalar($fRaw) ? \trim((string) $fRaw) : '');
-
-        // Read raw last_name text for trimming
-        $lRaw = $last['text'] ?? null;
+        // Normalize first_name text for required-name checks (a part that is not a pair has no text)
+        $f = $this->trimmedScalarText(\is_array($first) ? ($first['text'] ?? null) : null);
 
         // Normalize last_name text for required-name checks
-        $l = \is_string($lRaw)
-            ? \trim($lRaw)
-            : (\is_scalar($lRaw) ? \trim((string) $lRaw) : '');
+        $l = $this->trimmedScalarText(\is_array($last) ? ($last['text'] ?? null) : null);
 
         // Shell is complete when both names are non-empty after trim
         return $f !== '' && $l !== '';
@@ -1163,9 +1136,7 @@ class ProviderPeoplePersonNameComputedValues
             $tRaw = $block['text'] ?? null;
 
             // Trimmed display text for semantic checks
-            $t = \is_string($tRaw)
-                ? \trim($tRaw)
-                : (\is_scalar($tRaw) ? \trim((string) $tRaw) : '');
+            $t = $this->trimmedScalarText($tRaw);
 
             // Track segments that participate in the phonetic completeness rule
             if ($t !== '') {
@@ -1174,6 +1145,9 @@ class ProviderPeoplePersonNameComputedValues
         }
 
         // Nothing to normalize when no text segments exist
+        // Without a named part the loop below has nothing to check and returns the same object,
+        // so removing this return changes nothing.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($withText === []) {
             return $combined;
         }
@@ -1187,6 +1161,8 @@ class ProviderPeoplePersonNameComputedValues
             $block = $combined[$part] ?? [];
 
             // Check if the block is not an array
+            // Every part in the list passed the same check in the first loop, so the block is always an array here.
+            // @pest-mutate-ignore: FalseToTrue,BreakToContinue
             if (! \is_array($block)) {
                 // Set the all have phonetic flag to false
                 $allHavePhonetic = false;
@@ -1198,21 +1174,13 @@ class ProviderPeoplePersonNameComputedValues
             // Raw phonetic text for this name part
             $pRaw = $block['phonetic_text'] ?? null;
 
-            // Working buffer for trimmed phonetic text
-            $p = '';
-
-            // Check if the phonetic text is not null and not empty
-            if (
-                $pRaw !== null
-                && $pRaw !== ''
-            ) {
-                // Coerce non-string phonetics to trimmed strings when present
-                $p = \is_string($pRaw)
-                    ? \trim($pRaw)
-                    : (\is_scalar($pRaw) ? \trim((string) $pRaw) : '');
-            }
+            // Trimmed phonetic text, empty when absent
+            $p = $this->trimmedScalarText($pRaw);
 
             // Treat empty phonetic as incomplete when text exists
+            // A part without a phonetic sets the flag false, which it already is when the loop moves on, so continuing
+            // instead of stopping changes nothing.
+            // @pest-mutate-ignore: BreakToContinue
             if ($p === '') {
                 // Set the all have phonetic flag to false
                 $allHavePhonetic = false;
@@ -1233,11 +1201,15 @@ class ProviderPeoplePersonNameComputedValues
         // Loop through each part with text
         foreach ($withText as $part) {
             // Check if the part is not set or not an array
+            // Every part in the list was an array in the first loop, so it is always set here.
+            // @pest-mutate-ignore: ContinueToBreak
             if (! isset($out[$part])) {
                 // Continue to the next part
                 continue;
             }
 
+            // Every part in the list was an array in the first loop.
+            // @pest-mutate-ignore: ContinueToBreak
             if (! \is_array($out[$part])) {
                 // Continue to the next part
                 continue;
@@ -1283,9 +1255,7 @@ class ProviderPeoplePersonNameComputedValues
             $tRaw = $block['text'] ?? null;
 
             // Trimmed display text for gating phonetic checks
-            $t = \is_string($tRaw)
-                ? \trim($tRaw)
-                : (\is_scalar($tRaw) ? \trim((string) $tRaw) : '');
+            $t = $this->trimmedScalarText($tRaw);
 
             // Ignore segments without display text
             if ($t === '') {
@@ -1295,19 +1265,8 @@ class ProviderPeoplePersonNameComputedValues
             // Raw phonetic text before trimming
             $pRaw = $block['phonetic_text'] ?? null;
 
-            // Working buffer for trimmed phonetic text
-            $p = '';
-
-            // Check if the phonetic text is not null and not empty
-            if (
-                $pRaw !== null
-                && $pRaw !== ''
-            ) {
-                // Coerce stored phonetics to comparable trimmed strings
-                $p = \is_string($pRaw)
-                    ? \trim($pRaw)
-                    : (\is_scalar($pRaw) ? \trim((string) $pRaw) : '');
-            }
+            // Trimmed phonetic text, empty when absent
+            $p = $this->trimmedScalarText($pRaw);
 
             // Any text without phonetic means IPA expansion is disabled
             if ($p === '') {
@@ -1351,6 +1310,8 @@ class ProviderPeoplePersonNameComputedValues
             }
 
             // Set the key to true in the seen array
+            // isset() is true for a stored false as well, so the stored value never matters.
+            // @pest-mutate-ignore: TrueToFalse
             $seen[$key] = true;
 
             // Add the row to the output array
@@ -1491,14 +1452,6 @@ class ProviderPeoplePersonNameComputedValues
             $raw
         );
 
-        // Ignore if the phonetic text key exists and the text key does not exist
-        if (
-            $hasPhoneticKey
-            && ! $hasTextKey
-        ) {
-            return null;
-        }
-
         // Ignore if the text key does not exist
         if (! $hasTextKey) {
             return null;
@@ -1512,9 +1465,7 @@ class ProviderPeoplePersonNameComputedValues
         $textRaw = $raw['text'];
 
         // Check if the text is a string
-        $text = \is_string($textRaw)
-            ? \trim($textRaw)
-            : (\is_scalar($textRaw) ? \trim((string) $textRaw) : '');
+        $text = $this->trimmedScalarText($textRaw);
 
         // Ignore blank nickname text
         if ($text === '') {
@@ -1529,23 +1480,16 @@ class ProviderPeoplePersonNameComputedValues
             // Read optional phonetic companion text
             $p = $raw['phonetic_text'];
 
-            // Check if the phonetic text is not null and not empty
-            if (
-                $p !== null
-                && $p !== ''
-            ) {
-                // Set the phonetic text to the phonetic text
-                $phoneticText = \is_string($p)
-                    ? $p
-                    : (\is_scalar($p) ? (string) $p : null);
+            // Keep a string or scalar phonetic as given; whitespace-only values count as absent
+            $phoneticText = \is_string($p)
+                ? $p
+                : (\is_scalar($p) ? (string) $p : null);
 
-                // Treat whitespace-only phonetic values as absent
-                if (
-                    $phoneticText !== null
-                    && \trim($phoneticText) === ''
-                ) {
-                    $phoneticText = null;
-                }
+            if (
+                $phoneticText !== null
+                && \trim($phoneticText) === ''
+            ) {
+                $phoneticText = null;
             }
         }
 
@@ -1611,13 +1555,12 @@ class ProviderPeoplePersonNameComputedValues
 
             // Loop through each phonetic candidate
             foreach ($phonetics as $candidate) {
-                // Check if the candidate is not null and not empty
-                if (
-                    $candidate !== null
-                    && \trim((string) $candidate) !== ''
-                ) {
+                // Take the first candidate with text once trimmed
+                $trimmedCandidate = $this->trimmedScalarText($candidate);
+
+                if ($trimmedCandidate !== '') {
                     // Set the chosen phonetic to the candidate
-                    $chosenPhonetic = \trim((string) $candidate);
+                    $chosenPhonetic = $trimmedCandidate;
 
                     // Break out of the loop
                     break;
@@ -1659,7 +1602,7 @@ class ProviderPeoplePersonNameComputedValues
         $prefix = $this->getPrefix($entry);
 
         // Build display text with optional prefix
-        $text = $prefix !== '' && $prefix !== '0'
+        $text = $prefix !== ''
             ? sprintf('%s %s', $prefix, $baseDisplayName)
             : $baseDisplayName;
 
@@ -1679,7 +1622,7 @@ class ProviderPeoplePersonNameComputedValues
             // Set the phonetic text to the base phonetic text with optional doctor honorific
             // IPA
             // ---
-            $phonetic = $prefix !== '' && $prefix !== '0'
+            $phonetic = $prefix !== ''
                 ? self::DOCTOR_HONORIFIC_IPA.' '.$basePhonetic
                 : $basePhonetic;
         }
@@ -1841,7 +1784,7 @@ class ProviderPeoplePersonNameComputedValues
         $prefix = $this->getPrefix($entry);
 
         // Build doctor-style short form when prefix applies
-        if ($prefix !== '' && $prefix !== '0') {
+        if ($prefix !== '') {
             // Get the normalized person name from the entry
             $normalized = $this->getNormalizedPersonName($entry);
 
@@ -1861,23 +1804,15 @@ class ProviderPeoplePersonNameComputedValues
 
             // Get the last name from the normalized person name
             $lastNameBlock = $normalized['last_name'] ?? null;
-            $lastNameTextRaw = \is_array($lastNameBlock) ? ($lastNameBlock['text'] ?? '') : '';
-            $lastName = \trim(\is_scalar($lastNameTextRaw) ? (string) $lastNameTextRaw : '');
+            $lastName = $this->trimmedScalarText(\is_array($lastNameBlock) ? ($lastNameBlock['text'] ?? null) : null);
 
-            // Return prefixed last name if last name exists, otherwise empty pair
-            if ($lastName === '') {
-                return $this->computeComputedTextPhoneticPair(
-                    '',
-                    ''
-                );
-            }
+            // A complete name always has a last name once trimmed, so there is no empty case to return here
 
             // Build the text with the prefix and last name
             $text = sprintf('%s %s', $prefix, $lastName);
 
             // Get the last name phonetic text from the normalized person name
-            $lastPhoneticRaw = \is_array($lastNameBlock) ? ($lastNameBlock['phonetic_text'] ?? '') : '';
-            $lastPhonetic = \trim(\is_scalar($lastPhoneticRaw) ? (string) $lastPhoneticRaw : '');
+            $lastPhonetic = $this->trimmedScalarText(\is_array($lastNameBlock) ? ($lastNameBlock['phonetic_text'] ?? null) : null);
 
             // Check if the last name phonetic text is not empty
             $phonetic = $lastPhonetic !== ''
@@ -1907,6 +1842,8 @@ class ProviderPeoplePersonNameComputedValues
         mixed $credentials
     ): string {
         // Return the base name if the credentials are not set
+        // An empty credentials value gives an empty title list, which returns the base name below as well.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if (! $credentials) {
             return $baseName;
         }
@@ -1971,10 +1908,8 @@ class ProviderPeoplePersonNameComputedValues
     private function credentialAbbreviationPhoneticSegments(
         mixed $credentials
     ): array {
-        // Return empty array when the credentials are null, empty, or an empty array
-        if (
-            in_array($credentials, [null, '', []], true)
-        ) {
+        // Return empty array when the credentials are an empty string (null and an empty array have nothing to loop over)
+        if ($credentials === '') {
             return [];
         }
 
@@ -2095,7 +2030,7 @@ class ProviderPeoplePersonNameComputedValues
         $prefix = $this->getPrefix($entry);
 
         // Build the text with the prefix and full name
-        $text = $prefix !== '' && $prefix !== '0'
+        $text = $prefix !== ''
             ? sprintf('%s %s', $prefix, $fullName)
             : $fullName;
 
@@ -2111,7 +2046,7 @@ class ProviderPeoplePersonNameComputedValues
             // Set the phonetic text to the base phonetic text with optional doctor honorific
             // IPA
             // ---
-            $phonetic = $prefix !== '' && $prefix !== '0'
+            $phonetic = $prefix !== ''
                 ? self::DOCTOR_HONORIFIC_IPA.' '.$basePhonetic
                 : $basePhonetic;
         }

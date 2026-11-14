@@ -256,5 +256,15 @@ final readonly class ProvidersPeopleSharedCollectionComputedsRegistrar
             'hide_medical_ontology',
             fn (Entry $entry): bool => $ontologySuppression->resolve($entry)
         );
+
+        // Register the clinical provider profile eligibility flag on the people collection: the index
+        // that `clinical_provider_profile_eligible_query:is="true"` filters on, which the location
+        // listeners and the scheduled job keep current. The host's own people-only registrar registers
+        // the same callable until it drops its line.
+        Collection::computed(
+            PeopleCollection::handle(),
+            'clinical_provider_profile_eligible_query',
+            $list->computeClinicalProviderProfileEligibleQuery(...)
+        );
     }
 }

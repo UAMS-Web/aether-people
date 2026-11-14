@@ -40,6 +40,9 @@ final class ProviderIndexController
             ->map(fn (Entry $person): array => $this->transformer->toArray($person))
             ->all();
 
+        // A time of zero gives the same response with or without the cache, which stores nothing for a time of zero
+        // or less, so the lower bound of this comparison is an equivalent mutant
+        // @pest-mutate-ignore: GreaterToGreaterOrEqual, DecrementInteger
         $data = $ttl > 0
             ? Cache::remember(sprintf('find_a_doc_api:%s:providers', $version), $ttl, $build)
             : $build();
