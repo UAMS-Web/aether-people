@@ -4,18 +4,30 @@ declare(strict_types=1);
 
 namespace UAMSWeb\Aether\People;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
+use Statamic\Events\EntryDeleted;
+use Statamic\Events\EntrySaved;
+use Statamic\Events\EntrySaving;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
+use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
+use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
+use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
+use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
+use UAMSWeb\Aether\People\Listeners\RefreshProviderEligibilityForLocation;
+use UAMSWeb\Aether\People\Listeners\StripProviderPeopleVirtualFieldsOnEntrySaving;
+use UAMSWeb\Aether\People\Support\Features;
 
 /**
  * Service provider for the add-on.
@@ -84,6 +96,9 @@ class ServiceProvider extends AddonServiceProvider
         // Merge the add-on's defaults under the key the code reads
         $this->mergeConfigFrom(__DIR__.'/../config/people.php', 'people');
         $this->mergeConfigFrom(__DIR__.'/../config/people_lenses.php', 'people_lenses');
+        $this->mergeConfigFrom(__DIR__.'/../config/clinical_provider_profile.php', 'clinical_provider_profile');
+        $this->mergeConfigFrom(__DIR__.'/../config/researcher_profile.php', 'researcher_profile');
+        $this->mergeConfigFrom(__DIR__.'/../config/find_a_doc_api.php', 'find_a_doc_api');
     }
 
     /**
@@ -108,6 +123,60 @@ class ServiceProvider extends AddonServiceProvider
 
         // Route each lens ahead of Statamic's catch-all
         Statamic::pushWebRoutes(fn () => $this->registerLensRoutes());
+
+        // Register the clinical provider layer, unless the host turned it off
+        if (Features::providerLayer()) {
+            $this->registerProviderLayer();
+        }
+    }
+
+    /**
+     * Re-index provider eligibility for the people linked to practice locations whose date has passed.
+     *
+     * A scheduled location counts toward eligibility only from its date, and nothing is saved when that
+     * date arrives, so this job is what re-indexes it. The cadence is
+     * `clinical_provider_profile.location_date_refresh.cron`, read in the display timezone.
+     *
+     * @param  Schedule  $schedule  The application's scheduler.
+     */
+    #[\Override]
+    public function schedule(Schedule $schedule): void
+    {
+        if (! Features::providerLayer() || config('clinical_provider_profile.location_date_refresh.enabled') !== true) {
+            return;
+        }
+
+        $schedule->job(new RefreshProviderEligibilityForDatedLocations)
+            ->cron(config()->string('clinical_provider_profile.location_date_refresh.cron'))
+            ->timezone(Statamic::displayTimezone());
+    }
+
+    /**
+     * Register the clinical provider layer: the computed values, the listeners that keep them
+     * current and the Find-a-Doc read API.
+     */
+    private function registerProviderLayer(): void
+    {
+        // Register the providers and people shared computeds
+        $this->app->make(ProvidersPeopleSharedCollectionComputedsRegistrar::class)->register();
+
+        // Strip the computed fields' virtual values before an entry is saved
+        Event::listen(EntrySaving::class, StripProviderPeopleVirtualFieldsOnEntrySaving::class);
+
+        // Re-index linked people's eligibility when a practice location changes or is deleted
+        Event::listen(EntrySaved::class, RefreshProviderEligibilityForLocation::class);
+        Event::listen(EntryDeleted::class, RefreshProviderEligibilityForLocation::class);
+
+        // Serve the Find-a-Doc read API under `/api/v1/find-a-doc`, as the host's API routes do
+        $rateLimit = config('find_a_doc_api.rate_limit_per_minute', 60);
+        $perMinute = \is_int($rateLimit) ? $rateLimit : 60;
+
+        Route::middleware(['api', \sprintf('throttle:%d,1', $perMinute)])
+            ->prefix('api/v1/find-a-doc')
+            ->group(function (): void {
+                Route::get('providers', ProviderIndexController::class);
+                Route::get('providers/{provider}', ProviderShowController::class);
+            });
     }
 
     /**

@@ -7,13 +7,13 @@ use Statamic\Entries\EntryCollection;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Site;
 use Statamic\Sites\Site as SiteInstance;
-use UAMSWeb\Aether\People\Contracts\ClinicalProviderEligibility;
 use UAMSWeb\Aether\People\Contracts\DepartmentHubRoster;
-use UAMSWeb\Aether\People\Contracts\ResearcherEligibility;
 use UAMSWeb\Aether\People\Lenses\Gates\AcademicLensGate;
 use UAMSWeb\Aether\People\Lenses\Gates\ClinicalProviderLensGate;
 use UAMSWeb\Aether\People\Lenses\Gates\InstitutionalLensGate;
 use UAMSWeb\Aether\People\Lenses\Gates\ResearcherLensGate;
+use UAMSWeb\Aether\People\Support\ClinicalProviderProfileEligibility;
+use UAMSWeb\Aether\People\Support\ResearcherProfileEligibility;
 
 covers(
     ClinicalProviderLensGate::class,
@@ -95,32 +95,33 @@ function lensGateOrganization(string $id, ?string $role): Entry
     return $entry;
 }
 
-it('admits a person to the clinical lens exactly when the host says they qualify', function (bool $qualifies): void {
-    $eligibility = new readonly class($qualifies) implements ClinicalProviderEligibility
-    {
-        public function __construct(private bool $qualifies) {}
+it('admits a person to the clinical lens exactly when the eligibility rules pass and the provider layer is on', function (bool $qualifies, bool $layerOn, bool $admitted): void {
+    config([
+        'people.features.provider_layer' => $layerOn,
+        'clinical_provider_profile' => [
+            'base' => [['field' => 'clinical_flag', 'operator' => 'equals', 'value' => true]],
+            'paths' => [[['field' => 'clinical_flag', 'operator' => 'equals', 'value' => true]]],
+        ],
+    ]);
 
-        public function qualifies(Entry $entry): bool
-        {
-            return $this->qualifies;
-        }
-    };
+    $person = lensGatePerson('p1');
+    $person->set('clinical_flag', $qualifies);
 
-    expect(new ClinicalProviderLensGate($eligibility)->passes(lensGatePerson('p1'), lensGateSite()))->toBe($qualifies);
-})->with([true, false]);
+    expect(new ClinicalProviderLensGate(new ClinicalProviderProfileEligibility)->passes($person, lensGateSite()))->toBe($admitted);
+})->with([
+    'qualifies, layer on' => [true, true, true],
+    'does not qualify, layer on' => [false, true, false],
+    'qualifies, layer off' => [true, false, false],
+    'does not qualify, layer off' => [false, false, false],
+]);
 
-it('admits a person to the researcher lens exactly when the host says they qualify', function (bool $qualifies): void {
-    $eligibility = new readonly class($qualifies) implements ResearcherEligibility
-    {
-        public function __construct(private bool $qualifies) {}
+it('admits a person to the researcher lens exactly when they carry a configured researcher signal', function (bool $qualifies): void {
+    config(['researcher_profile.signals' => ['orcid_id']]);
 
-        public function qualifies(Entry $entry): bool
-        {
-            return $this->qualifies;
-        }
-    };
+    $person = lensGatePerson('p1');
+    $person->set('orcid_id', $qualifies ? '0000-0001-2345-6789' : null);
 
-    expect(new ResearcherLensGate($eligibility)->passes(lensGatePerson('p1'), lensGateSite()))->toBe($qualifies);
+    expect(new ResearcherLensGate(new ResearcherProfileEligibility)->passes($person, lensGateSite()))->toBe($qualifies);
 })->with([true, false]);
 
 it('admits a rostered person on a hub site whose organization has a role the lens serves', function (string $role, bool $academic): void {
