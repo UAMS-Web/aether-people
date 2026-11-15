@@ -10,18 +10,16 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Blueprint;
-use Statamic\Facades\Collection;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
-use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeopleListingComputedValues;
+use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
 use UAMSWeb\Aether\People\Support\Features;
-use UAMSWeb\Aether\People\Support\PeopleCollection;
 
 /**
  * Service provider for the add-on.
@@ -170,16 +168,8 @@ class ServiceProvider extends AddonServiceProvider
      */
     private function registerProviderLayer(): void
     {
-        // Register the clinical provider profile eligibility flag on the people collection: the index
-        // that `clinical_provider_profile_eligible_query:is="true"` filters on, which the location
-        // listeners and the scheduled job keep current.
-        $listing = $this->app->make(ProviderPeopleListingComputedValues::class);
-
-        Collection::computed(
-            PeopleCollection::handle(),
-            'clinical_provider_profile_eligible_query',
-            $listing->computeClinicalProviderProfileEligibleQuery(...)
-        );
+        // Register the providers and people shared computeds, among them the eligibility index flag
+        $this->app->make(ProvidersPeopleSharedCollectionComputedsRegistrar::class)->register();
     }
 
     /**

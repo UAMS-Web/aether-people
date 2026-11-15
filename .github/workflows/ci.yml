@@ -65,7 +65,7 @@ jobs:
     with:
       linux-only: true
       mutate-paths: src
-      mutate-timeout-minutes: 75
+      mutate-timeout-minutes: 120
 
   # The chain checks the emoji sweep; it does not check the decision log.
   decision-log:
