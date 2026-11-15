@@ -25,6 +25,7 @@ use Statamic\Stache\Indexes\Index;
 use Statamic\Stache\Query\EntryQueryBuilder;
 use Statamic\Stache\Stores\AggregateStore;
 use Statamic\Stache\Stores\Store;
+use UAMSWeb\Aether\People\Api\FindADoc\FindADocProviderRepository;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeopleListingComputedValues;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\Gates\ClinicalProviderLensGate;
@@ -136,9 +137,9 @@ function datedLocationEligibilityIndex(): Index
 }
 
 /**
- * Which of the three provider surfaces list the person.
+ * Which of the four provider surfaces list the person.
  *
- * @return array{directory: bool, lens: bool, find_a_doc_selection: bool}
+ * @return array{directory: bool, lens: bool, find_a_doc_selection: bool, find_a_doc_api: bool}
  */
 function datedLocationSurfaces(EntryInstance $person): array
 {
@@ -159,6 +160,7 @@ function datedLocationSurfaces(EntryInstance $person): array
         'directory' => $indexed,
         'lens' => app(ClinicalProviderLensGate::class)->passes($fresh, $site),
         'find_a_doc_selection' => $indexed,
+        'find_a_doc_api' => app(FindADocProviderRepository::class)->findEligible($id) instanceof EntryInstance,
     ];
 }
 
@@ -181,6 +183,7 @@ it('keeps a provider whose only location is scheduled off every surface', functi
             'directory' => false,
             'lens' => false,
             'find_a_doc_selection' => false,
+            'find_a_doc_api' => false,
         ]);
 });
 
@@ -203,6 +206,7 @@ it('lists the provider everywhere once the date passes and the refresh runs, wit
         'directory' => true,
         'lens' => true,
         'find_a_doc_selection' => true,
+        'find_a_doc_api' => true,
     ]);
 });
 
@@ -214,6 +218,7 @@ it('keeps a provider with a published, past-dated location on every surface', fu
         'directory' => true,
         'lens' => true,
         'find_a_doc_selection' => true,
+        'find_a_doc_api' => true,
     ]);
 });
 
@@ -229,6 +234,7 @@ it('keeps a provider whose only location is a draft off every surface, before an
         'directory' => false,
         'lens' => false,
         'find_a_doc_selection' => false,
+        'find_a_doc_api' => false,
     ]);
 });
 
@@ -550,7 +556,7 @@ describe('schedule', function (): void {
     it('is not scheduled when the refresh is disabled', function (mixed $enabled): void {
         config(['clinical_provider_profile.location_date_refresh.enabled' => $enabled]);
 
-        expect(datedLocationScheduledEvents())->toHaveCount(0);
+        expect(datedLocationScheduledEvents())->toBe([]);
     })->with([
         'off' => [false],
         'a truthy value that is not true' => [1],
@@ -563,7 +569,7 @@ describe('schedule', function (): void {
             'people.features.provider_layer' => false,
         ]);
 
-        expect(datedLocationScheduledEvents())->toHaveCount(0);
+        expect(datedLocationScheduledEvents())->toBe([]);
     });
 
     it('is scheduled when the provider layer switch is absent', function (): void {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Route;
 use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
 use Statamic\Events\EntrySaving;
@@ -16,8 +17,8 @@ use UAMSWeb\Aether\People\Support\Features;
  * The `people.features.provider_layer` switch: what the add-on registers with it on and with it off.
  *
  * Each case boots its own application, so the flag is read where a host sets it, before the add-on's
- * provider boots. The switch covers the shared computeds and the entry listeners; the
- * `clinical_provider_eligible` modifier and the eligibility scope are always registered.
+ * provider boots. The switch covers the computed fields, the entry listeners and the Find-a-Doc routes;
+ * the `clinical_provider_eligible` modifier and the eligibility scope are always registered.
  *
  * @command vendor/bin/pest tests/Integration/ProviderLayerFlagTest.php
  */
@@ -50,7 +51,7 @@ afterEach(function (): void {
 });
 
 /**
- * The computed handles the registrar adds to the `people` collection.
+ * The shared computed handles the registrar adds to the `people` collection.
  */
 const PROVIDER_LAYER_PEOPLE_COMPUTEDS = ['display_name_full', 'full_name', 'searchable', 'clinical_title', 'hide_medical_ontology', 'clinical_provider_profile_eligible_query'];
 
@@ -84,8 +85,22 @@ function providerLayerListenerCount(string $event, string $listener): int
     return count(array_filter(providerLayerListenerClasses($event), fn (string $class): bool => $class === $listener));
 }
 
+/**
+ * Whether the router serves a path for GET.
+ */
+function providerLayerServesRoute(string $uri): bool
+{
+    foreach (Route::getRoutes()->getRoutes() as $route) {
+        if ($route->uri() === $uri && in_array('GET', $route->methods(), true)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 describe('with the provider layer on (the default)', function (): void {
-    it('registers the shared computeds on the people collection', function (): void {
+    it('registers the computed fields on the people collection', function (): void {
         $callbacks = Collection::getComputedCallbacks('people');
 
         foreach (PROVIDER_LAYER_PEOPLE_COMPUTEDS as $handle) {
@@ -99,6 +114,11 @@ describe('with the provider layer on (the default)', function (): void {
         expect(providerLayerListenerCount(EntrySaving::class, StripProviderPeopleVirtualFieldsOnEntrySaving::class))->toBe(1)
             ->and(providerLayerListenerCount(EntrySaved::class, RefreshProviderEligibilityForLocation::class))->toBe(1)
             ->and(providerLayerListenerCount(EntryDeleted::class, RefreshProviderEligibilityForLocation::class))->toBe(1);
+    });
+
+    it('serves the Find-a-Doc routes', function (): void {
+        expect(providerLayerServesRoute('api/v1/find-a-doc/providers'))->toBeTrue()
+            ->and(providerLayerServesRoute('api/v1/find-a-doc/providers/{provider}'))->toBeTrue();
     });
 
     it('registers the clinical_provider_eligible modifier', function (): void {
@@ -120,7 +140,7 @@ describe('with the provider layer off', function (): void {
             ->and(Features::providerLayer())->toBeFalse();
     });
 
-    it('registers no shared computeds on the people collection', function (): void {
+    it('registers no computed fields on the people collection', function (): void {
         $callbacks = Collection::getComputedCallbacks('people');
 
         foreach (PROVIDER_LAYER_PEOPLE_COMPUTEDS as $handle) {
@@ -132,6 +152,11 @@ describe('with the provider layer off', function (): void {
         expect(providerLayerListenerCount(EntrySaving::class, StripProviderPeopleVirtualFieldsOnEntrySaving::class))->toBe(0)
             ->and(providerLayerListenerCount(EntrySaved::class, RefreshProviderEligibilityForLocation::class))->toBe(0)
             ->and(providerLayerListenerCount(EntryDeleted::class, RefreshProviderEligibilityForLocation::class))->toBe(0);
+    });
+
+    it('serves no Find-a-Doc routes', function (): void {
+        expect(providerLayerServesRoute('api/v1/find-a-doc/providers'))->toBeFalse()
+            ->and(providerLayerServesRoute('api/v1/find-a-doc/providers/{provider}'))->toBeFalse();
     });
 
     it('still registers the clinical_provider_eligible modifier', function (): void {

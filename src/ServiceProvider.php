@@ -16,6 +16,8 @@ use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
 use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
+use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
+use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
@@ -90,6 +92,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/people_lenses.php', 'people_lenses');
         $this->mergeConfigFrom(__DIR__.'/../config/clinical_provider_profile.php', 'clinical_provider_profile');
         $this->mergeConfigFrom(__DIR__.'/../config/researcher_profile.php', 'researcher_profile');
+        $this->mergeConfigFrom(__DIR__.'/../config/find_a_doc_api.php', 'find_a_doc_api');
     }
 
     /**
@@ -163,13 +166,24 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Register the clinical provider layer: the eligibility index computed. Its listeners are
-     * subscribed by {@see self::bootEvents()}, and the scheduled re-index by {@see self::schedule()}.
+     * Register the clinical provider layer: the computed values and the Find-a-Doc read API. Its
+     * listeners are subscribed by {@see self::bootEvents()}.
      */
     private function registerProviderLayer(): void
     {
-        // Register the providers and people shared computeds, among them the eligibility index flag
+        // Register the providers and people shared computeds
         $this->app->make(ProvidersPeopleSharedCollectionComputedsRegistrar::class)->register();
+
+        // Serve the Find-a-Doc read API under `/api/v1/find-a-doc`, as the host's API routes do
+        $rateLimit = config('find_a_doc_api.rate_limit_per_minute', 60);
+        $perMinute = \is_int($rateLimit) ? $rateLimit : 60;
+
+        Route::middleware(['api', \sprintf('throttle:%d,1', $perMinute)])
+            ->prefix('api/v1/find-a-doc')
+            ->group(function (): void {
+                Route::get('providers', ProviderIndexController::class);
+                Route::get('providers/{provider}', ProviderShowController::class);
+            });
     }
 
     /**
