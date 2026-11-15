@@ -78,7 +78,7 @@ final class PeopleEditingScope
         $user = User::fromUser($user);
 
         // phpstan requires this type guard; no caller reaches it with another type.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // @pest-mutate-ignore: InstanceOfToTrue, FalseToTrue, RemoveEarlyReturn
         if (! $user instanceof UserContract) {
             return false;
         }
@@ -145,6 +145,9 @@ final class PeopleEditingScope
             return [];
         }
 
+        // Equivalent: a query over a collection that does not exist returns no entries, so the
+        // result is the same empty list; the early return only skips the query.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if (CollectionFacade::findByHandle(self::COLLECTION) === null) {
             return [];
         }
@@ -160,7 +163,7 @@ final class PeopleEditingScope
 
         foreach ($entries as $entry) {
             // phpstan requires this type guard; no caller reaches it with another type.
-            // @pest-mutate-ignore: InstanceOfToTrue
+            // @pest-mutate-ignore: InstanceOfToTrue, ContinueToBreak
             if (! $entry instanceof Entry) {
                 continue;
             }
@@ -189,6 +192,9 @@ final class PeopleEditingScope
     {
         $userOrganizations = $this->userOrganizationIds($user);
 
+        // Equivalent: a query over a collection that does not exist returns no entries, so the
+        // result is the same empty list; the early return only skips the query.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if (CollectionFacade::findByHandle(self::COLLECTION) === null) {
             return [];
         }
@@ -204,7 +210,7 @@ final class PeopleEditingScope
 
         foreach ($entries as $entry) {
             // phpstan requires this type guard; no caller reaches it with another type.
-            // @pest-mutate-ignore: InstanceOfToTrue
+            // @pest-mutate-ignore: InstanceOfToTrue, ContinueToBreak
             if (! $entry instanceof Entry) {
                 continue;
             }
@@ -231,6 +237,9 @@ final class PeopleEditingScope
     {
         $named = $this->namedOrganizationIds($user);
 
+        // Equivalent: with no named organizations the walk collects nothing, so the result is
+        // the same empty list; the early return only skips the walk.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($named === []) {
             return [];
         }
@@ -283,7 +292,7 @@ final class PeopleEditingScope
         $user = User::fromUser($user);
 
         // phpstan requires this type guard; no caller reaches it with another type.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $user instanceof UserContract) {
             return [];
         }
@@ -295,7 +304,7 @@ final class PeopleEditingScope
 
         foreach ($groups as $group) {
             // phpstan requires this type guard; no caller reaches it with another type.
-            // @pest-mutate-ignore: InstanceOfToTrue
+            // @pest-mutate-ignore: InstanceOfToTrue, ContinueToBreak
             if (! $group instanceof UserGroup) {
                 continue;
             }
@@ -321,12 +330,16 @@ final class PeopleEditingScope
     private function collectCovered(array $nodes, array $named, bool $underNamed, bool $topLevel, array &$covered, array &$inTree): void
     {
         foreach ($nodes as $node) {
+            // Equivalent: a tree is saved only as nested arrays, so no stored node is another type.
+            // @pest-mutate-ignore: ContinueToBreak
             if (! \is_array($node)) {
                 continue;
             }
 
             $id = $node['entry'] ?? null;
 
+            // Equivalent: a stored tree keeps every entry as a string id, so no node reaches the guard.
+            // @pest-mutate-ignore: ContinueToBreak
             if (! \is_string($id)) {
                 continue;
             }
@@ -368,7 +381,7 @@ final class PeopleEditingScope
         $site = Site::default();
 
         // phpstan requires this type guard; no caller reaches it with another type.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $site instanceof SiteItem) {
             return [];
         }
@@ -376,7 +389,7 @@ final class PeopleEditingScope
         $tree = $structure->in($site->handle());
 
         // phpstan requires this type guard; no caller reaches it with another type.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $tree instanceof Tree) {
             return [];
         }
@@ -414,7 +427,7 @@ final class PeopleEditingScope
         $blueprint = $entry->blueprint();
 
         // phpstan requires this type guard; no caller reaches it with another type.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $blueprint instanceof Blueprint) {
             return [];
         }

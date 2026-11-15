@@ -21,6 +21,7 @@ use Statamic\Facades\Role;
 use Statamic\Facades\User;
 use Statamic\Facades\UserGroup;
 use Statamic\Facades\YAML;
+use Statamic\Policies\EntryPolicy;
 use Statamic\Stache\Query\EntryQueryBuilder;
 use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Tree;
@@ -902,4 +903,131 @@ it('governs only people entries', function (): void {
         ->and($scope->governs(Entry::find('uhura')))->toBeTrue()
         ->and($scope->governs(null))->toBeFalse()
         ->and($scope->editableEntryIds(scopedPeopleEditor()))->toEqualCanonicalizing(['sulu', 'uhura']);
+});
+
+it('lists the people entries a scoped user may not act on, and no other entry', function (): void {
+    scopedPeoplePage('sickbay');
+
+    $scope = app(PeopleEditingScope::class);
+
+    expect($scope->outOfScopeEntryIds(scopedPeopleEditor()))->toBe(['chekov']);
+
+    scopedPeopleGroupOrganizations([]);
+
+    // A group that names nothing covers nothing, so every person is out of scope
+    expect($scope->outOfScopeEntryIds(scopedPeopleEditor()))->toEqualCanonicalizing(['chekov', 'sulu', 'uhura']);
+});
+
+it('lists no entry when the people collection is gone', function (): void {
+    $editor = scopedPeopleEditor();
+
+    $people = CollectionFacade::findByHandle('people');
+    Assert::assertInstanceOf(StatamicCollection::class, $people);
+    $people->delete();
+
+    $scope = app(PeopleEditingScope::class);
+
+    expect($scope->outOfScopeEntryIds($editor))->toBe([])
+        ->and($scope->editableEntryIds($editor))->toBe([]);
+});
+
+it('covers nothing for a user in no group', function (): void {
+    $user = User::make();
+    Assert::assertInstanceOf(FileStatamicUser::class, $user);
+
+    $user->id((string) Str::uuid());
+    $user->email('rand-ungrouped@example.test');
+    $user->save();
+
+    expect(app(PeopleEditingScope::class)->userOrganizationIds($user))->toBe([]);
+});
+
+it('skips a malformed role row and goes on to the rows after it', function (): void {
+    scopedPeoplePerson('rand', ['job_title' => [
+        'not-a-row',
+        ['id' => 'role-untyped', 'type' => 7, 'department' => [SCOPED_PEOPLE_ORG_OUT]],
+        ...scopedPeopleRole(SCOPED_PEOPLE_ORG_IN),
+    ]]);
+
+    /** @var EntryItem $rand */
+    $rand = Entry::find('rand');
+
+    expect(app(PeopleEditingScope::class)->entryOrganizationIds($rand))->toBe([SCOPED_PEOPLE_ORG_IN]);
+});
+
+it('skips a malformed set definition and goes on to the sets after it', function (): void {
+    $organizationsField = ['type' => 'entries', 'collections' => ['organizations']];
+
+    $blueprint = Blueprint::makeFromFields([
+        'title' => ['type' => 'text'],
+        'no_sets' => ['type' => 'replicator'],
+        'job_title' => [
+            'type' => 'replicator',
+            'sets' => [
+                'broken' => 'not-a-set',
+                'clinical_role' => [
+                    'display' => 'Clinical',
+                    'fields' => [
+                        ['handle' => 'clinic', 'field' => $organizationsField],
+                    ],
+                ],
+            ],
+        ],
+    ]);
+    $blueprint->setHandle('malformed');
+    $blueprint->setNamespace('collections.people');
+    $blueprint->save();
+
+    BlinkFacade::flush();
+
+    scopedPeoplePerson('riley', ['blueprint' => 'malformed', 'job_title' => [
+        ['id' => 'role-clinical', 'type' => 'clinical_role', 'enabled' => true, 'clinic' => [SCOPED_PEOPLE_ORG_IN]],
+    ]]);
+
+    /** @var EntryItem $riley */
+    $riley = Entry::find('riley');
+
+    expect(app(PeopleEditingScope::class)->entryOrganizationIds($riley))->toBe([SCOPED_PEOPLE_ORG_IN]);
+});
+
+it('scopes who may delete a people entry', function (): void {
+    /** @var StatamicRole $role */
+    $role = Role::make();
+    $role->handle('people_deleter');
+    $role->title('People deleter');
+    $role->permissions(['delete people entries']);
+    $role->save();
+
+    $editor = scopedPeopleEditor();
+    $editor->assignRole('people_deleter');
+    $editor->save();
+
+    $policy = app(EntryPolicy::class);
+
+    expect($policy->delete($editor, Entry::find('uhura')))->toBeTrue()
+        ->and($policy->delete($editor, Entry::find('chekov')))->toBeFalse();
+});
+
+it('leaves a user the scope does not apply to unrestricted in the policy', function (): void {
+    /** @var StatamicRole $role */
+    $role = Role::make();
+    $role->handle('collection_manager');
+    $role->title('Collection manager');
+    $role->permissions(['configure collections', 'edit people entries', 'delete people entries']);
+    $role->save();
+
+    $manager = User::make();
+    Assert::assertInstanceOf(FileStatamicUser::class, $manager);
+
+    $manager->id((string) Str::uuid());
+    $manager->email('scott-manager@example.test');
+    $manager->assignRole('collection_manager');
+    $manager->addToGroup('cardiology_editors');
+    $manager->save();
+
+    $policy = app(EntryPolicy::class);
+
+    // In a group that covers only Cardiology, yet not limited to it: the scope applies to neither
+    expect($policy->edit($manager, Entry::find('chekov')))->toBeTrue()
+        ->and($policy->delete($manager, Entry::find('chekov')))->toBeTrue();
 });

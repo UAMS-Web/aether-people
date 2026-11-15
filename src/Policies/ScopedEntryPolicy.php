@@ -93,6 +93,9 @@ class ScopedEntryPolicy extends EntryPolicy
 
         $user = User::fromUser($user);
 
+        // phpstan requires this null guard; the parent policy methods read the user first and
+        // fail on null, so no caller reaches it.
+        // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
         if ($user === null) {
             return false;
         }
