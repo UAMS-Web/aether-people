@@ -71,7 +71,7 @@ it('fills a missing provider eligibility config while it registers', function (s
 
     expect(config($key))->toBe($defaults)
         ->and($defaults)->not->toBeEmpty();
-})->with(['clinical_provider_profile', 'researcher_profile']);
+})->with(['clinical_provider_profile', 'researcher_profile', 'find_a_doc_api']);
 
 it('leaves a provider eligibility config value the host has set', function (string $key): void {
     // Set the host's own value, then register the provider again
@@ -79,7 +79,7 @@ it('leaves a provider eligibility config value the host has set', function (stri
     new ServiceProvider(app())->register();
 
     expect(config("{$key}.host_marker"))->toBe('kept');
-})->with(['clinical_provider_profile', 'researcher_profile']);
+})->with(['clinical_provider_profile', 'researcher_profile', 'find_a_doc_api']);
 
 it('serves each collection blueprint directory under the collection namespace', function (string $collection): void {
     // Read the blueprints the namespace serves
