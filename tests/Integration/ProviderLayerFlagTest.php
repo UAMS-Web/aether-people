@@ -16,7 +16,7 @@ use UAMSWeb\Aether\People\Support\Features;
  * The `people.features.provider_layer` switch: what the add-on registers with it on and with it off.
  *
  * Each case boots its own application, so the flag is read where a host sets it, before the add-on's
- * provider boots. The switch covers the eligibility computed and the entry listeners; the
+ * provider boots. The switch covers the shared computeds and the entry listeners; the
  * `clinical_provider_eligible` modifier and the eligibility scope are always registered.
  *
  * @command vendor/bin/pest tests/Integration/ProviderLayerFlagTest.php
@@ -50,9 +50,9 @@ afterEach(function (): void {
 });
 
 /**
- * The computed handles the layer adds to the `people` collection.
+ * The computed handles the registrar adds to the `people` collection.
  */
-const PROVIDER_LAYER_PEOPLE_COMPUTEDS = ['clinical_provider_profile_eligible_query'];
+const PROVIDER_LAYER_PEOPLE_COMPUTEDS = ['display_name_full', 'full_name', 'searchable', 'clinical_title', 'hide_medical_ontology', 'clinical_provider_profile_eligible_query'];
 
 /**
  * The classes registered as listeners of an event, read from the class listeners' closures.
@@ -85,7 +85,7 @@ function providerLayerListenerCount(string $event, string $listener): int
 }
 
 describe('with the provider layer on (the default)', function (): void {
-    it('registers the eligibility computed on the people collection', function (): void {
+    it('registers the shared computeds on the people collection', function (): void {
         $callbacks = Collection::getComputedCallbacks('people');
 
         foreach (PROVIDER_LAYER_PEOPLE_COMPUTEDS as $handle) {
@@ -120,7 +120,7 @@ describe('with the provider layer off', function (): void {
             ->and(Features::providerLayer())->toBeFalse();
     });
 
-    it('registers no eligibility computed on the people collection', function (): void {
+    it('registers no shared computeds on the people collection', function (): void {
         $callbacks = Collection::getComputedCallbacks('people');
 
         foreach (PROVIDER_LAYER_PEOPLE_COMPUTEDS as $handle) {
