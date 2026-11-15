@@ -148,7 +148,7 @@ it('throttles the Find-a-Doc routes at 60 a minute when the configured rate is n
     expect(findADocRouteMiddleware('fast'))->toBe(['api', 'throttle:60,1']);
 });
 
-it('limits the entry policy to the editor\'s organizations', function (): void {
+it("limits the entry policy to the editor's organizations", function (): void {
     expect(app(EntryPolicy::class))->toBeInstanceOf(ScopedEntryPolicy::class);
 });
 

@@ -123,7 +123,7 @@ describe('with the provider layer on (the default)', function (): void {
 
         expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
             ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
-            ->and(array_search(EnforcePeopleEditingScope::class, $classes, true))->toBeLessThan(array_search(EnforcePeopleScopeOnProviderSync::class, $classes, true));
+            ->and(array_flip($classes)[EnforcePeopleEditingScope::class])->toBeLessThan(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class]);
     });
 
     it('serves the Find-a-Doc routes', function (): void {
@@ -169,7 +169,7 @@ describe('with the provider layer off', function (): void {
 
         expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
             ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
-            ->and(array_search(EnforcePeopleEditingScope::class, $classes, true))->toBeLessThan(array_search(EnforcePeopleScopeOnProviderSync::class, $classes, true));
+            ->and(array_flip($classes)[EnforcePeopleEditingScope::class])->toBeLessThan(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class]);
     });
 
     it('serves no Find-a-Doc routes', function (): void {
