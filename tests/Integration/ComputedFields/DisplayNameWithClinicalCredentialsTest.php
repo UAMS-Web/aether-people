@@ -6,9 +6,11 @@ use Statamic\Contracts\Taxonomies\Term as TermContract;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Term;
 use Statamic\Taxonomies\LocalizedTerm;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameBaseComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNamePrefixAndCredentialComputeds;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
 
-covers(ProviderPeoplePersonNameComputedValues::class);
+covers(ProviderPeoplePersonNameComputedValues::class, PersonNameBaseComputeds::class, PersonNamePrefixAndCredentialComputeds::class);
 
 /**
  * `display_name_full_with_clinical_credentials` keeps only the credentials whose
