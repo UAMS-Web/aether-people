@@ -7,6 +7,7 @@ namespace UAMSWeb\Aether\People\Tests;
 use Illuminate\Foundation\Application;
 use Statamic\Testing\AddonTestCase;
 use UAMSWeb\Aether\People\Contracts\LocationRegions;
+use UAMSWeb\Aether\People\Contracts\PublicationCitations;
 use UAMSWeb\Aether\People\ServiceProvider;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
@@ -85,5 +86,6 @@ abstract class TestCase extends AddonTestCase
         // Bind the contracts the host binds, to stand-ins that return what the host returns for
         // content it has nothing for
         $app->singleton(LocationRegions::class, fn (): LocationRegions => HostFakes::locationRegions());
+        $app->singleton(PublicationCitations::class, fn (): PublicationCitations => HostFakes::publicationCitations());
     }
 }
