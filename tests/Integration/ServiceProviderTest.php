@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Illuminate\Routing\Route as RoutingRoute;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Addon;
@@ -96,4 +99,48 @@ it('adds the field views, search views and templates to the view finder', functi
     expect($realPaths($hints['statamic'] ?? []))->toContain(realpath(__DIR__.'/../../resources/field-views'))
         ->and($realPaths($hints['aether-search'] ?? []))->toContain(realpath(__DIR__.'/../../resources/search-views'))
         ->and($realPaths($finder->getPaths()))->toContain(realpath(__DIR__.'/../../resources/views'));
+});
+
+/**
+ * Register the Find-a-Doc routes again under a given rate-limit config, and return the middleware of the
+ * route the second registration added. The provider boots once per application, so the config the
+ * registration reads is set first and the private method is called directly.
+ *
+ * @param  bool  $configured  Whether the config key exists; false removes it so the default applies.
+ * @return list<string>
+ */
+function findADocRouteMiddleware(mixed $rateLimit, bool $configured = true): array
+{
+    $all = config()->all();
+    Arr::forget($all, 'find_a_doc_api.rate_limit_per_minute');
+    config()->set('find_a_doc_api', $all['find_a_doc_api']);
+
+    if ($configured) {
+        config()->set('find_a_doc_api.rate_limit_per_minute', $rateLimit);
+    }
+
+    $provider = mustBe(ServiceProvider::class, app()->getProvider(ServiceProvider::class), 'the add-on provider');
+    $method = new ReflectionMethod($provider, 'registerProviderLayer');
+    $method->invoke($provider);
+
+    $matches = array_values(array_filter(
+        Route::getRoutes()->getRoutes(),
+        fn (RoutingRoute $route): bool => $route->uri() === 'api/v1/find-a-doc/providers',
+    ));
+
+    $route = end($matches);
+
+    return $route instanceof RoutingRoute ? array_values(array_map(strval(...), $route->middleware())) : [];
+}
+
+it('throttles the Find-a-Doc routes at the configured rate under the api middleware', function (): void {
+    expect(findADocRouteMiddleware(120))->toBe(['api', 'throttle:120,1']);
+});
+
+it('throttles the Find-a-Doc routes at 60 a minute when the rate is not configured', function (): void {
+    expect(findADocRouteMiddleware(null, configured: false))->toBe(['api', 'throttle:60,1']);
+});
+
+it('throttles the Find-a-Doc routes at 60 a minute when the configured rate is not an integer', function (): void {
+    expect(findADocRouteMiddleware('fast'))->toBe(['api', 'throttle:60,1']);
 });
