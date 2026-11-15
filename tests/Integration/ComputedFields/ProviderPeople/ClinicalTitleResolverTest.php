@@ -79,7 +79,7 @@ function clinicalTitleMakePerson(array $data): EntryInstance
 {
     $entry = new EntryInstance;
     $entry->collection('people');
-    $entry->slug('provider-'.bin2hex(random_bytes(4)));
+    $entry->slug(uniqid('provider-'));
     $entry->data($data);
 
     return $entry;
