@@ -550,7 +550,7 @@ describe('schedule', function (): void {
     it('is not scheduled when the refresh is disabled', function (mixed $enabled): void {
         config(['clinical_provider_profile.location_date_refresh.enabled' => $enabled]);
 
-        expect(datedLocationScheduledEvents())->toBe([]);
+        expect(datedLocationScheduledEvents())->toHaveCount(0);
     })->with([
         'off' => [false],
         'a truthy value that is not true' => [1],
@@ -563,7 +563,7 @@ describe('schedule', function (): void {
             'people.features.provider_layer' => false,
         ]);
 
-        expect(datedLocationScheduledEvents())->toBe([]);
+        expect(datedLocationScheduledEvents())->toHaveCount(0);
     });
 
     it('is scheduled when the provider layer switch is absent', function (): void {
