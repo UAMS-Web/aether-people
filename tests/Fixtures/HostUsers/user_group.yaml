@@ -1,0 +1,38 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Title
+              listable: true
+              validate:
+                - required
+              instructions: 'Usually a plural noun, like Editors or Photographers'
+              localizable: false
+          -
+            handle: roles
+            field:
+              type: user_roles
+              mode: select
+              listable: true
+              instructions: 'Assign roles to give users in this group all of their corresponding permissions.'
+              localizable: false
+          -
+            handle: organizations
+            field:
+              type: entries
+              collections:
+                - organizations
+              create: false
+              mode: stack
+              display: Organizations
+              instructions: 'Members of this group may edit the people linked to any of these organizations or to any organization below them. A top-level organization such as UAMS Health cannot be chosen. Leave empty for a group that edits no people.'
+              listable: true
+              localizable: false
+              validate:
+                - not_top_level_organization

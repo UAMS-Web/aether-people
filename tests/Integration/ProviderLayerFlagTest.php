@@ -8,6 +8,8 @@ use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
 use Statamic\Events\EntrySaving;
 use Statamic\Facades\Collection;
+use UAMSWeb\Aether\People\EditingScope\EnforcePeopleEditingScope;
+use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
 use UAMSWeb\Aether\People\Listeners\RefreshProviderEligibilityForLocation;
 use UAMSWeb\Aether\People\Listeners\StripProviderPeopleVirtualFieldsOnEntrySaving;
 use UAMSWeb\Aether\People\ServiceProvider;
@@ -116,6 +118,14 @@ describe('with the provider layer on (the default)', function (): void {
             ->and(providerLayerListenerCount(EntryDeleted::class, RefreshProviderEligibilityForLocation::class))->toBe(1);
     });
 
+    it('subscribes the editing scope listeners in order', function (): void {
+        $classes = providerLayerListenerClasses(EntrySaving::class);
+
+        expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
+            ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
+            ->and(array_search(EnforcePeopleEditingScope::class, $classes, true))->toBeLessThan(array_search(EnforcePeopleScopeOnProviderSync::class, $classes, true));
+    });
+
     it('serves the Find-a-Doc routes', function (): void {
         expect(providerLayerServesRoute('api/v1/find-a-doc/providers'))->toBeTrue()
             ->and(providerLayerServesRoute('api/v1/find-a-doc/providers/{provider}'))->toBeTrue();
@@ -152,6 +162,14 @@ describe('with the provider layer off', function (): void {
         expect(providerLayerListenerCount(EntrySaving::class, StripProviderPeopleVirtualFieldsOnEntrySaving::class))->toBe(0)
             ->and(providerLayerListenerCount(EntrySaved::class, RefreshProviderEligibilityForLocation::class))->toBe(0)
             ->and(providerLayerListenerCount(EntryDeleted::class, RefreshProviderEligibilityForLocation::class))->toBe(0);
+    });
+
+    it('still subscribes the editing scope listeners, which no flag switches off', function (): void {
+        $classes = providerLayerListenerClasses(EntrySaving::class);
+
+        expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
+            ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
+            ->and(array_search(EnforcePeopleEditingScope::class, $classes, true))->toBeLessThan(array_search(EnforcePeopleScopeOnProviderSync::class, $classes, true));
     });
 
     it('serves no Find-a-Doc routes', function (): void {

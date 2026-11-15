@@ -6,22 +6,36 @@ namespace UAMSWeb\Aether\People;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
+use Statamic\Entries\Collection as EntryCollection;
+use Statamic\Events\EntrySaving;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\URL as StatamicUrl;
+use Statamic\Facades\User;
+use Statamic\Hooks\CP\EntriesIndexQuery;
+use Statamic\Policies\EntryPolicy;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Query\Builder as QueryBuilder;
 use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
 use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
+use UAMSWeb\Aether\People\EditingScope\EnforcePeopleEditingScope;
+use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
+use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
+use UAMSWeb\Aether\People\Rules\NotTopLevelOrganization;
 use UAMSWeb\Aether\People\Support\Features;
+use UAMSWeb\Aether\People\Support\PeopleEditingScope;
 
 /**
  * Service provider for the add-on.
@@ -93,6 +107,9 @@ class ServiceProvider extends AddonServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/clinical_provider_profile.php', 'clinical_provider_profile');
         $this->mergeConfigFrom(__DIR__.'/../config/researcher_profile.php', 'researcher_profile');
         $this->mergeConfigFrom(__DIR__.'/../config/find_a_doc_api.php', 'find_a_doc_api');
+
+        // Limit `people` entries to the organizations of the user's groups (UAMS-Web/uams-statamic-archive#3182)
+        $this->app->bind(EntryPolicy::class, ScopedEntryPolicy::class);
     }
 
     /**
@@ -118,10 +135,60 @@ class ServiceProvider extends AddonServiceProvider
         // Route each lens ahead of Statamic's catch-all
         Statamic::pushWebRoutes(fn () => $this->registerLensRoutes());
 
+        // Scope `people` editing to the editor's organizations; not part of the provider layer, so no flag turns it off
+        $this->bootPeopleEditingScope();
+
         // Register the clinical provider layer, unless the host turned it off
         if (Features::providerLayer()) {
             $this->registerProviderLayer();
         }
+    }
+
+    /**
+     * Scope Control Panel editing of `people` entries to the organizations of the editor's user groups.
+     *
+     * The entry policy (bound in {@see self::register()}) stops a scoped editor opening an entry outside their
+     * organizations. This keeps those entries out of the listing and its search, refuses a save that would
+     * leave the entry out of scope, and registers the validation rule the user group blueprint names. The
+     * listeners are subscribed here rather than found by Statamic, so the order is fixed and the provider
+     * layer flag cannot switch them off.
+     */
+    private function bootPeopleEditingScope(): void
+    {
+        // Keep out-of-scope entries out of the listing and its search results
+        EntriesIndexQuery::hook('query', function (mixed $payload, \Closure $next): mixed {
+            /** @var object{query: mixed, collection: mixed} $payload */
+            $collection = $payload->collection;
+            $query = $payload->query;
+            $user = User::current();
+            $scope = app(PeopleEditingScope::class);
+
+            if (
+                $collection instanceof EntryCollection
+                && $collection->handle() === PeopleEditingScope::COLLECTION
+                && $query instanceof QueryBuilder
+                && $user !== null
+                && $scope->appliesTo($user)
+            ) {
+                $query->whereIn('id', $scope->editableEntryIds($user));
+            }
+
+            return $next($payload);
+        });
+
+        // Refuse a save that leaves a `people` entry out of scope, then one that syncs an out-of-scope person
+        Event::listen(EntrySaving::class, EnforcePeopleEditingScope::class);
+        Event::listen(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class);
+
+        // Register the rule the user group blueprint names, reporting its failure on the field
+        Validator::extend('not_top_level_organization', function (string $attribute, mixed $value, array $parameters, ValidatorContract $validator): bool {
+            (new NotTopLevelOrganization)->validate($attribute, $value, function (string $message) use ($attribute, $validator): void {
+                $validator->errors()->add($attribute, $message);
+            });
+
+            // Report success: a failure is already on the error bag, and a false return would add a second message
+            return true;
+        });
     }
 
     /**

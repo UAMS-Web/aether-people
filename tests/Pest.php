@@ -14,5 +14,7 @@ declare(strict_types=1);
 use UAMSWeb\Aether\People\Tests\TestCase;
 
 require_once __DIR__.'/Support/TypeNarrowing.php';
+require_once __DIR__.'/Support/Throwables.php';
+require_once __DIR__.'/Support/IsolatedStache.php';
 
 pest()->extend(TestCase::class)->in('Integration');
