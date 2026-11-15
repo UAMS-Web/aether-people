@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace UAMSWeb\Aether\People;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Blueprint;
+use Statamic\Facades\Collection;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeopleListingComputedValues;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
+use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
+use UAMSWeb\Aether\People\Support\Features;
+use UAMSWeb\Aether\People\Support\PeopleCollection;
 
 /**
  * Service provider for the add-on.
@@ -84,6 +90,8 @@ class ServiceProvider extends AddonServiceProvider
         // Merge the add-on's defaults under the key the code reads
         $this->mergeConfigFrom(__DIR__.'/../config/people.php', 'people');
         $this->mergeConfigFrom(__DIR__.'/../config/people_lenses.php', 'people_lenses');
+        $this->mergeConfigFrom(__DIR__.'/../config/clinical_provider_profile.php', 'clinical_provider_profile');
+        $this->mergeConfigFrom(__DIR__.'/../config/researcher_profile.php', 'researcher_profile');
     }
 
     /**
@@ -108,6 +116,70 @@ class ServiceProvider extends AddonServiceProvider
 
         // Route each lens ahead of Statamic's catch-all
         Statamic::pushWebRoutes(fn () => $this->registerLensRoutes());
+
+        // Register the clinical provider layer, unless the host turned it off
+        if (Features::providerLayer()) {
+            $this->registerProviderLayer();
+        }
+    }
+
+    /**
+     * Re-index provider eligibility for the people linked to practice locations whose date has passed.
+     *
+     * A scheduled location counts toward eligibility only from its date, and nothing is saved when that
+     * date arrives, so this job is what re-indexes it. The cadence is
+     * `clinical_provider_profile.location_date_refresh.cron`, read in the display timezone.
+     *
+     * @param  Schedule  $schedule  The application's scheduler.
+     */
+    #[\Override]
+    protected function schedule(Schedule $schedule): void
+    {
+        if (! Features::providerLayer() || config('clinical_provider_profile.location_date_refresh.enabled') !== true) {
+            return;
+        }
+
+        $schedule->job(new RefreshProviderEligibilityForDatedLocations)
+            ->cron(config()->string('clinical_provider_profile.location_date_refresh.cron'))
+            ->timezone(Statamic::displayTimezone());
+    }
+
+    /**
+     * Register the add-on's listeners, unless the host turned the provider layer off.
+     *
+     * Statamic finds every class under `src/Listeners` and subscribes it to the events its
+     * `handle()` method type-hints: the listener that strips the computed fields' virtual values
+     * before an entry is saved, and the one that re-indexes linked people's eligibility when a
+     * practice location is saved or deleted. Both belong to the provider layer, so with it off
+     * nothing is subscribed.
+     */
+    #[\Override]
+    public function bootEvents(): static
+    {
+        // Subscribe nothing with the layer off
+        if (Features::providerLayer()) {
+            parent::bootEvents();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Register the clinical provider layer: the eligibility index computed. Its listeners are
+     * subscribed by {@see self::bootEvents()}, and the scheduled re-index by {@see self::schedule()}.
+     */
+    private function registerProviderLayer(): void
+    {
+        // Register the clinical provider profile eligibility flag on the people collection: the index
+        // that `clinical_provider_profile_eligible_query:is="true"` filters on, which the location
+        // listeners and the scheduled job keep current.
+        $listing = $this->app->make(ProviderPeopleListingComputedValues::class);
+
+        Collection::computed(
+            PeopleCollection::handle(),
+            'clinical_provider_profile_eligible_query',
+            $listing->computeClinicalProviderProfileEligibleQuery(...)
+        );
     }
 
     /**

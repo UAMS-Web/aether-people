@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Addon;
+use Statamic\Facades\Blueprint;
 use UAMSWeb\Aether\People\ServiceProvider;
+
+covers(ServiceProvider::class);
 
 /**
  * The add-on boots inside a minimal Statamic.
@@ -54,4 +59,41 @@ it('leaves a people config the host has set', function (): void {
     new ServiceProvider(app())->register();
 
     expect(config('people.collection'))->toBe('staff');
+});
+
+it('fills a missing provider eligibility config while it registers', function (string $key): void {
+    // Drop the merged config, then register the provider again
+    config([$key => []]);
+    new ServiceProvider(app())->register();
+
+    // Expect the add-on's own file to supply it again
+    $defaults = require __DIR__.'/../../config/'.$key.'.php';
+
+    expect(config($key))->toBe($defaults)
+        ->and($defaults)->not->toBeEmpty();
+})->with(['clinical_provider_profile', 'researcher_profile']);
+
+it('leaves a provider eligibility config value the host has set', function (string $key): void {
+    // Set the host's own value, then register the provider again
+    config(["{$key}.host_marker" => 'kept']);
+    new ServiceProvider(app())->register();
+
+    expect(config("{$key}.host_marker"))->toBe('kept');
+})->with(['clinical_provider_profile', 'researcher_profile']);
+
+it('serves each collection blueprint directory under the collection namespace', function (string $collection): void {
+    // Read the blueprints the namespace serves
+    $blueprints = Blueprint::in("collections.{$collection}");
+
+    expect($blueprints)->not->toBeEmpty();
+})->with(ServiceProvider::COLLECTION_BLUEPRINT_DIRECTORIES);
+
+it('adds the field views, search views and templates to the view finder', function (): void {
+    $finder = mustBe(FileViewFinder::class, View::getFinder(), 'the view finder');
+    $realPaths = fn (array $paths): array => array_map(realpath(...), array_values(array_filter($paths, is_string(...))));
+    $hints = $finder->getHints();
+
+    expect($realPaths($hints['statamic'] ?? []))->toContain(realpath(__DIR__.'/../../resources/field-views'))
+        ->and($realPaths($hints['aether-search'] ?? []))->toContain(realpath(__DIR__.'/../../resources/search-views'))
+        ->and($realPaths($finder->getPaths()))->toContain(realpath(__DIR__.'/../../resources/views'));
 });

@@ -6,8 +6,9 @@ namespace UAMSWeb\Aether\People\Lenses\Gates;
 
 use Statamic\Entries\Entry;
 use Statamic\Sites\Site;
-use UAMSWeb\Aether\People\Contracts\ClinicalProviderEligibility;
 use UAMSWeb\Aether\People\Lenses\LensGate;
+use UAMSWeb\Aether\People\Support\ClinicalProviderProfileEligibility;
+use UAMSWeb\Aether\People\Support\Features;
 
 /**
  * The clinical provider lens gate (UAMS-Web/uams-statamic-archive#571 / UAMS-Web/uams-statamic-archive#919): a person qualifies for the
@@ -24,11 +25,16 @@ use UAMSWeb\Aether\People\Lenses\LensGate;
 final readonly class ClinicalProviderLensGate implements LensGate
 {
     public function __construct(
-        private ClinicalProviderEligibility $eligibility,
+        private ClinicalProviderProfileEligibility $eligibility,
     ) {}
 
     public function passes(Entry $person, Site $site): bool
     {
+        // With the provider layer off, no one has a clinical provider profile
+        if (! Features::providerLayer()) {
+            return false;
+        }
+
         return $this->eligibility->qualifies($person);
     }
 }
