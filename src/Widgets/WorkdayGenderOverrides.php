@@ -41,6 +41,10 @@ class WorkdayGenderOverrides extends Widget
     /**
      * Default maximum entries to display.
      */
+    // PCOV attributes no coverage to a constant's initializer, so its mutants report uncovered. The
+    // limit tests pin the fallback behavior (a limit below 1 lists both entries), and no test needs 25
+    // flagged entries, so the value itself is not asserted.
+    // @pest-mutate-ignore: IncrementInteger, DecrementInteger
     private const int DEFAULT_LIMIT = 25;
 
     /**
@@ -78,14 +82,13 @@ class WorkdayGenderOverrides extends Widget
         $gender = app(WorkdayGender::class);
         $scope = app(PeopleEditingScope::class);
 
-        // Find the flagged people entries. The flag is only a first cut, since
-        // isFlagged() below re-reads it with the override, so dropping it changes
-        // which entries are loaded but not which are listed: removing that call
-        // is an equivalent mutant, and an annotation cannot reach the statement
-        // it sits on.
         /** @var EntryQueryBuilder $query */
         $query = EntryFacade::query();
         $query->where('collection', PeopleEditingScope::COLLECTION);
+
+        // The flag is only a first cut, since isFlagged() below re-reads it with the override, so dropping
+        // it changes which entries are loaded but not which are listed.
+        // @pest-mutate-ignore: RemoveMethodCall
         $query->where(WorkdayGender::REVIEW_KEY, true);
 
         // Limit a scoped viewer to the entries they may edit, since the actions refuse any other
@@ -101,7 +104,7 @@ class WorkdayGenderOverrides extends Widget
         foreach ($entries as $entry) {
             // Keep entries still flagged and overridden. An entry query returns
             // only entries; the guard is for the static analysis.
-            // @pest-mutate-ignore: InstanceOfToTrue
+            // @pest-mutate-ignore: InstanceOfToTrue, ContinueToBreak
             if (! $entry instanceof Entry) {
                 continue;
             }

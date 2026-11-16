@@ -604,3 +604,12 @@ it('leaves alone a people revision whose entry no longer exists', function (): v
     expect(throwableFrom(fn () => app(RestoreWorkdayManagedFields::class)->handleRevisionSaving(new RevisionSaving($revision))))
         ->toBeNull();
 });
+
+it('locks no trainee field for a provenance entry that is not a handle name', function (): void {
+    $fields = app(WorkdayManagedFields::class);
+
+    // A loose comparison would match `true` against any string
+    expect($fields->lockedHandles([WorkdayManagedFields::PROVENANCE_KEY => [true]]))->toBe(WorkdayManagedFields::ALWAYS_LOCKED)
+        ->and($fields->lockedHandles([WorkdayManagedFields::PROVENANCE_KEY => ['fellow_query', true]]))
+        ->toBe([...WorkdayManagedFields::ALWAYS_LOCKED, 'fellow_query']);
+});

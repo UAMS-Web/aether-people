@@ -40,6 +40,10 @@ final class WorkdayManagedFields
      *
      * @var list<string>
      */
+    // PCOV attributes no coverage to a constant's initializer, so Pest selects no test for its mutants and
+    // reports them uncovered. Each removed entry is observable: `WorkdayManagedFieldsTest` pins the exact
+    // list `lockedHandles()` returns, and hand-applying each removal fails that test.
+    // @pest-mutate-ignore: RemoveArrayItem
     public const array ALWAYS_LOCKED = [
         'person_name',
         'uams_worker_query',
@@ -55,6 +59,8 @@ final class WorkdayManagedFields
      *
      * @var list<string>
      */
+    // Uncovered for the reason given on `ALWAYS_LOCKED`; the same test pins each entry, supplied one at a time.
+    // @pest-mutate-ignore: RemoveArrayItem
     public const array LOCKED_WHEN_SUPPLIED = [
         'resident_query',
         'fellow_query',
@@ -94,8 +100,15 @@ final class WorkdayManagedFields
      */
     public function storedData(Entry $entry): array
     {
+        // `Entry::path()` already returns the initial path when there is one, so dropping the left side
+        // reads the same file.
+        // @pest-mutate-ignore: CoalesceRemoveLeft
         $path = $entry->initialPath() ?? $entry->path();
 
+        // A missing file parses to an empty array (`File::get()` falls back to null and `parse()` returns
+        // [] for empty input), the same result as the early return, so neither the `&&` nor dropping the
+        // return changes what a caller sees.
+        // @pest-mutate-ignore: BooleanOrToBooleanAnd, RemoveEarlyReturn
         if (! \is_string($path) || ! File::exists($path)) {
             return [];
         }
@@ -124,6 +137,9 @@ final class WorkdayManagedFields
      */
     public function isLocked(string $handle, array $storedData): bool
     {
+        // Handles are strings and the locked list holds only non-numeric strings, so loose and strict
+        // comparison agree for every input this method receives.
+        // @pest-mutate-ignore: TrueToFalse
         return \in_array($handle, $this->lockedHandles($storedData), true);
     }
 
@@ -166,6 +182,8 @@ final class WorkdayManagedFields
             return [];
         }
 
+        // The caller spreads the result, which renumbers keys, so a filtered array with gaps behaves the same.
+        // @pest-mutate-ignore: UnwrapArrayValues
         return array_values(array_filter(
             self::LOCKED_WHEN_SUPPLIED,
             static fn (string $handle): bool => \in_array($handle, $supplied, true)

@@ -483,6 +483,27 @@ it('shows the marker alone when workday_gender has no instructions of its own', 
         ->and(workdayGenderFieldConfig('hikaru')['instructions'])->toBe('');
 });
 
+it('locks workday_gender on a blueprint that carries none of the other Workday fields', function (): void {
+    $blueprint = Blueprint::makeFromFields([
+        'title' => ['type' => 'text'],
+        'gender' => ['type' => 'text'],
+        'workday_gender' => ['type' => 'text'],
+        'service_line' => ['type' => 'entries', 'collections' => ['organizations']],
+    ]);
+    $blueprint->setHandle('variant');
+    $blueprint->setNamespace('collections.people');
+    $blueprint->save();
+
+    // The people collection has read its blueprints already
+    Blink::flush();
+
+    workdayGenderPerson('nyota', ['blueprint' => 'variant', 'gender' => 'Other', 'workday_gender' => 'Female']);
+
+    test()->actingAs(workdayGenderEditor());
+
+    expect(workdayGenderFieldConfig('nyota')['visibility'] ?? null)->toBe('read_only');
+});
+
 it('leaves a people blueprint without workday_gender alone', function (): void {
     $blueprint = Blueprint::makeFromFields([
         'title' => ['type' => 'text'],
@@ -648,10 +669,13 @@ it('clears a flag by confirming the override', function (): void {
         ->assertSessionHas('success', 'Gender override confirmed.');
 
     $nyota = workdayGenderFind('nyota');
+    $stored = YAML::file($nyota->path())->parse();
 
     expect($nyota->get('gender'))->toBe('Other')
         ->and($nyota->get('workday_gender'))->toBe('Female')
         ->and($nyota->has('workday_gender_review'))->toBeFalse()
+        ->and($stored)->not->toHaveKey('workday_gender_review')
+        ->and($stored['gender'])->toBe('Other')
         ->and(workdayGenderWidgetIds())->toBe([]);
 });
 
@@ -665,9 +689,12 @@ it('clears a flag by taking the Workday value', function (): void {
         ->assertSessionHas('success', 'Gender set to the value in Workday.');
 
     $nyota = workdayGenderFind('nyota');
+    $stored = YAML::file($nyota->path())->parse();
 
     expect($nyota->get('gender'))->toBe('Female')
         ->and($nyota->has('workday_gender_review'))->toBeFalse()
+        ->and($stored)->not->toHaveKey('workday_gender_review')
+        ->and($stored['gender'])->toBe('Female')
         ->and(workdayGenderWidgetIds())->toBe([]);
 });
 
