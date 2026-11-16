@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Route;
+use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
 use Statamic\Events\EntrySaving;
+use Statamic\Events\RevisionSaving;
 use Statamic\Facades\Collection;
 use UAMSWeb\Aether\People\EditingScope\EnforcePeopleEditingScope;
 use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
@@ -14,6 +16,8 @@ use UAMSWeb\Aether\People\Listeners\RefreshProviderEligibilityForLocation;
 use UAMSWeb\Aether\People\Listeners\StripProviderPeopleVirtualFieldsOnEntrySaving;
 use UAMSWeb\Aether\People\ServiceProvider;
 use UAMSWeb\Aether\People\Support\Features;
+use UAMSWeb\Aether\People\Workday\MakeWorkdayFieldsReadOnly;
+use UAMSWeb\Aether\People\Workday\RestoreWorkdayManagedFields;
 
 /**
  * The `people.features.provider_layer` switch: what the add-on registers with it on and with it off.
@@ -80,7 +84,7 @@ function providerLayerListenerClasses(string $event): array
 /**
  * How many times a class is registered as a listener of an event.
  *
- * @param  class-string  $listener
+ * @param  string  $listener  A listener class, or `Class@method` for one that handles the event in another method
  */
 function providerLayerListenerCount(string $event, string $listener): int
 {
@@ -124,6 +128,16 @@ describe('with the provider layer on (the default)', function (): void {
         expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
             ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
             ->and(array_flip($classes)[EnforcePeopleEditingScope::class])->toBeLessThan(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class]);
+    });
+
+    it('subscribes the Workday listeners after the editing scope ones', function (): void {
+        $classes = providerLayerListenerClasses(EntrySaving::class);
+        $save = RestoreWorkdayManagedFields::class.'@handleEntrySaving';
+
+        expect(providerLayerListenerCount(EntryBlueprintFound::class, MakeWorkdayFieldsReadOnly::class))->toBe(1)
+            ->and(providerLayerListenerCount(EntrySaving::class, $save))->toBe(1)
+            ->and(providerLayerListenerCount(RevisionSaving::class, RestoreWorkdayManagedFields::class.'@handleRevisionSaving'))->toBe(1)
+            ->and(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class])->toBeLessThan(array_flip($classes)[$save]);
     });
 
     it('serves the Find-a-Doc routes', function (): void {
@@ -170,6 +184,16 @@ describe('with the provider layer off', function (): void {
         expect(providerLayerListenerCount(EntrySaving::class, EnforcePeopleEditingScope::class))->toBe(1)
             ->and(providerLayerListenerCount(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class))->toBe(1)
             ->and(array_flip($classes)[EnforcePeopleEditingScope::class])->toBeLessThan(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class]);
+    });
+
+    it('still subscribes the Workday listeners, which no flag switches off', function (): void {
+        $classes = providerLayerListenerClasses(EntrySaving::class);
+        $save = RestoreWorkdayManagedFields::class.'@handleEntrySaving';
+
+        expect(providerLayerListenerCount(EntryBlueprintFound::class, MakeWorkdayFieldsReadOnly::class))->toBe(1)
+            ->and(providerLayerListenerCount(EntrySaving::class, $save))->toBe(1)
+            ->and(providerLayerListenerCount(RevisionSaving::class, RestoreWorkdayManagedFields::class.'@handleRevisionSaving'))->toBe(1)
+            ->and(array_flip($classes)[EnforcePeopleScopeOnProviderSync::class])->toBeLessThan(array_flip($classes)[$save]);
     });
 
     it('serves no Find-a-Doc routes', function (): void {

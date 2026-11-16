@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
 use Statamic\Entries\Collection as EntryCollection;
+use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\EntrySaving;
+use Statamic\Events\RevisionSaving;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Facades\User;
@@ -30,12 +32,15 @@ use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
+use UAMSWeb\Aether\People\Http\Controllers\WorkdayGenderController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
 use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
 use UAMSWeb\Aether\People\Rules\NotTopLevelOrganization;
 use UAMSWeb\Aether\People\Support\Features;
 use UAMSWeb\Aether\People\Support\PeopleEditingScope;
+use UAMSWeb\Aether\People\Workday\MakeWorkdayFieldsReadOnly;
+use UAMSWeb\Aether\People\Workday\RestoreWorkdayManagedFields;
 
 /**
  * Service provider for the add-on.
@@ -138,6 +143,9 @@ class ServiceProvider extends AddonServiceProvider
         // Scope `people` editing to the editor's organizations; not part of the provider layer, so no flag turns it off
         $this->bootPeopleEditingScope();
 
+        // Hold the Workday-managed fields and serve the gender override review; also not part of the provider layer
+        $this->bootWorkdayTooling();
+
         // Register the clinical provider layer, unless the host turned it off
         if (Features::providerLayer()) {
             $this->registerProviderLayer();
@@ -210,6 +218,32 @@ class ServiceProvider extends AddonServiceProvider
         $schedule->job(new RefreshProviderEligibilityForDatedLocations)
             ->cron(config()->string('clinical_provider_profile.location_date_refresh.cron'))
             ->timezone(Statamic::displayTimezone());
+    }
+
+    /**
+     * Hold the Workday-managed `people` fields and serve the gender override review routes.
+     *
+     * The listeners sit under `src/Workday` rather than `src/Listeners`, so Statamic does not find them and
+     * the provider layer flag cannot switch them off: without them a Control Panel user could change what
+     * Workday owns. The `WorkdayGenderOverrides` widget under `src/Widgets` is found by Statamic; the routes
+     * here are the two actions it links to. The save listener runs after the editing scope's two.
+     */
+    private function bootWorkdayTooling(): void
+    {
+        // Show the Workday-managed fields read-only when a `people` blueprint is resolved
+        Event::listen(EntryBlueprintFound::class, MakeWorkdayFieldsReadOnly::class);
+
+        // Keep their stored values when an entry is saved, and when a working copy or revision is
+        Event::listen(EntrySaving::class, RestoreWorkdayManagedFields::class.'@handleEntrySaving');
+        Event::listen(RevisionSaving::class, RestoreWorkdayManagedFields::class.'@handleRevisionSaving');
+
+        // Serve the two actions the gender override widget links to
+        Statamic::pushCpRoutes(function (): void {
+            Route::prefix('people/workday-gender/{id}')->name('people-workday-gender.')->group(function (): void {
+                Route::post('confirm', [WorkdayGenderController::class, 'confirm'])->name('confirm');
+                Route::post('take', [WorkdayGenderController::class, 'take'])->name('take');
+            });
+        });
     }
 
     /**
