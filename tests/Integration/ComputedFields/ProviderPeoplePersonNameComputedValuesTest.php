@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Statamic\Entries\Entry;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameBaseComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNamePrefixAndCredentialComputeds;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
 
-covers(ProviderPeoplePersonNameComputedValues::class);
+covers(ProviderPeoplePersonNameComputedValues::class, PersonNameBaseComputeds::class, PersonNamePrefixAndCredentialComputeds::class);
 
 /**
  * Person-name computeds on providers/people entries: the empty result for an incomplete
@@ -211,7 +213,7 @@ it('joins phonetic subfields in getDisplayNameFull per display format', function
 });
 
 it('uses letter IPA for the initial first-name segment in getDisplayNameFull phonetic text', function (): void {
-    $provider = new ProviderPeoplePersonNameComputedValues;
+    $provider = new PersonNameBaseComputeds;
     $entry = Mockery::mock(Entry::class);
     $entry->shouldReceive('get')
         ->andReturnUsing(
@@ -257,7 +259,7 @@ it('uses letter IPA for the initial first-name segment in getDisplayNameFull pho
 });
 
 it('uses stored subfield phonetics in getFullNamePhoneticText for initial formats', function (): void {
-    $provider = new ProviderPeoplePersonNameComputedValues;
+    $provider = new PersonNameBaseComputeds;
     $entry = Mockery::mock(Entry::class);
     $entry->shouldReceive('get')
         ->andReturnUsing(
@@ -303,7 +305,7 @@ it('uses stored subfield phonetics in getFullNamePhoneticText for initial format
 });
 
 it('maps the pedigree Jr. label in getDisplayNameFull phonetic text', function (): void {
-    $provider = new ProviderPeoplePersonNameComputedValues;
+    $provider = new PersonNameBaseComputeds;
     $entry = Mockery::mock(Entry::class);
     $entry->shouldReceive('get')
         ->andReturnUsing(
@@ -349,7 +351,7 @@ it('maps the pedigree Jr. label in getDisplayNameFull phonetic text', function (
 });
 
 it('prefers the pedigree label map IPA in getDisplayNameFull phonetic text', function (): void {
-    $provider = new ProviderPeoplePersonNameComputedValues;
+    $provider = new PersonNameBaseComputeds;
     $entry = Mockery::mock(Entry::class);
     $entry->shouldReceive('get')
         ->andReturnUsing(

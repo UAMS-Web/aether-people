@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 use Mockery\MockInterface;
 use Statamic\Entries\Entry;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameBaseComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameNicknameComputeds;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
 
-covers(ProviderPeoplePersonNameComputedValues::class);
+covers(ProviderPeoplePersonNameComputedValues::class, PersonNameBaseComputeds::class, PersonNameNicknameComputeds::class);
 
 /**
  * Stub the name refinement fields kept beside `person_name` (UAMS-Web/uams-statamic-archive#3186) as unset,
