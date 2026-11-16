@@ -65,7 +65,9 @@ jobs:
     with:
       linux-only: true
       mutate-paths: src
-      mutate-timeout-minutes: 120
+      # Temporary: the mutation job outran 120 minutes once `src/ServiceProvider.php` grew with the #57
+      # slices (#83 to #86). Return it to 120 under #89 after the last slice merges.
+      mutate-timeout-minutes: 180
 
   # The chain checks the emoji sweep; it does not check the decision log.
   decision-log:
