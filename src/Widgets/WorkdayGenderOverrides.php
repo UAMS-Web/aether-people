@@ -84,12 +84,14 @@ class WorkdayGenderOverrides extends Widget
 
         /** @var EntryQueryBuilder $query */
         $query = EntryFacade::query();
+
         $query->where('collection', PeopleEditingScope::COLLECTION);
 
-        // The flag is only a first cut, since isFlagged() below re-reads it with the override, so dropping
-        // it changes which entries are loaded but not which are listed.
-        // @pest-mutate-ignore: RemoveMethodCall
-        $query->where(WorkdayGender::REVIEW_KEY, true);
+        // The flag is only a first cut, since isFlagged() below re-reads it with the override, so it narrows
+        // which entries are loaded but not which are listed. The result is assigned, because a mutation run
+        // cannot be told to leave a bare statement-level call alone.
+        /** @var EntryQueryBuilder $query */
+        $query = $query->where(WorkdayGender::REVIEW_KEY, true);
 
         // Limit a scoped viewer to the entries they may edit, since the actions refuse any other
         if ($scope->appliesTo($user)) {
