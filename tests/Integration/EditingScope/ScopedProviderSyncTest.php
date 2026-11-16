@@ -21,6 +21,8 @@ use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
 use Statamic\Facades\UserGroup;
+use Statamic\Facades\YAML;
+use Statamic\Stache\Repositories\EntryRepository as StacheEntryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
 use UAMSWeb\Aether\People\Tests\Support\FreshEntryRepository;
@@ -488,4 +490,72 @@ it('looks nothing up for the stored copy of an entry with no id', function (): v
     $listener = app(EnforcePeopleScopeOnProviderSync::class);
 
     expect(fn () => $listener->handle(new EntrySaving($location)))->toThrow(Exception::class, SCOPED_SYNC_REFUSAL);
+});
+
+/**
+ * Put Statamic's own entry repository back, whose `find()` returns the stored instance itself
+ * rather than a copy, so a save that merged new values into the entry has already changed what
+ * `find()` returns.
+ */
+function scopedSyncUsePlainRepository(): void
+{
+    app()->singleton(EntryRepositoryContract::class, fn (): StacheEntryRepository => new StacheEntryRepository(app('stache')));
+    Entry::clearResolvedInstance(EntryRepositoryContract::class);
+}
+
+/**
+ * The list a field holds in the entry's stored file, which a refused save must leave as it was.
+ *
+ * Under Statamic's own repository the stored instance is the one a save merged new values into, so
+ * `find()` still shows them after a refusal; the file is what was written.
+ *
+ * @return list<string>
+ */
+function scopedSyncFileIds(string $id, string $field): array
+{
+    /** @var EntryItem $entry */
+    $entry = Entry::find($id);
+    $path = $entry->initialPath();
+    Assert::assertIsString($path);
+
+    /** @var list<string>|null $value */
+    $value = YAML::file($path)->parse()[$field] ?? null;
+
+    return $value ?? [];
+}
+
+it('lets a scoped editor keep an out-of-scope person listed under a repository that returns the stored instance', function (): void {
+    scopedSyncUsePlainRepository();
+    test()->actingAs(scopedSyncEditor());
+
+    scopedSyncSaveLocation(['sulu', 'chekov'], '501-555-0199')->assertOk();
+
+    /** @var EntryItem $location */
+    $location = Entry::find('cl-main');
+
+    expect($location->get('phone'))->toBe('501-555-0199')
+        ->and(scopedSyncIds('cl-main', 'physician_locations'))->toBe(['sulu', 'chekov']);
+});
+
+it('refuses a scoped editor adding an out-of-scope person under a repository that returns the stored instance', function (): void {
+    scopedSyncUsePlainRepository();
+    test()->actingAs(scopedSyncEditor());
+
+    scopedSyncSaveLocation(['sulu', 'chekov', 'pavel'], '501-555-0199')
+        ->assertServerError()
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Pavel [pavel]')
+            && ! str_contains($message, 'Chekov'));
+
+    expect(scopedSyncFileIds('cl-main', 'physician_locations'))->toBe(['sulu', 'chekov']);
+});
+
+it('refuses a scoped editor removing an out-of-scope person under a repository that returns the stored instance', function (): void {
+    scopedSyncUsePlainRepository();
+    test()->actingAs(scopedSyncEditor());
+
+    scopedSyncSaveLocation(['sulu'], '501-555-0199')
+        ->assertServerError()
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Chekov [chekov]'));
+
+    expect(scopedSyncFileIds('cl-main', 'physician_locations'))->toBe(['sulu', 'chekov']);
 });
