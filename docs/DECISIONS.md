@@ -45,3 +45,13 @@ Oldest first, one entry per closed decision, so **a new entry is appended to the
 **Rejected.** Waiting for the legal decision: it left the listing without a license, which the checklist treats as a prerequisite. A different license: MIT is the recorded choice for the sibling add-on, and diverging would need its own decision.
 
 **Companion.** `UAMS-Web/aether-people#39`.
+
+## 2026-11-16: Write merge redirects through a host-bound contract that the preview and the commit share (#98)
+
+**Decision.** The people merge writes redirects through a contract the host binds, in the way the reference repointer is bound. The dry-run preview reads the same binding the commit uses, so it reports the count that would be written. A host with no binding is refused with a message that names the missing binding, and a host that wants no redirects binds an explicit no-op.
+
+**Why.** The ported behavior lets the preview report the planned redirects without looking at the `redirects` global, while a commit with no global logs a warning, deletes the losing entries and reports no redirects. The operator sees a count that the commit does not honor, and the retired URLs return 404. A binding makes the dependency explicit, the preview and the commit then agree, and an unbound host fails before anything is deleted.
+
+**Rejected.** Refusing a merge when the global is missing, with no contract: it fails closed but leaves a host that wants no redirects with no supported way to say so. Keeping the log-and-continue path and making only the preview report zero: the smallest change, but the operator can still commit and lose the URLs.
+
+**Companion.** `UAMS-Web/aether-people#98`. The pull request that moved the merge into the add-on (`UAMS-Web/aether-people#99`) ports the site's behavior unchanged and is not affected.
