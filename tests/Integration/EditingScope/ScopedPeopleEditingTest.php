@@ -21,6 +21,7 @@ use Statamic\Facades\Role;
 use Statamic\Facades\User;
 use Statamic\Facades\UserGroup;
 use Statamic\Facades\YAML;
+use Statamic\Hooks\CP\EntriesIndexQuery;
 use Statamic\Policies\EntryPolicy;
 use Statamic\Stache\Query\EntryQueryBuilder;
 use Statamic\Structures\CollectionStructure;
@@ -1030,4 +1031,59 @@ it('leaves a user the scope does not apply to unrestricted in the policy', funct
     // In a group that covers only Cardiology, yet not limited to it: the scope applies to neither
     expect($policy->edit($manager, Entry::find('chekov')))->toBeTrue()
         ->and($policy->delete($manager, Entry::find('chekov')))->toBeTrue();
+});
+
+it('limits the listing hook to a people entries query', function (): void {
+    test()->actingAs(scopedPeopleEditor());
+
+    scopedPeoplePage('sickbay');
+    scopedPeoplePage('bridge');
+
+    $people = CollectionFacade::findByHandle('people');
+    $pages = CollectionFacade::findByHandle('pages');
+    Assert::assertInstanceOf(StatamicCollection::class, $people);
+    Assert::assertInstanceOf(StatamicCollection::class, $pages);
+
+    // Not the people collection: every page stays in the listing
+    $pageQuery = Entry::query();
+    $pageQuery->where('collection', 'pages');
+
+    $pageRows = new EntriesIndexQuery($pageQuery, $pages)->paginate(50);
+
+    // Something that only has the handle of the people collection is not that collection
+    $lookalike = new class
+    {
+        public function handle(): string
+        {
+            return 'people';
+        }
+    };
+    $peopleQuery = Entry::query();
+    $peopleQuery->where('collection', 'people');
+
+    $lookalikeRows = new EntriesIndexQuery($peopleQuery, $lookalike)->paginate(50);
+
+    // Not an entries query builder: the hook leaves it alone
+    $foreignQuery = new class
+    {
+        public int $filters = 0;
+
+        public function whereIn(): static
+        {
+            $this->filters++;
+
+            return $this;
+        }
+
+        public function paginate(): string
+        {
+            return 'paginated';
+        }
+    };
+    $foreignRows = new EntriesIndexQuery($foreignQuery, $people)->paginate(50);
+
+    expect($pageRows->total())->toBe(2)
+        ->and($lookalikeRows->total())->toBe(3)
+        ->and($foreignRows)->toBe('paginated')
+        ->and($foreignQuery->filters)->toBe(0);
 });
