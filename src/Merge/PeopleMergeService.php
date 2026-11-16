@@ -315,6 +315,9 @@ class PeopleMergeService
     private function loadCandidates(array $entryIds): array
     {
         // Unique, non-empty ids, order preserved
+        // A blank id resolves to no entry and a repeated one to the same keyed entry, so dropping the
+        // blank test, the filter, the unique or the reindex changes nothing a caller can see.
+        // @pest-mutate-ignore: UnwrapArrayFilter, UnwrapArrayUnique, UnwrapArrayValues, EmptyStringToNotEmpty
         $ids = array_values(array_unique(array_filter($entryIds, static fn (string $id): bool => $id !== '')));
 
         $entries = [];
@@ -486,6 +489,8 @@ class PeopleMergeService
 
                 if ($hasValue) {
                     // Track distinct non-empty values to detect a conflict
+                    // A distinct value is counted by its key alone, so the stored flag is never read.
+                    // @pest-mutate-ignore: TrueToFalse
                     $distinct[$this->normalize($raw)] = true;
                 }
             }
@@ -522,8 +527,13 @@ class PeopleMergeService
             $handles = array_merge($handles, array_keys($this->entryData($entry)));
         }
 
+        // The list is iterated and re-indexed below; its keys are never read.
+        // @pest-mutate-ignore: UnwrapArrayValues
         $handles = array_values(array_unique($handles));
 
+        // Callers only iterate the result, and a handle is compared by string equality against
+        // non-numeric names, where loose and strict comparison agree.
+        // @pest-mutate-ignore: UnwrapArrayValues, TrueToFalse
         return array_values(array_filter(
             $handles,
             fn (string $handle): bool => ! \in_array($handle, $excludedHandles, true),
@@ -539,6 +549,8 @@ class PeopleMergeService
      */
     private function nonReconcilableHandles(Entry $survivor): array
     {
+        // The list is only searched for a handle, so a repeated entry and its keys change nothing.
+        // @pest-mutate-ignore: UnwrapArrayUnique, UnwrapArrayValues
         return array_values(array_unique([
             ...self::NON_RECONCILABLE_HANDLES,
             ...$this->computedHandles($survivor),
@@ -565,6 +577,8 @@ class PeopleMergeService
 
         foreach ($fields as $handle => $field) {
             if ($field->visibility() === 'computed') {
+                // A handle is a string; the cast only matters for an all-digit handle PHP turned into an int key.
+                // @pest-mutate-ignore: RemoveStringCast
                 $computed[] = (string) $handle;
             }
         }
@@ -596,6 +610,9 @@ class PeopleMergeService
                 continue;
             }
 
+            // A handle is a string; the casts only matter for an all-digit handle PHP turned into an int key,
+            // and an array key reads the same either way.
+            // @pest-mutate-ignore: RemoveStringCast
             $meta[(string) $handle] = [
                 'display' => $this->stringOrNull($field->display()) ?? $this->humanize((string) $handle),
                 'type' => $this->stringOrNull($field->type()) ?? 'unknown',
@@ -758,6 +775,8 @@ class PeopleMergeService
         $existingSources = [];
         foreach ($redirects as $existing) {
             if (\is_array($existing) && isset($existing['source']) && \is_string($existing['source'])) {
+                // isset() is true for a stored false too, so the flag is never read.
+                // @pest-mutate-ignore: TrueToFalse
                 $existingSources[$existing['source']] = true;
             }
         }
@@ -770,6 +789,8 @@ class PeopleMergeService
                 continue;
             }
 
+            // isset() is true for a stored false too, so the flag is never read.
+            // @pest-mutate-ignore: TrueToFalse
             $existingSources[$row['source']] = true;
 
             $redirects[] = [
@@ -914,6 +935,8 @@ class PeopleMergeService
      */
     private function displayValue(mixed $value): string
     {
+        // An empty string renders as an empty string whichever branch it takes, so its entry is redundant.
+        // @pest-mutate-ignore: RemoveArrayItem, EmptyStringToNotEmpty
         if (in_array($value, [null, '', []], true)) {
             return '';
         }
@@ -942,6 +965,8 @@ class PeopleMergeService
      */
     private function stringOrNull(mixed $value): ?string
     {
+        // Falling through reaches the same final return null.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($value === null) {
             return null;
         }
@@ -950,6 +975,8 @@ class PeopleMergeService
             return $value;
         }
 
+        // Since PHP 8 a class with __toString is Stringable, so the method_exists clause adds nothing.
+        // @pest-mutate-ignore: InstanceOfToFalse, BooleanOrToBooleanAnd
         if ($value instanceof \Stringable || (\is_object($value) && method_exists($value, '__toString'))) {
             return (string) $value;
         }

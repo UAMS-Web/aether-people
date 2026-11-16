@@ -13,6 +13,8 @@ use Statamic\Globals\Variables;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
+covers(PeopleMergeService::class);
+
 /**
  * Cross-site serving of people-merge redirects (UAMS-Web/uams-statamic-archive#1088, follow-up to UAMS-Web/uams-statamic-archive#838).
  *

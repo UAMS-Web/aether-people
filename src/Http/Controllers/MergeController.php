@@ -108,6 +108,9 @@ class MergeController extends CpController
         /** @var array{ids: list<string>, survivor: string, selections?: array<string, string>} $validated */
         $validated = $request->validate([
             'ids' => ['required', 'array', 'min:2'],
+            // A blank or null id fails `string` as well, so `required` adds no refusal; the 28 controller
+            // tests pass with it removed by hand.
+            // @pest-mutate-ignore: RemoveArrayItem
             'ids.*' => ['required', 'string'],
             'survivor' => ['required', 'string'],
             'selections' => ['array'],
@@ -128,10 +131,14 @@ class MergeController extends CpController
      */
     private function idsFromCsv(mixed $value): array
     {
+        // An empty string splits into one blank id, which the filter below drops, so its early return is a shortcut.
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
         if (! \is_string($value) || $value === '') {
             return [];
         }
 
+        // PeopleMergeService drops a blank or repeated id itself, so the filter and the reindex only tidy the list.
+        // @pest-mutate-ignore: UnwrapArrayFilter, UnwrapArrayValues, EmptyStringToNotEmpty
         return array_values(array_filter(
             array_map(trim(...), explode(',', $value)),
             static fn (string $id): bool => $id !== '',

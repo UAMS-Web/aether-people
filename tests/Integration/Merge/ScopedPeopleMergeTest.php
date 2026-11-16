@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -21,6 +22,10 @@ use Statamic\Facades\Role;
 use Statamic\Facades\User;
 use Statamic\Facades\UserGroup;
 use UAMSWeb\Aether\People\Actions\MergePeople;
+use UAMSWeb\Aether\People\Http\Controllers\MergeController;
+use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+
+covers(MergeController::class, MergePeople::class, PeopleMergeService::class);
 
 /**
  * The people editing scope (UAMS-Web/uams-statamic-archive#3182) applied to the people merge feature (UAMS-Web/uams-statamic-archive#3197).
@@ -331,6 +336,32 @@ it('lets an administrator merge people outside every scope', function (): void {
         ->assertJsonPath('result.retired_ids', ['pavel']);
 
     expect(Entry::find('pavel'))->toBeNull();
+});
+
+it('refuses a scoped user an item that is not an entry', function (): void {
+    $action = new MergePeople;
+
+    expect($action->authorize(scopedMergeEditor(), 'not-an-entry'))->toBeFalse()
+        ->and($action->authorize(scopedMergeAdministrator(), 'not-an-entry'))->toBeTrue();
+});
+
+it('lets a user the scope cannot be checked for merge once they hold the permission', function (): void {
+    $action = new MergePeople;
+
+    // Authorizable but not Authenticatable: the people editing scope has nothing to apply to.
+    $user = new class implements Authorizable
+    {
+        /**
+         * @param  iterable<string>|string  $abilities
+         * @param  array<mixed>  $arguments
+         */
+        public function can($abilities, $arguments = []): bool
+        {
+            return $abilities === 'merge people entries';
+        }
+    };
+
+    expect($action->authorize($user, Entry::find('chekov')))->toBeTrue();
 });
 
 it('offers the merge action to a scoped user only on entries in scope', function (): void {

@@ -16,6 +16,8 @@ use UAMSWeb\Aether\People\Merge\PeopleMergeService;
 use UAMSWeb\Aether\People\Support\ReferenceRepointSummary;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
+covers(PeopleMergeService::class);
+
 /**
  * Service coverage for {@see PeopleMergeService} (UAMS-Web/uams-statamic-archive#838): reconciliation,
  * preview safety, the committed merge (survivor identity, per-field selection,

@@ -38,6 +38,9 @@ class MergePeople extends Action
      *
      * @var bool
      */
+    // PCOV attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Flipped by hand, it fails "does not confirm in a modal (confirmation happens on the screen)".
+    // @pest-mutate-ignore: FalseToTrue
     protected $confirm = false;
 
     /**
