@@ -108,7 +108,7 @@ class MergeController extends CpController
         /** @var array{ids: list<string>, survivor: string, selections?: array<string, string>} $validated */
         $validated = $request->validate([
             'ids' => ['required', 'array', 'min:2'],
-            // A blank or null id fails `string` as well, so `required` adds no refusal; the 28 controller
+            // A blank or null id fails `string` as well, so `required` adds no refusal; the controller
             // tests pass with it removed by hand.
             // @pest-mutate-ignore: RemoveArrayItem
             'ids.*' => ['required', 'string'],
