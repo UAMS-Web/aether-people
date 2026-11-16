@@ -12,12 +12,14 @@ use Statamic\Events\RevisionSaving;
 use Statamic\Facades\Collection;
 use UAMSWeb\Aether\People\EditingScope\EnforcePeopleEditingScope;
 use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
+use UAMSWeb\Aether\People\EditingScope\PeopleEditingScopeRegistrar;
 use UAMSWeb\Aether\People\Listeners\RefreshProviderEligibilityForLocation;
 use UAMSWeb\Aether\People\Listeners\StripProviderPeopleVirtualFieldsOnEntrySaving;
 use UAMSWeb\Aether\People\ServiceProvider;
 use UAMSWeb\Aether\People\Support\Features;
 use UAMSWeb\Aether\People\Workday\MakeWorkdayFieldsReadOnly;
 use UAMSWeb\Aether\People\Workday\RestoreWorkdayManagedFields;
+use UAMSWeb\Aether\People\Workday\WorkdayToolingRegistrar;
 
 /**
  * The `people.features.provider_layer` switch: what the add-on registers with it on and with it off.
@@ -28,7 +30,7 @@ use UAMSWeb\Aether\People\Workday\RestoreWorkdayManagedFields;
  *
  * @command vendor/bin/pest tests/Integration/ProviderLayerFlagTest.php
  */
-covers(Features::class, ServiceProvider::class);
+covers(Features::class, ServiceProvider::class, PeopleEditingScopeRegistrar::class, WorkdayToolingRegistrar::class);
 
 /**
  * Switch the provider layer through the environment variable `config/people.php` reads, then boot a fresh

@@ -155,16 +155,15 @@ it("limits the entry policy to the editor's organizations", function (): void {
     expect(app(EntryPolicy::class))->toBeInstanceOf(ScopedEntryPolicy::class);
 });
 
-it('registers the validation rule the user group blueprint names', function (): void {
-    // An unregistered rule throws instead of passing
-    expect(Validator::make(['organization' => 'org-none'], ['organization' => 'not_top_level_organization'])->passes())->toBeTrue();
-});
-
-it('registers the gender override widget and its two Control Panel routes', function (): void {
+it('registers the gender override widget', function (): void {
     $extensions = mustBe(ArrayAccess::class, app('statamic.extensions'), 'the extensions');
     $widgets = mustBe(Collection::class, $extensions[Widget::class], 'the registered widgets');
 
-    expect($widgets->get('workday_gender_overrides'))->toBe(WorkdayGenderOverrides::class)
-        ->and(cp_route('people-workday-gender.confirm', ['id' => 'x']))->toEndWith('/people/workday-gender/x/confirm')
-        ->and(cp_route('people-workday-gender.take', ['id' => 'x']))->toEndWith('/people/workday-gender/x/take');
+    expect($widgets->get('workday_gender_overrides'))->toBe(WorkdayGenderOverrides::class);
+});
+
+it('boots the editing scope and Workday registrars', function (): void {
+    // The registrars' own tests cover what each registers; here the provider's call to each shows as its effect
+    expect(Validator::make(['organization' => 'org-none'], ['organization' => 'not_top_level_organization'])->passes())->toBeTrue()
+        ->and(cp_route('people-workday-gender.confirm', ['id' => 'x']))->toEndWith('/people/workday-gender/x/confirm');
 });

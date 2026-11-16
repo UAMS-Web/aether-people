@@ -6,41 +6,27 @@ namespace UAMSWeb\Aether\People;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
-use Statamic\Entries\Collection as EntryCollection;
-use Statamic\Events\EntryBlueprintFound;
-use Statamic\Events\EntrySaving;
-use Statamic\Events\RevisionSaving;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\URL as StatamicUrl;
 use Statamic\Facades\User;
-use Statamic\Hooks\CP\EntriesIndexQuery;
 use Statamic\Policies\EntryPolicy;
 use Statamic\Providers\AddonServiceProvider;
-use Statamic\Query\Builder as QueryBuilder;
 use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
 use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
-use UAMSWeb\Aether\People\EditingScope\EnforcePeopleEditingScope;
-use UAMSWeb\Aether\People\EditingScope\EnforcePeopleScopeOnProviderSync;
+use UAMSWeb\Aether\People\EditingScope\PeopleEditingScopeRegistrar;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
-use UAMSWeb\Aether\People\Http\Controllers\WorkdayGenderController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
 use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
-use UAMSWeb\Aether\People\Rules\NotTopLevelOrganization;
 use UAMSWeb\Aether\People\Support\Features;
-use UAMSWeb\Aether\People\Support\PeopleEditingScope;
-use UAMSWeb\Aether\People\Workday\MakeWorkdayFieldsReadOnly;
-use UAMSWeb\Aether\People\Workday\RestoreWorkdayManagedFields;
+use UAMSWeb\Aether\People\Workday\WorkdayToolingRegistrar;
 
 /**
  * Service provider for the add-on.
@@ -141,62 +127,15 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::pushWebRoutes(fn () => $this->registerLensRoutes());
 
         // Scope `people` editing to the editor's organizations; not part of the provider layer, so no flag turns it off
-        $this->bootPeopleEditingScope();
+        $this->app->make(PeopleEditingScopeRegistrar::class)->register();
 
         // Hold the Workday-managed fields and serve the gender override review; also not part of the provider layer
-        $this->bootWorkdayTooling();
+        $this->app->make(WorkdayToolingRegistrar::class)->register();
 
         // Register the clinical provider layer, unless the host turned it off
         if (Features::providerLayer()) {
             $this->registerProviderLayer();
         }
-    }
-
-    /**
-     * Scope Control Panel editing of `people` entries to the organizations of the editor's user groups.
-     *
-     * The entry policy (bound in {@see self::register()}) stops a scoped editor opening an entry outside their
-     * organizations. This keeps those entries out of the listing and its search, refuses a save that would
-     * leave the entry out of scope, and registers the validation rule the user group blueprint names. The
-     * listeners are subscribed here rather than found by Statamic, so the order is fixed and the provider
-     * layer flag cannot switch them off.
-     */
-    private function bootPeopleEditingScope(): void
-    {
-        // Keep out-of-scope entries out of the listing and its search results
-        EntriesIndexQuery::hook('query', function (mixed $payload, \Closure $next): mixed {
-            /** @var object{query: mixed, collection: mixed} $payload */
-            $collection = $payload->collection;
-            $query = $payload->query;
-            $user = User::current();
-            $scope = app(PeopleEditingScope::class);
-
-            if (
-                $collection instanceof EntryCollection
-                && $collection->handle() === PeopleEditingScope::COLLECTION
-                && $query instanceof QueryBuilder
-                && $user !== null
-                && $scope->appliesTo($user)
-            ) {
-                $query->whereIn('id', $scope->editableEntryIds($user));
-            }
-
-            return $next($payload);
-        });
-
-        // Refuse a save that leaves a `people` entry out of scope, then one that syncs an out-of-scope person
-        Event::listen(EntrySaving::class, EnforcePeopleEditingScope::class);
-        Event::listen(EntrySaving::class, EnforcePeopleScopeOnProviderSync::class);
-
-        // Register the rule the user group blueprint names, reporting its failure on the field
-        Validator::extend('not_top_level_organization', function (string $attribute, mixed $value, array $parameters, ValidatorContract $validator): bool {
-            (new NotTopLevelOrganization)->validate($attribute, $value, function (string $message) use ($attribute, $validator): void {
-                $validator->errors()->add($attribute, $message);
-            });
-
-            // Report success: a failure is already on the error bag, and a false return would add a second message
-            return true;
-        });
     }
 
     /**
@@ -218,32 +157,6 @@ class ServiceProvider extends AddonServiceProvider
         $schedule->job(new RefreshProviderEligibilityForDatedLocations)
             ->cron(config()->string('clinical_provider_profile.location_date_refresh.cron'))
             ->timezone(Statamic::displayTimezone());
-    }
-
-    /**
-     * Hold the Workday-managed `people` fields and serve the gender override review routes.
-     *
-     * The listeners sit under `src/Workday` rather than `src/Listeners`, so Statamic does not find them and
-     * the provider layer flag cannot switch them off: without them a Control Panel user could change what
-     * Workday owns. The `WorkdayGenderOverrides` widget under `src/Widgets` is found by Statamic; the routes
-     * here are the two actions it links to. The save listener runs after the editing scope's two.
-     */
-    private function bootWorkdayTooling(): void
-    {
-        // Show the Workday-managed fields read-only when a `people` blueprint is resolved
-        Event::listen(EntryBlueprintFound::class, MakeWorkdayFieldsReadOnly::class);
-
-        // Keep their stored values when an entry is saved, and when a working copy or revision is
-        Event::listen(EntrySaving::class, RestoreWorkdayManagedFields::class.'@handleEntrySaving');
-        Event::listen(RevisionSaving::class, RestoreWorkdayManagedFields::class.'@handleRevisionSaving');
-
-        // Serve the two actions the gender override widget links to
-        Statamic::pushCpRoutes(function (): void {
-            Route::prefix('people/workday-gender/{id}')->name('people-workday-gender.')->group(function (): void {
-                Route::post('confirm', [WorkdayGenderController::class, 'confirm'])->name('confirm');
-                Route::post('take', [WorkdayGenderController::class, 'take'])->name('take');
-            });
-        });
     }
 
     /**
