@@ -9,6 +9,7 @@ use Statamic\Entries\Entry;
 use Statamic\Events\EntrySaving;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\User;
+use Statamic\Facades\YAML;
 use UAMSWeb\Aether\People\Support\PeopleEditingScope;
 
 /**
@@ -84,7 +85,8 @@ class EnforcePeopleScopeOnProviderSync
         }
 
         // Find the people added to or removed from the field by this save, reading
-        // the stored entry as the addon does, since the original is not always synced
+        // what is stored rather than anything the repository hands back or the entry's
+        // original data, which a lookup during the save can overwrite
         $before = $this->ids($this->storedValue($entry, $field));
         $after = $this->ids($entry->get($field));
         $changed = array_merge(array_diff($after, $before), array_diff($before, $after));
@@ -111,6 +113,12 @@ class EnforcePeopleScopeOnProviderSync
     /**
      * Read a field from the entry as it is stored, before this save.
      *
+     * The stored file is read first, because nothing in memory is reliable here: Statamic's own
+     * repository returns the stored instance from `find()`, and that instance already carries this
+     * save's values, and its original data is synced to those values again by any lookup made
+     * after the Control Panel merged them in (a URI uniqueness check is one). The file holds what was
+     * last written whatever the host's repository returns.
+     *
      * @param  Entry  $entry  The entry being saved
      * @param  string  $field  The field handle
      * @return mixed The stored value, or null for an entry not yet stored
@@ -124,6 +132,15 @@ class EnforcePeopleScopeOnProviderSync
             return null;
         }
 
+        // Read the file the entry was loaded from, when it has one that still exists
+        $path = $entry->initialPath();
+
+        if (\is_string($path) && is_file($path)) {
+            return YAML::file($path)->parse()[$field] ?? null;
+        }
+
+        // An entry with no file of its own, such as one built in code with the id of a stored
+        // entry, falls back to the repository's stored copy
         $stored = EntryFacade::find($id);
 
         // Treat an entry the repository does not hold, or hands back as the same
