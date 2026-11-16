@@ -72,6 +72,11 @@ parameters:
         - src
         - tests
 
+    # Larastan boots a bare application, so the add-on's own view location is not on its view finder; this
+    # file adds it, which lets Larastan resolve a `view-string` that names one of the add-on's views.
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php
+
     # Host-bound tests, if the add-on grows any, extend the host application's `Tests\TestCase`,
     # which does not exist in this package, so they cannot be resolved here. They run in the host.
     # The `(?)` marks the path optional, so the entry is harmless until `tests/Feature` exists.

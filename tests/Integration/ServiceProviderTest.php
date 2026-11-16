@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
@@ -11,8 +12,10 @@ use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Addon;
 use Statamic\Facades\Blueprint;
 use Statamic\Policies\EntryPolicy;
+use Statamic\Widgets\Widget;
 use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
 use UAMSWeb\Aether\People\ServiceProvider;
+use UAMSWeb\Aether\People\Widgets\WorkdayGenderOverrides;
 
 covers(ServiceProvider::class);
 
@@ -155,4 +158,13 @@ it("limits the entry policy to the editor's organizations", function (): void {
 it('registers the validation rule the user group blueprint names', function (): void {
     // An unregistered rule throws instead of passing
     expect(Validator::make(['organization' => 'org-none'], ['organization' => 'not_top_level_organization'])->passes())->toBeTrue();
+});
+
+it('registers the gender override widget and its two Control Panel routes', function (): void {
+    $extensions = mustBe(ArrayAccess::class, app('statamic.extensions'), 'the extensions');
+    $widgets = mustBe(Collection::class, $extensions[Widget::class], 'the registered widgets');
+
+    expect($widgets->get('workday_gender_overrides'))->toBe(WorkdayGenderOverrides::class)
+        ->and(cp_route('people-workday-gender.confirm', ['id' => 'x']))->toEndWith('/people/workday-gender/x/confirm')
+        ->and(cp_route('people-workday-gender.take', ['id' => 'x']))->toEndWith('/people/workday-gender/x/take');
 });
