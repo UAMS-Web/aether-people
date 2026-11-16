@@ -5,10 +5,13 @@ declare(strict_types=1);
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
 use Statamic\Facades\Addon;
 use Statamic\Facades\Blueprint;
+use Statamic\Policies\EntryPolicy;
+use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
 use UAMSWeb\Aether\People\ServiceProvider;
 
 covers(ServiceProvider::class);
@@ -143,4 +146,13 @@ it('throttles the Find-a-Doc routes at 60 a minute when the rate is not configur
 
 it('throttles the Find-a-Doc routes at 60 a minute when the configured rate is not an integer', function (): void {
     expect(findADocRouteMiddleware('fast'))->toBe(['api', 'throttle:60,1']);
+});
+
+it("limits the entry policy to the editor's organizations", function (): void {
+    expect(app(EntryPolicy::class))->toBeInstanceOf(ScopedEntryPolicy::class);
+});
+
+it('registers the validation rule the user group blueprint names', function (): void {
+    // An unregistered rule throws instead of passing
+    expect(Validator::make(['organization' => 'org-none'], ['organization' => 'not_top_level_organization'])->passes())->toBeTrue();
 });
