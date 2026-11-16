@@ -10,8 +10,10 @@ use Statamic\Facades\Entry;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Globals\Variables;
+use UAMSWeb\Aether\People\Contracts\EntryReferenceRepointer;
 use UAMSWeb\Aether\People\Merge\PeopleMergeException;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+use UAMSWeb\Aether\People\Support\ReferenceRepointSummary;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
 /**
@@ -482,4 +484,30 @@ it('reports the applied fields taken from a non-survivor source', function (): v
     expect($result->appliedFields)->toContain('bio')
         ->and($result->appliedFields)->toContain('nickname')
         ->and($result->appliedFields)->not->toContain('email');
+});
+
+it('carries every field of the repointer summary into the preview and the result', function (): void {
+    pmMakePerson('surv', 'survivor', ['bio' => 'A']);
+    pmMakePerson('lose', 'loser', ['bio' => 'B']);
+
+    // A repointer that reports a distinct count for each field, so a swapped or dropped one shows
+    $repointer = new class implements EntryReferenceRepointer
+    {
+        public function repoint(array $idMap): ReferenceRepointSummary
+        {
+            return new ReferenceRepointSummary(1, 2, 3, 9);
+        }
+
+        public function preview(array $idMap): ReferenceRepointSummary
+        {
+            return new ReferenceRepointSummary(4, 5, 6, 10);
+        }
+    };
+    $service = new PeopleMergeService($repointer);
+
+    expect($service->preview(['surv', 'lose'], 'surv', [])->toArray()['references'])
+        ->toBe(['entries' => 4, 'globals' => 5, 'terms' => 6, 'occurrences' => 10, 'items_changed' => 15]);
+
+    expect($service->merge(['surv', 'lose'], 'surv', [])->toArray()['references'])
+        ->toBe(['entries' => 1, 'globals' => 2, 'terms' => 3, 'occurrences' => 9, 'items_changed' => 6]);
 });

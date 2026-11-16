@@ -12,6 +12,11 @@ use UAMSWeb\Aether\People\Support\ReferenceRepointSummary;
  * The host binds it: a reference to a person can sit in any collection's entries, in global sets and in
  * taxonomy terms, so finding every one means walking the host's blueprints, which this add-on does not own.
  * The people merge calls `preview()` for the reconciliation screen and `repoint()` once the merge is confirmed.
+ *
+ * Nothing in the add-on binds it. A host that has not bound it gets a `BindingResolutionException` on the
+ * first request to a merge endpoint, because the controller resolves `PeopleMergeService`, which needs it;
+ * the `MergePeople` bulk action is still listed. The implementation must return this add-on's
+ * `ReferenceRepointSummary`.
  */
 interface EntryReferenceRepointer
 {
