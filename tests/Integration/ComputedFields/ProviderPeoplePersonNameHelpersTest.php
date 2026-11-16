@@ -7,31 +7,67 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Term;
 use Statamic\Taxonomies\LocalizedTerm;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNameCollector;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNameListBuilder;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNamePhoneticCoherence;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameBaseComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameNicknameComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNamePrefixAndCredentialComputeds;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
 
 uses(MockeryPHPUnitIntegration::class);
 
-covers(ProviderPeoplePersonNameComputedValues::class);
+covers(
+    ProviderPeoplePersonNameComputedValues::class,
+    PersonNameBaseComputeds::class,
+    PersonNameNicknameComputeds::class,
+    AlternateNameCollector::class,
+    AlternateNamePhoneticCoherence::class,
+    AlternateNameListBuilder::class,
+    PersonNamePrefixAndCredentialComputeds::class,
+);
 
 /**
  * Pins the steps behind the person-name computeds: how a raw name field is read, merged, deduplicated
- * and joined. The steps are private, so each case calls one through reflection with the input that
- * decides its branch, and the public computeds are checked end to end beside them.
+ * and joined. The steps are private, so each case calls one through reflection on the class that
+ * holds it, with the input that decides its branch, and the public computeds are checked end to end
+ * beside them.
  *
  * @command vendor/bin/pest tests/Integration/ComputedFields/ProviderPeoplePersonNameHelpersTest.php
  */
 
 /**
- * Call a private method of the name computeds.
+ * Call a method of the name classes, found on the one class that declares it.
+ *
+ * The pieces are built over one shared base, as the facade builds them. A name that no class
+ * declares fails the call, so a typo is never read as a pass.
  *
  * @param  string  $method  The method name.
  * @param  mixed  ...$arguments  The arguments to pass.
  */
 function ppnCall(string $method, mixed ...$arguments): mixed
 {
-    $computeds = new ProviderPeoplePersonNameComputedValues;
+    $base = new PersonNameBaseComputeds;
+    $nicknames = new PersonNameNicknameComputeds($base);
+    $collector = new AlternateNameCollector($base);
+    $phonetics = new AlternateNamePhoneticCoherence($base);
+    $pieces = [
+        $base,
+        $nicknames,
+        $collector,
+        $phonetics,
+        new AlternateNameListBuilder($nicknames, $collector, $phonetics),
+        new PersonNamePrefixAndCredentialComputeds($base),
+    ];
 
-    return new ReflectionMethod($computeds, $method)->invoke($computeds, ...$arguments);
+    $declares = static fn (object $piece): bool => new ReflectionClass($piece)->hasMethod($method)
+        && new ReflectionMethod($piece, $method)->getDeclaringClass()->getName() === $piece::class;
+
+    expect(array_filter($pieces, $declares))->toHaveCount(1, "one class declares {$method}");
+
+    $owner = array_find($pieces, $declares) ?? throw new LogicException("No name class declares {$method}");
+
+    return new ReflectionMethod($owner, $method)->invoke($owner, ...$arguments);
 }
 
 /**

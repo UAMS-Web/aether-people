@@ -5,11 +5,16 @@ declare(strict_types=1);
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Statamic\Entries\Entry;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNameCollector;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNameListBuilder;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\AlternateNamePhoneticCoherence;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameBaseComputeds;
+use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\PersonName\PersonNameNicknameComputeds;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
 
 uses(MockeryPHPUnitIntegration::class);
 
-covers(ProviderPeoplePersonNameComputedValues::class);
+covers(ProviderPeoplePersonNameComputedValues::class, PersonNameBaseComputeds::class, PersonNameNicknameComputeds::class, AlternateNameCollector::class, AlternateNamePhoneticCoherence::class, AlternateNameListBuilder::class);
 
 /**
  * Stub the name refinement fields kept beside `person_name` (UAMS-Web/uams-statamic-archive#3186) as unset,
