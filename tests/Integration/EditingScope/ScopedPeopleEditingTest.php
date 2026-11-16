@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
@@ -1045,10 +1046,11 @@ it('limits the listing hook to a people entries query', function (): void {
     Assert::assertInstanceOf(StatamicCollection::class, $pages);
 
     // Not the people collection: every page stays in the listing
+    /** @var EntryQueryBuilder $pageQuery */
     $pageQuery = Entry::query();
     $pageQuery->where('collection', 'pages');
 
-    $pageRows = new EntriesIndexQuery($pageQuery, $pages)->paginate(50);
+    $pageRows = mustBe(LengthAwarePaginator::class, new EntriesIndexQuery($pageQuery, $pages)->paginate(50), 'a page of entries');
 
     // Something that only has the handle of the people collection is not that collection
     $lookalike = new class
@@ -1058,10 +1060,11 @@ it('limits the listing hook to a people entries query', function (): void {
             return 'people';
         }
     };
+    /** @var EntryQueryBuilder $peopleQuery */
     $peopleQuery = Entry::query();
     $peopleQuery->where('collection', 'people');
 
-    $lookalikeRows = new EntriesIndexQuery($peopleQuery, $lookalike)->paginate(50);
+    $lookalikeRows = mustBe(LengthAwarePaginator::class, new EntriesIndexQuery($peopleQuery, $lookalike)->paginate(50), 'a page of entries');
 
     // Not an entries query builder: the hook leaves it alone
     $foreignQuery = new class
