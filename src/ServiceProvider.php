@@ -24,7 +24,6 @@ use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowControlle
 use UAMSWeb\Aether\People\Http\Controllers\PeopleLensController;
 use UAMSWeb\Aether\People\Jobs\RefreshProviderEligibilityForDatedLocations;
 use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
-use UAMSWeb\Aether\People\Merge\PeopleMergeRegistrar;
 use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
 use UAMSWeb\Aether\People\Support\Features;
 use UAMSWeb\Aether\People\Workday\WorkdayToolingRegistrar;
@@ -132,9 +131,6 @@ class ServiceProvider extends AddonServiceProvider
 
         // Hold the Workday-managed fields and serve the gender override review; also not part of the provider layer
         $this->app->make(WorkdayToolingRegistrar::class)->register();
-
-        // Serve the duplicate people merge: its permission and reconciliation screen; also not part of the provider layer
-        $this->app->make(PeopleMergeRegistrar::class)->register();
 
         // Register the clinical provider layer, unless the host turned it off
         if (Features::providerLayer()) {
