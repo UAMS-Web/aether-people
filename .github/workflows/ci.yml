@@ -65,13 +65,10 @@ jobs:
     with:
       linux-only: true
       mutate-paths: src
-      # Temporary: the mutation job outran 120 minutes once `src/ServiceProvider.php` grew with the #57
-      # slices (#83 to #86), and outran 180 on #92 (#84). Return it to 120 under #89 after the last slice merges.
-      mutate-timeout-minutes: 240
-      # The weekly full pass takes its own timeout, which the pull-request value above does not touch, so
-      # returning that one to 120 under #89 leaves the scheduled run alone. The first scheduled run was
-      # cancelled at the 180-minute default (#43); 360 is GitHub's longest job until a full pass has been
-      # measured and this is set from the result (#106).
+      mutate-timeout-minutes: 120
+      # The weekly full pass takes its own timeout, which the pull-request value above does not touch. The
+      # first scheduled run was cancelled at the 180-minute default (#43); a full pass then took 224 minutes,
+      # and 360 is GitHub's longest job (#106).
       mutate-full-timeout-minutes: 360
 
   # The chain checks the emoji sweep; it does not check the decision log.
