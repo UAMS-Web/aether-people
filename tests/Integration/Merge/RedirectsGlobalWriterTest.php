@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Statamic\Events\GlobalVariablesSaved;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Globals\Variables;
@@ -121,4 +123,78 @@ it('warns and reports zero from both methods when the redirects set is missing',
 
     expect($writer->count([rgwRow('default', '/a')]))->toBe(0)
         ->and($writer->write([rgwRow('default', '/a')]))->toBe(0);
+});
+
+it('writes a later site after an earlier site with nothing new', function (): void {
+    $writer = new RedirectsGlobalWriter;
+    $plan = [rgwRow('default', '/already'), rgwRow('health', '/new')];
+
+    expect($writer->write($plan))->toBe(1)
+        ->and(array_column(rgwStored('health'), 'source'))->toBe(['/new']);
+});
+
+it('stores each redirect as an enabled 301 url row with its own uuid, and saves the site once', function (): void {
+    Event::fake([GlobalVariablesSaved::class]);
+
+    (new RedirectsGlobalWriter)->write([rgwRow('default', '/a'), rgwRow('default', '/b')]);
+
+    $rows = rgwStored('default');
+    $stored = $rows[1];
+
+    expect($rows)->toHaveCount(3)
+        ->and(array_keys($stored))->toBe(['id', 'type', 'source', 'target_type', 'target_url', 'response', 'order', 'enabled'])
+        ->and($stored['id'])->toBeString()->toMatch('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/')
+        ->and(array_slice($stored, 1))->toBe([
+            'type' => 'redirect',
+            'source' => '/a',
+            'target_type' => 'url',
+            'target_url' => '/people/jane',
+            'response' => '301',
+            'order' => 30,
+            'enabled' => true,
+        ])
+        ->and($rows[2]['id'])->not->toBe($stored['id']);
+    Event::assertDispatchedTimes(GlobalVariablesSaved::class, 1);
+});
+
+it('stays silent about a missing redirects set when the plan is empty', function (): void {
+    /** @var Statamic\Globals\GlobalSet|null $set */
+    $set = GlobalSet::findByHandle('redirects');
+    $set?->delete();
+
+    Log::partialMock()->shouldReceive('warning')->never();
+
+    expect((new RedirectsGlobalWriter)->count([]))->toBe(0)
+        ->and((new RedirectsGlobalWriter)->write([]))->toBe(0);
+});
+
+it('counts and writes for a site the set does not list, where the set returns no localization', function (): void {
+    Site::setSites([
+        'default' => ['name' => 'Default', 'locale' => 'en_US', 'url' => '/'],
+        'health' => ['name' => 'Health', 'locale' => 'en_US', 'url' => '/health/'],
+        'extra' => ['name' => 'Extra', 'locale' => 'en_US', 'url' => '/extra/'],
+    ]);
+
+    /** @var Statamic\Globals\GlobalSet $set */
+    $set = GlobalSet::findByHandle('redirects');
+    $writer = new RedirectsGlobalWriter;
+
+    expect($set->in('extra'))->toBeNull()
+        ->and($writer->count([rgwRow('extra', '/new')]))->toBe(1)
+        ->and($writer->write([rgwRow('extra', '/new')]))->toBe(1);
+});
+
+it('skips the rows already stored when they are malformed, and does not treat a non-text source as a path', function (): void {
+    /** @var Statamic\Globals\GlobalSet $set */
+    $set = GlobalSet::findByHandle('redirects');
+    /** @var Variables $vars */
+    $vars = $set->in('default');
+    $vars->set('redirects', ['junk', ['id' => 'no-source'], ['id' => 'int-source', 'source' => 5], ['id' => 'ok', 'source' => '/already']]);
+    $vars->save();
+
+    $writer = new RedirectsGlobalWriter;
+    $plan = [rgwRow('default', '5'), rgwRow('default', '/already'), rgwRow('default', '/new')];
+
+    expect($writer->count($plan))->toBe(2)
+        ->and($writer->write($plan))->toBe(2);
 });

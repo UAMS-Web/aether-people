@@ -154,7 +154,11 @@ it('refuses a commit on a host that has not bound a writer and changes no entry'
 
 it('refuses on an unbound host even when there is nothing to redirect', function (): void {
     expect(fn (): MergeResult => mrwService(null)->merge(['surv', 'lose'], 'surv', []))
-        ->toThrow(PeopleMergeException::class, 'no redirect writer is bound');
+        ->toThrow(
+            PeopleMergeException::class,
+            'People merge cannot run: no redirect writer is bound. Bind UAMSWeb\Aether\People\Contracts\MergeRedirectWriter'
+            .' in the host (a writer that writes nothing is a valid binding) and try again.',
+        );
 });
 
 it('completes a merge with a writer that writes nothing', function (): void {
