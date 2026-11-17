@@ -11,6 +11,7 @@ use Statamic\Globals\Variables;
 use Statamic\Stache\Repositories\EntryRepository as StacheEntryRepository;
 use Statamic\Taxonomies\LocalizedTerm;
 use Statamic\Taxonomies\Term as TaxonomyTerm;
+use UAMSWeb\Aether\People\Support\TraineeType;
 
 /**
  * Resolves everything the clinical provider lens's appointment CTA and Primary
@@ -149,7 +150,7 @@ final readonly class AppointmentContextResolver
      */
     private function isEligible(Entry $entry): bool
     {
-        if ($this->truthy($entry->get('resident_query'))) {
+        if (TraineeType::isResident($entry->get(TraineeType::FIELD))) {
             return false;
         }
 

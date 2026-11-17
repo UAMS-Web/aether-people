@@ -8,6 +8,7 @@ use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ClinicalTitleResolver;
 use UAMSWeb\Aether\People\ComputedFields\ProviderPeople\ProviderPeoplePersonNameComputedValues;
+use UAMSWeb\Aether\People\Support\TraineeType;
 
 /**
  * Builds the Find-a-Doc read API's provider payload from a `people` entry (UAMS-Web/uams-statamic-archive#1043)
@@ -54,7 +55,7 @@ final class ProviderPayloadTransformer
                 'accepting_new_patients' => $this->truthy($person->get('accepting_patients_query')),
                 'referral_required' => $this->truthy($person->get('referral_required')),
             ],
-            'is_resident' => $this->truthy($person->get('resident_query')),
+            'is_resident' => TraineeType::isResident($person->get(TraineeType::FIELD)),
             'portrait' => [
                 // The stored asset paths (3:4 headshot + 16:9 wide). URL resolution
                 // is deferred to a coordinated follow-up with the app team.

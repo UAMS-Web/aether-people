@@ -130,8 +130,7 @@ function workdayFieldsChange(string $id): array
         'uams_worker_subtype' => 'contingent_worker',
         'uams_employee_subtype' => 'temporary',
         'uams_workday_id' => ['workday_universal_id' => 'WD-999', 'workday_employee_id' => 'E-999'],
-        'resident_query' => true,
-        'fellow_query' => true,
+        'trainee_type' => 'resident',
         'gender' => 'male',
         'person_name' => ['first_name' => 'Changed', 'last_name' => 'Name'],
         'nickname' => 'Bones',
@@ -265,8 +264,7 @@ beforeEach(function (): void {
             ['handle' => 'workday_universal_id', 'field' => ['type' => 'text']],
             ['handle' => 'workday_employee_id', 'field' => ['type' => 'text']],
         ]],
-        'resident_query' => $toggle,
-        'fellow_query' => $toggle,
+        'trainee_type' => ['type' => 'select', 'options' => ['none' => 'Not a trainee', 'resident' => 'Resident', 'fellow' => 'Fellow']],
     ]);
     $blueprint->setHandle('person');
     $blueprint->setNamespace('collections.people');
@@ -277,24 +275,24 @@ afterEach(function (): void {
     File::deleteDirectory((string) $this->workdayFieldsDirectory);
 });
 
-it('locks the always-Workday fields and each trainee field only once Workday supplied it', function (): void {
+it('locks the always-Workday fields and the trainee type only once Workday supplied it', function (): void {
     $fields = app(WorkdayManagedFields::class);
 
     expect($fields->lockedHandles([]))->toBe(['person_name', 'uams_worker_query', 'uams_worker_subtype', 'uams_employee_subtype', 'uams_workday_id', 'workday_gender'])
-        ->and($fields->isLocked('resident_query', []))->toBeFalse()
-        ->and($fields->isLocked('resident_query', ['workday_supplied' => ['resident_query']]))->toBeTrue()
-        ->and($fields->isLocked('fellow_query', ['workday_supplied' => ['resident_query']]))->toBeFalse()
+        ->and($fields->isLocked('trainee_type', []))->toBeFalse()
+        ->and($fields->isLocked('trainee_type', ['workday_supplied' => ['trainee_type']]))->toBeTrue()
+        ->and($fields->isLocked('trainee_type', ['workday_supplied' => ['resident_query']]))->toBeFalse()
         ->and($fields->isLocked('gender', ['workday_supplied' => ['gender']]))->toBeFalse()
-        ->and($fields->isLocked('resident_query', ['workday_supplied' => 'resident_query']))->toBeFalse();
+        ->and($fields->isLocked('trainee_type', ['workday_supplied' => 'trainee_type']))->toBeFalse();
 });
 
 it('puts back a stored value, drops one never stored, and keeps the provenance list', function (): void {
     $restored = app(WorkdayManagedFields::class)->restore(
         ['uams_worker_query' => false, 'uams_worker_subtype' => 'employee', 'workday_supplied' => [], 'bio' => 'New'],
-        ['uams_worker_query' => true, 'workday_supplied' => ['fellow_query']],
+        ['uams_worker_query' => true, 'workday_supplied' => ['trainee_type']],
     );
 
-    expect($restored)->toBe(['uams_worker_query' => true, 'workday_supplied' => ['fellow_query'], 'bio' => 'New']);
+    expect($restored)->toBe(['uams_worker_query' => true, 'workday_supplied' => ['trainee_type'], 'bio' => 'New']);
 });
 
 it('greys out the Workday fields for an editor and not for an administrator', function (): void {
@@ -306,7 +304,7 @@ it('greys out the Workday fields for an editor and not for an administrator', fu
         expect(workdayFieldsVisibility('nyota', $handle))->toBe('read_only');
     }
 
-    expect(workdayFieldsVisibility('nyota', 'resident_query'))->toBe('visible')
+    expect(workdayFieldsVisibility('nyota', 'trainee_type'))->toBe('visible')
         ->and(workdayFieldsVisibility('nyota', 'gender'))->toBe('visible')
         ->and(workdayFieldsVisibility('nyota', 'nickname'))->toBe('visible')
         ->and(workdayFieldsVisibility('nyota', 'bio'))->toBe('visible');
@@ -318,19 +316,18 @@ it('greys out the Workday fields for an editor and not for an administrator', fu
         ->and(workdayFieldsVisibility('nyota', 'person_name'))->toBe('visible');
 });
 
-it('greys out a trainee field for an editor only on the entry Workday supplied it for', function (): void {
-    workdayFieldsPerson('nyota', ['resident_query' => true, 'workday_supplied' => ['resident_query']]);
-    workdayFieldsPerson('hikaru', ['resident_query' => false]);
+it('greys out the trainee type for an editor only on the entry Workday supplied it for', function (): void {
+    workdayFieldsPerson('nyota', ['trainee_type' => 'resident', 'workday_supplied' => ['trainee_type']]);
+    workdayFieldsPerson('hikaru', ['trainee_type' => 'none']);
 
     test()->actingAs(workdayFieldsEditor());
 
-    expect(workdayFieldsVisibility('nyota', 'resident_query'))->toBe('read_only')
-        ->and(workdayFieldsVisibility('nyota', 'fellow_query'))->toBe('visible');
+    expect(workdayFieldsVisibility('nyota', 'trainee_type'))->toBe('read_only');
 
     // One blueprint object serves every entry of a request, so resolve both in one
     Blink::flush();
-    $nyota = workdayFieldsFieldVisibility(workdayFieldsFind('nyota'), 'resident_query');
-    $hikaru = workdayFieldsFieldVisibility(workdayFieldsFind('hikaru'), 'resident_query');
+    $nyota = workdayFieldsFieldVisibility(workdayFieldsFind('nyota'), 'trainee_type');
+    $hikaru = workdayFieldsFieldVisibility(workdayFieldsFind('hikaru'), 'trainee_type');
 
     expect($nyota)->toBe('read_only')
         ->and($hikaru)->toBe('visible');
@@ -375,8 +372,8 @@ it('keeps the Workday fields of a published entry in the working copy an editor 
         ->and($copy->get('uams_workday_id'))->toBe(['workday_universal_id' => 'WD-100', 'workday_employee_id' => 'E-100']);
 });
 
-it('lets an editor answer a trainee field Workday did not supply and keeps one it did', function (): void {
-    workdayFieldsPerson('nyota', ['resident_query' => false, 'fellow_query' => false, 'workday_supplied' => ['resident_query']]);
+it('keeps the trainee type Workday supplied when an editor changes it', function (): void {
+    workdayFieldsPerson('nyota', ['trainee_type' => 'none', 'workday_supplied' => ['trainee_type']]);
 
     test()->actingAs(workdayFieldsEditor());
 
@@ -384,9 +381,18 @@ it('lets an editor answer a trainee field Workday did not supply and keeps one i
 
     $nyota = workdayFieldsFind('nyota');
 
-    expect($nyota->get('resident_query'))->toBeFalse()
-        ->and($nyota->get('fellow_query'))->toBeTrue()
-        ->and($nyota->get('workday_supplied'))->toBe(['resident_query']);
+    expect($nyota->get('trainee_type'))->toBe('none')
+        ->and($nyota->get('workday_supplied'))->toBe(['trainee_type']);
+});
+
+it('lets an editor answer the trainee type when Workday did not supply it', function (): void {
+    workdayFieldsPerson('nyota', ['trainee_type' => 'none', 'workday_supplied' => ['gender']]);
+
+    test()->actingAs(workdayFieldsEditor());
+
+    test()->patchJson(workdayFieldsUpdateUrl('nyota'), workdayFieldsChange('nyota'))->assertOk();
+
+    expect(workdayFieldsFind('nyota')->get('trainee_type'))->toBe('resident');
 });
 
 it('stops an editor giving a Workday field its first value', function (): void {
@@ -424,11 +430,11 @@ it('keeps the Workday fields of an entry an editor creates empty', function (): 
         ->and($created->has('uams_workday_id'))->toBeFalse()
         ->and($created->has('uams_worker_query'))->toBeFalse()
         ->and($created->has('person_name'))->toBeFalse()
-        ->and($created->get('resident_query'))->toBeTrue();
+        ->and($created->get('trainee_type'))->toBe('resident');
 });
 
 it('lets an administrator change the Workday fields', function (): void {
-    workdayFieldsPerson('nyota', ['resident_query' => false, 'workday_supplied' => ['resident_query']]);
+    workdayFieldsPerson('nyota', ['trainee_type' => 'none', 'workday_supplied' => ['trainee_type']]);
 
     test()->actingAs(workdayFieldsAdministrator());
 
@@ -439,7 +445,7 @@ it('lets an administrator change the Workday fields', function (): void {
     expect($nyota->get('uams_worker_query'))->toBeFalse()
         ->and($nyota->get('uams_workday_id'))->toBe(['workday_universal_id' => 'WD-999', 'workday_employee_id' => 'E-999'])
         ->and($nyota->get('person_name'))->toBe(['first_name' => 'Changed', 'last_name' => 'Name'])
-        ->and($nyota->get('resident_query'))->toBeTrue();
+        ->and($nyota->get('trainee_type'))->toBe('resident');
 });
 
 it('holds nothing when no user is signed in, as for the Workday sync', function (): void {
@@ -447,13 +453,13 @@ it('holds nothing when no user is signed in, as for the Workday sync', function 
 
     $nyota = workdayFieldsFind('nyota');
     $nyota->set('uams_workday_id', ['workday_universal_id' => 'WD-200']);
-    $nyota->set('workday_supplied', ['fellow_query']);
+    $nyota->set('workday_supplied', ['trainee_type']);
     $nyota->save();
 
     $nyota = workdayFieldsFind('nyota');
 
     expect($nyota->get('uams_workday_id'))->toBe(['workday_universal_id' => 'WD-200'])
-        ->and($nyota->get('workday_supplied'))->toBe(['fellow_query']);
+        ->and($nyota->get('workday_supplied'))->toBe(['trainee_type']);
 });
 
 it('holds nothing on another collection', function (): void {
@@ -493,19 +499,19 @@ it('still locks the later Workday fields on a blueprint that lacks an earlier on
         'uams_workday_id' => ['type' => 'group', 'fields' => [
             ['handle' => 'workday_universal_id', 'field' => ['type' => 'text']],
         ]],
-        'resident_query' => ['type' => 'toggle'],
+        'trainee_type' => ['type' => 'select', 'options' => ['none' => 'Not a trainee', 'resident' => 'Resident']],
     ]);
     $blueprint->setHandle('person');
     $blueprint->setNamespace('collections.people');
     $blueprint->save();
 
-    workdayFieldsPerson('pavel', ['resident_query' => true, 'workday_supplied' => ['resident_query']]);
+    workdayFieldsPerson('pavel', ['trainee_type' => 'resident', 'workday_supplied' => ['trainee_type']]);
 
     test()->actingAs(workdayFieldsEditor());
 
     expect(workdayFieldsVisibility('pavel', 'uams_workday_id'))->toBe('read_only')
         ->and(workdayFieldsVisibility('pavel', 'workday_gender'))->toBe('read_only')
-        ->and(workdayFieldsVisibility('pavel', 'resident_query'))->toBe('read_only');
+        ->and(workdayFieldsVisibility('pavel', 'trainee_type'))->toBe('read_only');
 });
 
 it('leaves alone a blueprint that is not a Statamic blueprint, whatever its namespace', function (): void {
@@ -605,11 +611,11 @@ it('leaves alone a people revision whose entry no longer exists', function (): v
         ->toBeNull();
 });
 
-it('locks no trainee field for a provenance entry that is not a handle name', function (): void {
+it('locks no trainee type for a provenance entry that is not a handle name', function (): void {
     $fields = app(WorkdayManagedFields::class);
 
     // A loose comparison would match `true` against any string
     expect($fields->lockedHandles([WorkdayManagedFields::PROVENANCE_KEY => [true]]))->toBe(WorkdayManagedFields::ALWAYS_LOCKED)
-        ->and($fields->lockedHandles([WorkdayManagedFields::PROVENANCE_KEY => ['fellow_query', true]]))
-        ->toBe([...WorkdayManagedFields::ALWAYS_LOCKED, 'fellow_query']);
+        ->and($fields->lockedHandles([WorkdayManagedFields::PROVENANCE_KEY => ['trainee_type', true]]))
+        ->toBe([...WorkdayManagedFields::ALWAYS_LOCKED, 'trainee_type']);
 });
