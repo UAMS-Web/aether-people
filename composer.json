@@ -122,7 +122,7 @@
         "test:pint": "pint --test",
         "mutate": [
             "Composer\\Config::disableProcessTimeout",
-            "@php vendor/bin/pest --mutate --path=src"
+            "@php vendor/bin/pest --parallel --mutate --path=src"
         ]
     },
     "minimum-stability": "stable",
