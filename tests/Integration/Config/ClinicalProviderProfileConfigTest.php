@@ -55,7 +55,7 @@ it('holds the two paths with their rules and the credential slugs that qualify',
 });
 
 it('holds the scheduled refresh settings as a boolean and a cron string, whatever the environment sets', function (): void {
-    $refresh = config('clinical_provider_profile.location_date_refresh');
+    $refresh = config()->array('clinical_provider_profile.location_date_refresh');
 
     expect(array_keys($refresh))->toBe(['enabled', 'cron'])
         ->and($refresh['enabled'])->toBeBool()
