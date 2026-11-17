@@ -6,17 +6,14 @@ namespace UAMSWeb\Aether\People\Merge;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
-use Statamic\Facades\GlobalSet;
 use Statamic\Facades\User;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
-use Statamic\Globals\GlobalSet as GlobalSetItem;
-use Statamic\Globals\Variables;
 use UAMSWeb\Aether\People\Contracts\EntryReferenceRepointer;
+use UAMSWeb\Aether\People\Contracts\MergeRedirectWriter;
 use UAMSWeb\Aether\People\Support\PeopleCollection;
 use UAMSWeb\Aether\People\Support\PeopleEditingScope;
 
@@ -55,11 +52,6 @@ class PeopleMergeService
     }
 
     /**
-     * Handle of the globals replicator that stores site redirects.
-     */
-    private const string REDIRECTS_GLOBAL = 'redirects';
-
-    /**
      * Field handles never offered for reconciliation: identity (kept on the
      * survivor), system bookkeeping, and the derived title.
      *
@@ -78,10 +70,12 @@ class PeopleMergeService
 
     /**
      * @param  EntryReferenceRepointer  $repointer  Re-points inbound references from the retired entries.
+     * @param  MergeRedirectWriter|null  $redirects  Writes and counts the redirects from the retired URLs. Null when the host has not bound one, which refuses every merge and preview.
      * @param  PeopleEditingScope  $scope  Limits a scoped user to the people in their organizations.
      */
     public function __construct(
         private readonly EntryReferenceRepointer $repointer,
+        private readonly ?MergeRedirectWriter $redirects = null,
         private readonly PeopleEditingScope $scope = new PeopleEditingScope,
     ) {}
 
@@ -146,6 +140,13 @@ class PeopleMergeService
      */
     private function execute(array $entryIds, string $survivorId, array $fieldSelections, bool $dryRun): MergeResult
     {
+        // Refuse before anything is read or written: without a writer the preview cannot count
+        // redirects and the commit would retire entries whose URLs then 404
+        $redirects = $this->redirects ?? throw new PeopleMergeException(
+            'People merge cannot run: no redirect writer is bound. Bind '.MergeRedirectWriter::class
+            .' in the host (a writer that writes nothing is a valid binding) and try again.',
+        );
+
         $entries = $this->loadCandidates($entryIds);
 
         // The survivor must be one of the candidates so its identity is preserved
@@ -174,7 +175,7 @@ class PeopleMergeService
                 true,
                 $appliedFields,
                 $this->repointer->preview($idMap),
-                \count($redirectPlan),
+                $redirects->count($redirectPlan),
                 $redirectPlan,
                 $loserIds,
             );
@@ -187,7 +188,7 @@ class PeopleMergeService
         $survivor->saveQuietly();
 
         $references = $this->repointer->repoint($idMap);
-        $redirectsCreated = $this->appendRedirects($redirectPlan);
+        $redirectsCreated = $redirects->write($redirectPlan);
         $this->retireLosers($loserIds);
 
         return new MergeResult(
@@ -695,127 +696,6 @@ class PeopleMergeService
         }
 
         return $plan;
-    }
-
-    /**
-     * Append the planned redirects to the redirects global and persist them on
-     * the localization of the site each redirect serves.
-     *
-     * The redirects field is non-localizable, but `find_redirect_rule` (the 404
-     * serving tag) reads `$global->in($currentSite)->get('redirects')` for the
-     * site that 404'd — a raw, per-site read that does NOT cascade from the
-     * origin localization (verified: UAMS-Web/uams-statamic-archive#1088). So a redirect for a loser reachable
-     * only on a non-default site must be written to *that site's* localization,
-     * or it would never be served there. Each planned row is therefore grouped by
-     * its `site` and appended to that site's redirects (a default-site loser still
-     * lands on the origin/default localization, where editors manage the list).
-     *
-     * The same per-site, no-cascade read means editor-managed redirects on the
-     * default site do not serve on non-default sites either; that broader gap is
-     * tracked in UAMS-Web/uams-statamic-archive#1110 (out of scope here — this only fixes merge-created rows).
-     *
-     * @param  list<array{site: string, source: string, target: string, response: string}>  $plan
-     * @return int Number of redirect rows written.
-     */
-    private function appendRedirects(array $plan): int
-    {
-        if ($plan === []) {
-            return 0;
-        }
-
-        /** @var GlobalSetItem|null $set */
-        $set = GlobalSet::findByHandle(self::REDIRECTS_GLOBAL);
-
-        // No redirects global (e.g. an environment without content) — log and skip
-        // rather than fail the merge; the re-pointing already protects inbound links.
-        if ($set === null) {
-            Log::warning('People merge could not create redirects: redirects global set is missing.', [
-                'planned' => \count($plan),
-            ]);
-
-            return 0;
-        }
-
-        // Group planned rows by the site they must serve on, preserving order.
-        /** @var array<string, list<array{site: string, source: string, target: string, response: string}>> $rowsBySite */
-        $rowsBySite = [];
-        foreach ($plan as $row) {
-            $rowsBySite[$row['site']][] = $row;
-        }
-
-        $created = 0;
-
-        // Write each site's redirects to that site's own localization so the
-        // serving tag (which reads the 404'ing site) finds them.
-        foreach ($rowsBySite as $site => $rows) {
-            $created += $this->appendRedirectsForSite($set, $site, $rows);
-        }
-
-        return $created;
-    }
-
-    /**
-     * Append a single site's planned redirects to that site's redirects localization.
-     *
-     * @param  list<array{site: string, source: string, target: string, response: string}>  $rows
-     * @return int Number of redirect rows written for this site.
-     */
-    private function appendRedirectsForSite(GlobalSetItem $set, string $site, array $rows): int
-    {
-        $inSite = $set->in($site);
-        /** @var Variables $variables */
-        $variables = $inSite instanceof Variables ? $inSite : $set->makeLocalization($site);
-
-        $existingValue = $variables->get(self::REDIRECTS_GLOBAL, []);
-        $redirects = \is_array($existingValue) ? $existingValue : [];
-
-        // Index existing sources so repeated/overlapping merges (e.g. a new
-        // duplicate reusing a freed slug) never append a second row for a path
-        // that already redirects on this site — keeping the global from bloating.
-        $existingSources = [];
-        foreach ($redirects as $existing) {
-            if (\is_array($existing) && isset($existing['source']) && \is_string($existing['source'])) {
-                // isset() is true for a stored false too, so the flag is never read.
-                // @pest-mutate-ignore: TrueToFalse
-                $existingSources[$existing['source']] = true;
-            }
-        }
-
-        $created = 0;
-
-        foreach ($rows as $row) {
-            // Skip a source that already redirects on this site
-            if (isset($existingSources[$row['source']])) {
-                continue;
-            }
-
-            // isset() is true for a stored false too, so the flag is never read.
-            // @pest-mutate-ignore: TrueToFalse
-            $existingSources[$row['source']] = true;
-
-            $redirects[] = [
-                'id' => (string) Str::uuid(),
-                'type' => 'redirect',
-                'source' => $row['source'],
-                'target_type' => 'url',
-                'target_url' => $row['target'],
-                'response' => $row['response'],
-                'order' => 30,
-                'enabled' => true,
-            ];
-
-            $created++;
-        }
-
-        // Nothing new to write — every planned source already redirected here
-        if ($created === 0) {
-            return 0;
-        }
-
-        $variables->set(self::REDIRECTS_GLOBAL, $redirects);
-        $variables->save();
-
-        return $created;
     }
 
     /**
