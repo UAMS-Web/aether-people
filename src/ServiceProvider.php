@@ -105,6 +105,20 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
+     * Boot the provider, and register the Find-a-Doc API routes ahead of the host's own routes.
+     */
+    #[\Override]
+    public function boot(): void
+    {
+        parent::boot();
+
+        // The API routes go in now so they match before a host route does, unless the host turned the provider layer off
+        if (Features::providerLayer()) {
+            $this->registerFindADocApiRoutes();
+        }
+    }
+
+    /**
      * Boot the add-on once Statamic has booted.
      */
     public function bootAddon(): void
@@ -184,15 +198,26 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Register the clinical provider layer: the computed values and the Find-a-Doc read API. Its
-     * listeners are subscribed by {@see self::bootEvents()}.
+     * Register the clinical provider layer's computed values. Its listeners are subscribed by
+     * {@see self::bootEvents()}, and its Find-a-Doc read API routes by {@see self::boot()}.
      */
     private function registerProviderLayer(): void
     {
         // Register the providers and people shared computeds
         $this->app->make(ProvidersPeopleSharedCollectionComputedsRegistrar::class)->register();
+    }
 
-        // Serve the Find-a-Doc read API under `/api/v1/find-a-doc`, as the host's API routes do
+    /**
+     * Serve the Find-a-Doc read API under `/api/v1/find-a-doc`, as the host's API routes do.
+     *
+     * Registered from {@see self::boot()}, which runs while the providers boot, and not from
+     * `bootAddon()`, which Statamic runs once the application has booted. A host loads its own
+     * `routes/web.php` in between, and Laravel takes the first route that matches, so a greedy
+     * front-end route of the host's would otherwise take the index path
+     * (UAMS-Web/aether-people#116). The show route has the same place, and the same order among the API's own.
+     */
+    private function registerFindADocApiRoutes(): void
+    {
         $rateLimit = config('find_a_doc_api.rate_limit_per_minute', 60);
         $perMinute = \is_int($rateLimit) ? $rateLimit : 60;
 

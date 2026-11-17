@@ -126,7 +126,7 @@ function findADocRouteMiddleware(mixed $rateLimit, bool $configured = true): arr
     }
 
     $provider = mustBe(ServiceProvider::class, app()->getProvider(ServiceProvider::class), 'the add-on provider');
-    $method = new ReflectionMethod($provider, 'registerProviderLayer');
+    $method = new ReflectionMethod($provider, 'registerFindADocApiRoutes');
     $method->invoke($provider);
 
     $matches = array_values(array_filter(
