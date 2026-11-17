@@ -17,6 +17,7 @@ use Statamic\Facades\Site;
 use Statamic\Globals\Variables;
 use UAMSWeb\Aether\People\Merge\MergeReconciliation;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+use UAMSWeb\Aether\People\Merge\RedirectsGlobalWriter;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
 uses(MockeryPHPUnitIntegration::class);
@@ -142,7 +143,7 @@ function pmdCandidates(MergeReconciliation $reconciliation): array
 
 function pmdService(): PeopleMergeService
 {
-    return new PeopleMergeService(HostFakes::entryReferenceRepointer());
+    return new PeopleMergeService(HostFakes::entryReferenceRepointer(), new RedirectsGlobalWriter);
 }
 
 /**

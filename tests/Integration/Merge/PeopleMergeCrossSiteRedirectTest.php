@@ -11,6 +11,7 @@ use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Globals\Variables;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+use UAMSWeb\Aether\People\Merge\RedirectsGlobalWriter;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
 covers(PeopleMergeService::class);
@@ -158,7 +159,7 @@ function pmcsRulesServed(string $site, string $uri): array
 
 function pmcsService(): PeopleMergeService
 {
-    return new PeopleMergeService(HostFakes::entryReferenceRepointer());
+    return new PeopleMergeService(HostFakes::entryReferenceRepointer(), new RedirectsGlobalWriter);
 }
 
 it('serves a people-merge redirect on the non-default site the loser was reachable in', function (): void {

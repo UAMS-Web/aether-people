@@ -13,6 +13,7 @@ use Statamic\Globals\Variables;
 use UAMSWeb\Aether\People\Contracts\EntryReferenceRepointer;
 use UAMSWeb\Aether\People\Merge\PeopleMergeException;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+use UAMSWeb\Aether\People\Merge\RedirectsGlobalWriter;
 use UAMSWeb\Aether\People\Support\ReferenceRepointSummary;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
@@ -188,7 +189,7 @@ beforeEach(function (): void {
 
 function pmService(): PeopleMergeService
 {
-    return new PeopleMergeService(HostFakes::entryReferenceRepointer());
+    return new PeopleMergeService(HostFakes::entryReferenceRepointer(), new RedirectsGlobalWriter);
 }
 
 it('refuses to reconcile fewer than two people', function (): void {
@@ -505,7 +506,7 @@ it('carries every field of the repointer summary into the preview and the result
             return new ReferenceRepointSummary(4, 5, 6, 10);
         }
     };
-    $service = new PeopleMergeService($repointer);
+    $service = new PeopleMergeService($repointer, new RedirectsGlobalWriter);
 
     expect($service->preview(['surv', 'lose'], 'surv', [])->toArray()['references'])
         ->toBe(['entries' => 4, 'globals' => 5, 'terms' => 6, 'occurrences' => 10, 'items_changed' => 15]);

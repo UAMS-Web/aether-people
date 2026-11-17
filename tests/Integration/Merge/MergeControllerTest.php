@@ -19,6 +19,7 @@ use Statamic\Facades\Role;
 use Statamic\Facades\Site;
 use Statamic\Facades\User;
 use Statamic\Globals\Variables;
+use UAMSWeb\Aether\People\Contracts\MergeRedirectWriter;
 use UAMSWeb\Aether\People\Http\Controllers\MergeController;
 use UAMSWeb\Aether\People\Merge\MergeResult;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
@@ -417,4 +418,22 @@ it('turns a merge the service refuses into a 422 carrying its message', function
     test()->postJson(mergeControllerRoute('people-merge.preview'), ['ids' => ['surv', 'nope'], 'survivor' => 'surv'])
         ->assertStatus(422)
         ->assertJsonStructure(['message']);
+});
+
+it('refuses a preview and a commit with a 422 naming the binding when the host has bound no redirect writer', function (): void {
+    mergeControllerPerson('surv', 'survivor', ['bio' => 'A']);
+    mergeControllerPerson('lose', 'loser', ['bio' => 'B']);
+
+    // The test case binds a writer the way a host does; take the binding away
+    unset(app()[MergeRedirectWriter::class]);
+
+    test()->actingAs(mergeControllerSuperUser());
+
+    foreach (['people-merge.preview', 'people-merge.commit'] as $route) {
+        test()->postJson(mergeControllerRoute($route), ['ids' => ['surv', 'lose'], 'survivor' => 'surv'])
+            ->assertStatus(422)
+            ->assertJsonPath('message', fn (string $message): bool => str_contains($message, MergeRedirectWriter::class));
+    }
+
+    expect(Entry::find('lose'))->not->toBeNull();
 });
