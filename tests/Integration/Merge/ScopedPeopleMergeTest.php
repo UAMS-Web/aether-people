@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Assert;
 use Statamic\Auth\File\Role as StatamicRole;
@@ -24,8 +25,9 @@ use Statamic\Facades\UserGroup;
 use UAMSWeb\Aether\People\Actions\MergePeople;
 use UAMSWeb\Aether\People\Http\Controllers\MergeController;
 use UAMSWeb\Aether\People\Merge\PeopleMergeService;
+use UAMSWeb\Aether\People\Widgets\DuplicatePeople;
 
-covers(MergeController::class, MergePeople::class, PeopleMergeService::class);
+covers(MergeController::class, MergePeople::class, PeopleMergeService::class, DuplicatePeople::class);
 
 /**
  * The people editing scope (UAMS-Web/uams-statamic-archive#3182) applied to the people merge feature (UAMS-Web/uams-statamic-archive#3197).
@@ -33,8 +35,8 @@ covers(MergeController::class, MergePeople::class, PeopleMergeService::class);
  * A scoped user who holds `merge people entries` may open, preview and commit a
  * merge only when every entry in it is in their scope, and only when the merged
  * survivor stays in it, and is offered the merge action only on entries in scope.
- * Administrators are unaffected. The duplicate-people widget's own scoping moves with the
- * duplicate detection (UAMS-Web/aether-people#86).
+ * Administrators are unaffected. The duplicate-people widget lists a scoped user only the clusters
+ * whose every member is in scope.
  *
  * The scoped role is the shipped `people_editor` plus a throwaway role carrying
  * the merge permission, since no shipped role holds it; the role and group files
@@ -133,6 +135,30 @@ function scopedMergeRoute(string $name, array $parameters = []): string
     Assert::assertIsString($url);
 
     return $url;
+}
+
+/**
+ * The cluster member ids the widget lists to the signed-in user, sorted per cluster.
+ *
+ * @return list<list<string>>
+ */
+function scopedMergeWidgetClusters(): array
+{
+    $view = (new DuplicatePeople)->html();
+    Assert::assertInstanceOf(View::class, $view);
+
+    /** @var list<array{member_ids: list<string>}> $clusters */
+    $clusters = $view->getData()['clusters'];
+
+    $members = array_map(function (array $cluster): array {
+        $ids = $cluster['member_ids'];
+        sort($ids);
+
+        return $ids;
+    }, $clusters);
+    sort($members);
+
+    return $members;
 }
 
 beforeEach(function (): void {
@@ -362,6 +388,22 @@ it('lets a user the scope cannot be checked for merge once they hold the permiss
     };
 
     expect($action->authorize($user, Entry::find('chekov')))->toBeTrue();
+});
+
+it('lists to a scoped user only the duplicate clusters whose every member is in scope', function (): void {
+    // A third cluster mixes an in-scope and an out-of-scope member
+    scopedMergePerson('spock', ['service_line' => [SCOPED_MERGE_ORG_IN], 'npi' => '1000000003']);
+    scopedMergePerson('kirk', ['service_line' => [SCOPED_MERGE_ORG_OUT], 'npi' => '1000000003']);
+
+    test()->actingAs(scopedMergeAdministrator());
+    $administratorClusters = scopedMergeWidgetClusters();
+
+    // A fresh request with the scan cached, so both viewers read the same rows
+    test()->actingAs(scopedMergeEditor());
+    $scopedClusters = scopedMergeWidgetClusters();
+
+    expect($administratorClusters)->toBe([['chekov', 'pavel'], ['kirk', 'spock'], ['nyota', 'uhura']])
+        ->and($scopedClusters)->toBe([['nyota', 'uhura']]);
 });
 
 it('offers the merge action to a scoped user only on entries in scope', function (): void {
