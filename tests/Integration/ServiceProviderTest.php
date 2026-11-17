@@ -162,8 +162,9 @@ it('registers the gender override widget', function (): void {
     expect($widgets->get('workday_gender_overrides'))->toBe(WorkdayGenderOverrides::class);
 });
 
-it('boots the editing scope and Workday registrars', function (): void {
+it('boots the editing scope, Workday and people merge registrars', function (): void {
     // The registrars' own tests cover what each registers; here the provider's call to each shows as its effect
     expect(Validator::make(['organization' => 'org-none'], ['organization' => 'not_top_level_organization'])->passes())->toBeTrue()
-        ->and(cp_route('people-workday-gender.confirm', ['id' => 'x']))->toEndWith('/people/workday-gender/x/confirm');
+        ->and(cp_route('people-workday-gender.confirm', ['id' => 'x']))->toEndWith('/people/workday-gender/x/confirm')
+        ->and(cp_route('people-merge.show'))->toEndWith('/people/merge');
 });

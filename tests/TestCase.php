@@ -9,7 +9,6 @@ use Statamic\Testing\AddonTestCase;
 use UAMSWeb\Aether\People\Contracts\EntryReferenceRepointer;
 use UAMSWeb\Aether\People\Contracts\LocationRegions;
 use UAMSWeb\Aether\People\Contracts\PublicationCitations;
-use UAMSWeb\Aether\People\Merge\PeopleMergeRegistrar;
 use UAMSWeb\Aether\People\ServiceProvider;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
@@ -90,12 +89,5 @@ abstract class TestCase extends AddonTestCase
         $app->singleton(LocationRegions::class, fn (): LocationRegions => HostFakes::locationRegions());
         $app->singleton(PublicationCitations::class, fn (): PublicationCitations => HostFakes::publicationCitations());
         $app->singleton(EntryReferenceRepointer::class, fn (): EntryReferenceRepointer => HostFakes::entryReferenceRepointer());
-
-        // The people merge's permission and routes are registered here for now: the service
-        // provider's call to its registrar lands in a follow-up pull request, so without this the
-        // merge tests have no routes to request. Remove it when that call is in the provider.
-        $app->booted(static function () use ($app): void {
-            $app->make(PeopleMergeRegistrar::class)->register();
-        });
     }
 }
