@@ -36,7 +36,7 @@
 	subtitle through `class.fad-custom-post.php`, which short-circuits to the literal
 	"Resident Physician" when `physician_resident` is set and never consults the
 	specialization. Our blueprint agrees - `clinical_specializations` is gated
-	`resident_query: 'not true'`, so a resident has no specialization to resolve and
+	`trainee_type` not being `resident`, so a resident has no specialization to resolve and
 	`clinical_title` would be '' anyway; the override supplies the title WordPress
 	shows instead of falling through to the employment title.
 
@@ -45,7 +45,7 @@
 	falling back to `job_title`: WordPress printed an empty subtitle there, never the
 	employment title. That supersedes UAMS-Web/uams-statamic-archive#1680's fallback for this lens only.
 #}}
-{{ if resident_query:value === true }}
+{{ if trainee_type:value === 'resident' }}
 	{{ partial:people/components/identity_header lens="provider" :identity_name="display_name_full_with_clinical_credentials.text" subtitle="Resident Physician" }}
 {{ else }}
 	{{ partial:people/components/identity_header lens="provider" :identity_name="display_name_full_with_clinical_credentials.text" :subtitle="clinical_title" subtitle_only="true" }}

@@ -127,8 +127,7 @@ function fadApiBaseFields(): array
         'uams_worker_query' => true,
         'uams_worker_subtype' => 'employee',
         'uams_employee_subtype' => 'regular',
-        'resident_query' => false,
-        'fellow_query' => false,
+        'trainee_type' => 'none',
         'clinical_role_query' => true,
         'direct_patient_care_query' => true,
         'clinical_locations' => [fadApiLocationId()],
@@ -192,7 +191,7 @@ function fadApiCast(): void
         'gender' => 'Male',
     ]);
 
-    fadApiPerson('prov-chekov', 'pavel-chekov', 'Pavel', 'Chekov', ['resident_query' => true]);
+    fadApiPerson('prov-chekov', 'pavel-chekov', 'Pavel', 'Chekov', ['trainee_type' => 'resident']);
 
     fadApiPerson('prov-sulu', 'hikaru-sulu', 'Hikaru', 'Sulu', [
         'clinical_separated_query' => true,

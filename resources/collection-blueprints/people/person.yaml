@@ -170,25 +170,25 @@ tabs:
                       - 'unique_identifier:people,{id},uams_workday_id.workday_universal_id,uams_workday_id.workday_employee_id,uams_workday_id.workday_contingent_worker_id,uams_workday_id.workday_student_id'
                     localizable: false
           -
-            handle: resident_query
-            field: uamsweb_common.true_false
-            config:
-              display: 'Is the person a medical resident?'
+            handle: trainee_type
+            field:
+              type: select
+              display: 'Is the person a medical trainee?'
+              instructions: 'A resident or a fellow is a trainee. Choose "Not a trainee" for everyone else.'
+              clearable: false
+              options:
+                -
+                  key: none
+                  value: 'Not a trainee'
+                -
+                  key: resident
+                  value: 'Medical resident'
+                -
+                  key: fellow
+                  value: 'Medical fellow'
               localizable: false
               if:
                 uams_worker_query: 'equals true'
-              validate:
-                - 'required_unless:clinical_separated_query,true'
-                - sometimes
-          -
-            handle: fellow_query
-            field: uamsweb_common.true_false
-            config:
-              display: 'Is the person a medical fellow?'
-              localizable: false
-              if:
-                uams_worker_query: 'equals true'
-                resident_query: 'equals false'
               validate:
                 - 'required_unless:clinical_separated_query,true'
                 - sometimes
@@ -396,9 +396,8 @@ tabs:
               validate:
                 - sometimes
                 - required
-              if_any:
-                resident_query: 'equals true'
-                fellow_query: 'equals true'
+              if:
+                trainee_type: 'includes_any resident, fellow'
               localizable: false
           -
             handle: hometown_us
@@ -807,7 +806,7 @@ tabs:
               type: entries
               display: 'Academic Department for Current Residency'
               if:
-                resident_query: 'equals true'
+                trainee_type: 'equals resident'
               max_items: 1
               collections:
                 - organizations
@@ -826,7 +825,7 @@ tabs:
                 - 'required_unless:clinical_separated_query,true'
                 - sometimes
               if:
-                resident_query: 'equals true'
+                trainee_type: 'equals resident'
           -
             handle: resident_academic_year
             field:
@@ -838,7 +837,7 @@ tabs:
               taxonomies:
                 - residency_years
               if:
-                resident_query: 'equals true'
+                trainee_type: 'equals resident'
                 resident_chief_query: 'equals false'
               validate:
                 - 'required_unless:clinical_separated_query,true'
@@ -864,7 +863,7 @@ tabs:
               create: false
               max_items: 1
               if:
-                fellow_query: 'equals true'
+                trainee_type: 'equals fellow'
               localizable: false
   institutional_role:
     display: 'Institutional Role'
@@ -1028,8 +1027,9 @@ tabs:
               if:
                 clinical_role_query: 'equals true'
                 direct_patient_care_query: 'equals true'
-                resident_query: 'not true'
-                fellow_query: 'not true'
+                trainee_type:
+                  - 'not resident'
+                  - 'not fellow'
               validate:
                 - 'required_unless:clinical_separated_query,true'
                 - sometimes
@@ -1042,8 +1042,9 @@ tabs:
               if:
                 clinical_role_query: 'equals true'
                 direct_patient_care_query: 'equals true'
-                resident_query: 'not true'
-                fellow_query: 'not true'
+                trainee_type:
+                  - 'not resident'
+                  - 'not fellow'
               validate:
                 - 'required_unless:clinical_separated_query,true'
                 - sometimes

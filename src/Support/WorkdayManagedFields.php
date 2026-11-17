@@ -54,16 +54,15 @@ final class WorkdayManagedFields
     ];
 
     /**
-     * Trainee status fields, Workday's only when the entry's provenance list
-     * names them.
+     * The trainee-type field, Workday's only when the entry's provenance list
+     * names it.
      *
      * @var list<string>
      */
-    // Uncovered for the reason given on `ALWAYS_LOCKED`; the same test pins each entry, supplied one at a time.
+    // Uncovered for the reason given on `ALWAYS_LOCKED`; the same test pins the entry, supplied.
     // @pest-mutate-ignore: RemoveArrayItem
     public const array LOCKED_WHEN_SUPPLIED = [
-        'resident_query',
-        'fellow_query',
+        TraineeType::FIELD,
     ];
 
     public function __construct(
@@ -182,11 +181,10 @@ final class WorkdayManagedFields
             return [];
         }
 
-        // The caller spreads the result, which renumbers keys, so a filtered array with gaps behaves the same.
-        // @pest-mutate-ignore: UnwrapArrayValues
-        return array_values(array_filter(
+        // One field is locked today, so the filtered array is already a list; a second one needs `array_values()` back.
+        return array_filter(
             self::LOCKED_WHEN_SUPPLIED,
             static fn (string $handle): bool => \in_array($handle, $supplied, true)
-        ));
+        );
     }
 }

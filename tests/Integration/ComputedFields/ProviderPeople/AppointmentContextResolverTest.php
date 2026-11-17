@@ -182,7 +182,7 @@ it('is not eligible when patients are appointed to a resource rather than the pe
 it('is never eligible for a resident, whatever the appointment answers say', function (): void {
     // WordPress forces the section off for residents before reading anything else.
     $context = resolveAppointmentContext([
-        'resident_query' => true,
+        'trainee_type' => 'resident',
         'appointments_query' => true,
         'appointments_individual_query' => true,
     ]);

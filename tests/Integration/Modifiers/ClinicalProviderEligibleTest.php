@@ -73,8 +73,7 @@ function eligibleModifierPerson(string $id, string $title, array $fields = []): 
         'uams_worker_query' => true,
         'uams_worker_subtype' => 'employee',
         'uams_employee_subtype' => 'regular',
-        'resident_query' => false,
-        'fellow_query' => false,
+        'trainee_type' => 'none',
         'clinical_role_query' => true,
         'direct_patient_care_query' => true,
         'clinical_locations' => ['loc-published'],
@@ -130,7 +129,7 @@ it('keeps an eligible, searchable provider', function (): void {
 });
 
 it('drops a person who fails clinical-provider eligibility (a resident)', function (): void {
-    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
 
     expect(eligibleModifierIds([$chekov]))->toBe([]);
 });
@@ -149,7 +148,7 @@ it('drops a person hidden from the provider list (not searchable)', function ():
 
 it('keeps only the eligible, searchable providers from a mixed population, in order', function (): void {
     $mccoy = eligibleModifierPerson('mccoy', 'Leonard McCoy');
-    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
     $sulu = eligibleModifierPerson('sulu', 'Hikaru Sulu', eligibleModifierSeparated());
     $scott = eligibleModifierPerson('scott', 'Montgomery Scott');
 
@@ -165,7 +164,7 @@ it('drops non-entry items without error', function (): void {
 
 it('filters a resolved entry collection to eligible providers', function (): void {
     $mccoy = eligibleModifierPerson('mccoy', 'Leonard McCoy');
-    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
 
     expect(eligibleModifierIds(new Collection([$mccoy, $chekov])))->toBe(['mccoy']);
 });
@@ -174,7 +173,7 @@ it('resolves an unresolved query builder input (the lazy augmented relationship 
     // A live `entries` relationship augments to an UNRESOLVED query builder; call the modifier
     // directly so Antlers does not resolve it first
     $mccoy = eligibleModifierPerson('mccoy', 'Leonard McCoy');
-    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
     $builder = Mockery::mock(EntryQueryBuilder::class);
     $builder->shouldReceive('get')->andReturn(new Collection([$mccoy, $chekov]));
 
@@ -184,14 +183,14 @@ it('resolves an unresolved query builder input (the lazy augmented relationship 
 it('resolves related ids to entries and keeps only the eligible provider', function (): void {
     // Some render contexts pass the relationship as bare entry ids
     eligibleModifierPerson('mccoy', 'Leonard McCoy');
-    eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
 
     expect(eligibleModifierIds(['mccoy', 'chekov']))->toBe(['mccoy']);
 });
 
 it('is registered as the clinical_provider_eligible Antlers modifier', function (): void {
     $mccoy = eligibleModifierPerson('mccoy', 'Leonard McCoy');
-    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['resident_query' => true]);
+    $chekov = eligibleModifierPerson('chekov', 'Pavel Chekov', ['trainee_type' => 'resident']);
 
     $out = (string) Antlers::parse('{{ list | clinical_provider_eligible | count }}', ['list' => [$mccoy, $chekov]], true);
 

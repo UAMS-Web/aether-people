@@ -52,14 +52,14 @@ return [
             'value' => 'regular',
         ],
         [
-            'field' => 'resident_query',
-            'operator' => 'equals',
-            'value' => false,
+            'field' => 'trainee_type',
+            'operator' => 'not_equals',
+            'value' => 'resident',
         ],
         [
-            'field' => 'fellow_query',
-            'operator' => 'equals',
-            'value' => false,
+            'field' => 'trainee_type',
+            'operator' => 'not_equals',
+            'value' => 'fellow',
         ],
         [
             'field' => 'clinical_role_query',

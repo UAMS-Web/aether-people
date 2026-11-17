@@ -141,8 +141,7 @@ function providerLensPerson(string $slug, array $fields = []): Entry
         'uams_worker_query' => true,
         'uams_worker_subtype' => 'employee',
         'uams_employee_subtype' => 'regular',
-        'resident_query' => false,
-        'fellow_query' => false,
+        'trainee_type' => 'none',
         'clinical_role_query' => true,
         'direct_patient_care_query' => true,
         'credentials' => ['md'],
@@ -196,7 +195,7 @@ it('renders an eligible provider through the clinical lens template', function (
 });
 
 it('404s the clinical lens for an ineligible person', function (): void {
-    providerLensPerson('pavel-chekov', ['resident_query' => true]);
+    providerLensPerson('pavel-chekov', ['trainee_type' => 'resident']);
 
     $this->get('/health/provider/pavel-chekov')->assertNotFound();
 });

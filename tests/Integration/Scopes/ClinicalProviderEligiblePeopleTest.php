@@ -55,8 +55,7 @@ function makeScopePerson(string $id, array $fields = []): Entry
         'uams_worker_query' => true,
         'uams_worker_subtype' => 'employee',
         'uams_employee_subtype' => 'regular',
-        'resident_query' => false,
-        'fellow_query' => false,
+        'trainee_type' => 'none',
         'clinical_role_query' => true,
         'direct_patient_care_query' => true,
         'clinical_locations' => ['loc-published'],
@@ -105,7 +104,7 @@ function scopedPeopleIds(array $people): array
 }
 
 it('offers only clinical-provider-eligible people in the picker query', function (): void {
-    $people = [makeScopePerson('mccoy'), makeScopePerson('chekov', ['resident_query' => true])];
+    $people = [makeScopePerson('mccoy'), makeScopePerson('chekov', ['trainee_type' => 'resident'])];
 
     expect(scopedPeopleIds($people))->toBe(['mccoy']);
 });
@@ -113,8 +112,8 @@ it('offers only clinical-provider-eligible people in the picker query', function
 it('keeps only the eligible people from a mixed population', function (): void {
     $people = [
         makeScopePerson('mccoy'),
-        makeScopePerson('chekov', ['resident_query' => true]),
-        makeScopePerson('crusher', ['fellow_query' => true]),
+        makeScopePerson('chekov', ['trainee_type' => 'resident']),
+        makeScopePerson('crusher', ['trainee_type' => 'fellow']),
         makeScopePerson('scott'),
     ];
 
@@ -137,7 +136,7 @@ it('still offers an actively-separated eligible provider (eligibility only, not 
 it('constrains the query to nothing when no person is eligible', function (): void {
     // An empty eligible set is still passed to `whereIn`, so the picker is constrained to
     // nothing rather than left unconstrained
-    $people = [makeScopePerson('chekov', ['resident_query' => true]), makeScopePerson('crusher', ['fellow_query' => true])];
+    $people = [makeScopePerson('chekov', ['trainee_type' => 'resident']), makeScopePerson('crusher', ['trainee_type' => 'fellow'])];
 
     expect(scopedPeopleIds($people))->toBe([]);
 });

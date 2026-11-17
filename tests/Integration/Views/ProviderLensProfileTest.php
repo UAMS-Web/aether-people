@@ -100,7 +100,7 @@ it('shows the regulatory-designation name rather than the full credentials name'
         ->not->toContain('Non-Clinical');
 })->with([
     'a provider' => [[]],
-    'a resident' => [['resident_query' => new LabeledValue(true, 'Yes')]],
+    'a resident' => [['trainee_type' => new LabeledValue('resident', 'Medical resident')]],
 ]);
 
 it('strip_tags-escapes the clinical name', function (): void {
@@ -709,10 +709,10 @@ it('renders no subtitle at all when a provider has neither title', function (): 
 it('substitutes the resident title for the specialization, as WordPress does', function (): void {
     // Parity with `class.fad-custom-post.php`, which short-circuits to the literal
     // "Resident Physician" when `physician_resident` is set and never consults the
-    // specialization. `resident_query` is a `true_false`, so it augments to a
-    // LabeledValue - a raw-bool fixture would pass against an inert template.
+    // specialization. `trainee_type` is a `select`, so it augments to a
+    // LabeledValue - a raw-string fixture would pass against an inert template.
     $html = renderProviderLensBody(providerIdentityScope() + [
-        'resident_query' => new LabeledValue(true, 'Yes'),
+        'trainee_type' => new LabeledValue('resident', 'Medical resident'),
         'job_title' => 'Chief Medical Officer',
         'clinical_title' => 'Orthopaedic Surgery',
     ]);
@@ -724,7 +724,7 @@ it('substitutes the resident title for the specialization, as WordPress does', f
 
 it('leaves the clinical title in place for a non-resident answering the question', function (): void {
     $html = renderProviderLensBody(providerIdentityScope() + [
-        'resident_query' => new LabeledValue(false, 'No'),
+        'trainee_type' => new LabeledValue('none', 'Not a trainee'),
         'clinical_title' => 'Orthopaedic Surgery',
     ]);
 
