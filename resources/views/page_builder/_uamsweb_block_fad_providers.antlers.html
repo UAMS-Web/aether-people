@@ -76,6 +76,7 @@
 							fad_filter_collection="clinical_providers"
 							fad_filter_title_plural="Providers"
 							fad_filter_namespace="{{ $fad_namespace }}"
+							:fad_filter_title_ids="items | clinical_titles_carried"
 						}}
 						<div class="card-list-container">
 							<div class="card-list card-list-doctors">

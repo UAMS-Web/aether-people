@@ -147,14 +147,17 @@
 					<label class="sr-only" for="{{ $fad_id_prefix }}provider_title">Clinical Title</label>
 					<select name="{{ $fad_id_prefix }}provider_title" id="{{ $fad_id_prefix }}provider_title" class="form-control" data-fad-facet="specialty" x-model="filters.specialty">
 						<option value="">Any Clinical Title</option>
-						{{# Options are the Clinical Specialization entries (archive-parity slugs),
-						    read from `default`, the one site the collection lives on (UAMS-Web/uams-statamic-archive#2605), so the
+						{{# Options are the Clinical Specialization entries (archive-parity slugs) the block's own providers
+						    carry (`fad_filter_title_ids`, UAMS-Web/aether-people#119), so a title no listed provider
+						    carries is not offered, with or without JavaScript. They are read from `default`, the one site the collection lives on (UAMS-Web/uams-statamic-archive#2605), so the
 						    options are the same on every site. The label uses the entry title; the card's visible subtitle is the
 						    patient-facing `clinical_title` (ClinicalTitleResolver), which may read
-						    differently, but the facet matches on slug. The engine prunes unused options. #}}
-						{{ collection:clinical_specializations site="default" sort="title:asc" }}
+						    differently, but the facet matches on slug. The engine still prunes options no rendered card carries. #}}
+						{{ if fad_filter_title_ids }}
+						{{ collection:clinical_specializations site="default" sort="title:asc" :id:in="fad_filter_title_ids" }}
 							<option value="{{ slug }}">{{ title | sanitize }}</option>
 						{{ /collection:clinical_specializations }}
+						{{ /if }}
 					</select>
 				</div>
 			{{ /if }}
