@@ -8,7 +8,9 @@ use Illuminate\Foundation\Application;
 use Statamic\Testing\AddonTestCase;
 use UAMSWeb\Aether\People\Contracts\EntryReferenceRepointer;
 use UAMSWeb\Aether\People\Contracts\LocationRegions;
+use UAMSWeb\Aether\People\Contracts\MergeRedirectWriter;
 use UAMSWeb\Aether\People\Contracts\PublicationCitations;
+use UAMSWeb\Aether\People\Merge\RedirectsGlobalWriter;
 use UAMSWeb\Aether\People\ServiceProvider;
 use UAMSWeb\Aether\People\Tests\Support\HostFakes;
 
@@ -89,5 +91,6 @@ abstract class TestCase extends AddonTestCase
         $app->singleton(LocationRegions::class, fn (): LocationRegions => HostFakes::locationRegions());
         $app->singleton(PublicationCitations::class, fn (): PublicationCitations => HostFakes::publicationCitations());
         $app->singleton(EntryReferenceRepointer::class, fn (): EntryReferenceRepointer => HostFakes::entryReferenceRepointer());
+        $app->singleton(MergeRedirectWriter::class, fn (): MergeRedirectWriter => new RedirectsGlobalWriter);
     }
 }
