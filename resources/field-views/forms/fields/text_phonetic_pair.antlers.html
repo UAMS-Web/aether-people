@@ -1,0 +1,68 @@
+{{# TextPhoneticPair fieldtype (UAMSWeb\Aether\People\Fieldtypes\TextPhoneticPair): a
+    paired text + IPA-phonetic input (UAMS-Web/aether-people#123). Submitted as `{handle}[text]` and
+    `{handle}[phonetic_text]`. Blueprint config controls the per-input labels,
+    requirement, and whether the IPA helper alert renders.
+
+    Server-side validation in TextPhoneticPair::extraRules() enforces the
+    require_text / require_phonetic flags (and "international_phonetic_alphabet"
+    rule on the phonetic side). #}}
+<div class="text-phonetic-pair">
+	{{# `???` keeps a literal `false` instead of falling through to the default,
+		unlike `??`. See person_name.antlers.html for the same workaround. #}}
+	{{ if include_phonetic_instructions ??? true }}
+		<div class="alert alert-info small mb-2" role="note">
+			{{ trans key="The phonetic text uses the International Phonetic Alphabet (IPA)." }}
+		</div>
+	{{ /if }}
+
+	<div class="form-group mb-2">
+		{{ if text_label }}
+			<label for="{{ id }}-text" class="small text-muted mb-1">{{ text_label }}</label>
+		{{ /if }}
+		<input
+			type="text"
+			id="{{ id }}-text"
+			class="{{
+				[
+					'form-control' => true,
+					'is-invalid' => error
+				] | classes | collapse_whitespace
+			}}"
+			name="{{ handle }}[text]"
+			value="{{ value.text | sanitize }}"
+			{{# js_attributes omitted for composite subfields: see the host's name.antlers.html. #}}
+			{{ ( ( validate | contains:required ) || require_text ) | attribute:required }}
+			{{# `visibility: read_only`: see the host's forms/fields README. #}}
+			{{ if visibility == 'read_only' }}
+				readonly
+				aria-readonly="true"
+			{{ /if }}
+		>
+	</div>
+
+	<div class="form-group mb-0">
+		{{ if phonetic_label }}
+			<label for="{{ id }}-phonetic" class="small text-muted mb-1">{{ phonetic_label }}</label>
+		{{ /if }}
+		<input
+			type="text"
+			id="{{ id }}-phonetic"
+			class="{{
+				[
+					'form-control' => true,
+					'is-invalid' => error
+				] | classes | collapse_whitespace
+			}}"
+			name="{{ handle }}[phonetic_text]"
+			value="{{ value.phonetic_text | sanitize }}"
+			lang="ipa"
+			{{# js_attributes omitted for composite subfields: see the host's name.antlers.html. #}}
+			{{ require_phonetic | attribute:required }}
+			{{# `visibility: read_only`: see the host's forms/fields README. #}}
+			{{ if visibility == 'read_only' }}
+				readonly
+				aria-readonly="true"
+			{{ /if }}
+		>
+	</div>
+</div>

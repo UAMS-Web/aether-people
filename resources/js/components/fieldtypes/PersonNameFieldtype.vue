@@ -176,11 +176,13 @@
 /**
  * The Control Panel editor for the `person_name` fieldtype.
  *
- * `group-fieldtype-shell`, `text-phonetic-pair` and
- * `phonetic-text-instructions-alert` are not imported here: the host
- * application registers them globally in its own Control Panel bundle, and
- * Vue resolves them by name when this component renders, so the fieldtype
- * needs a host that registers all three.
+ * `text-phonetic-pair` and `phonetic-text-instructions-alert` are the add-on's
+ * own partials, registered on this component under the names the template uses,
+ * so they win over any global component a host registers under the same name
+ * (UAMS-Web/aether-people#123). `group-fieldtype-shell` and the `custom-input`
+ * the partials render are not imported here: the host application registers
+ * them globally in its own Control Panel bundle, and Vue resolves them by name
+ * when this component renders, so the fieldtype needs a host that registers both.
  */
 import { inject } from 'vue';
 import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
@@ -195,7 +197,9 @@ import {
 import { buildDisplayFormatOptions } from './person-name/personNameDisplayFormats.js';
 import PersonNameDisplayFormatSelect from './person-name/PersonNameDisplayFormatSelect.vue';
 import PersonNameGenerationalSuffix from './person-name/PersonNameGenerationalSuffix.vue';
+import PhoneticTextInstructions from './partials/PhoneticTextInstructions.vue';
 import { subfieldId } from './partials/subfieldId.js';
+import TextPhoneticPair from './partials/TextPhoneticPair.vue';
 
 function emptyPersonName() {
 	return {
@@ -220,7 +224,9 @@ export default {
 		PersonNameDisplayFormatSelect,
 		PersonNameGenerationalSuffix,
 		Separator,
-		Switch
+		Switch,
+		'phonetic-text-instructions-alert': PhoneticTextInstructions,
+		'text-phonetic-pair': TextPhoneticPair
 	},
 	mixins: [Fieldtype],
 	setup() {
