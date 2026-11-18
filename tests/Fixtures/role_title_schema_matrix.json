@@ -1,0 +1,4334 @@
+{
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q61061"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q61061"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q61061"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q61061"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#0 role=chancellor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12416358"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: faculty :: emeritus": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: faculty :: emerita": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: faculty :: both": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12416358"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: emeritus": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: emerita": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: both": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12416358"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: emeritus": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: emerita": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: both": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12416358"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: emeritus": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: emerita": [],
+    "#1 role=chancellor hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: both": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2114175"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2114175"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2114175"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2114175"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#2 role=provost hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q723682"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q723682"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q723682"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q723682"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#3 role=dean hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42880144"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: faculty :: emeritus": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: faculty :: emerita": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: faculty :: both": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42880144"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: both": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42880144"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: both": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42880144"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#4 role=dean hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: both": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q124162007"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emeritus": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emerita": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: faculty :: both": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q124162007"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: both": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q124162007"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: both": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q124162007"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#5 role=dean hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: both": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1255921"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1255921"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1255921"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1255921"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#6 role=president hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42178"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: faculty :: emeritus": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: faculty :: emerita": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: faculty :: both": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42178"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: emeritus": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: emerita": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: academic_leadership :: both": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42178"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: emeritus": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: emerita": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: institutional_leadership :: both": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q42178"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: emeritus": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: emerita": [],
+    "#7 role=president hierarchical_modifier=null positional_qualifier=vice :: clinical_leadership :: both": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484876"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484876"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484876"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484876"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#9 role=chief_executive_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623268"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3031.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1211"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4738155",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623268"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3031.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1211"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4738155",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623268"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3031.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1211"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4738155",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623268"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3031.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1211"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4738155",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#10 role=chief_financial_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623279"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1423657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623279"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1423657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623279"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1423657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q623279"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1423657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#11 role=chief_operating_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q10624502"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3121.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1212"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1056396",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q10624502"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3121.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1212"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1056396",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q10624502"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3121.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1212"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1056396",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q10624502"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3121.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1212"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1056396",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#12 role=chief_human_resources_officer|chief_people_and_culture_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2589465"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1473265",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2589465"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1473265",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2589465"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1473265",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2589465"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1473265",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#13 role=chief_information_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5287861"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1417293",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5287861"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1417293",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5287861"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1417293",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5287861"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-3021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1330"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1417293",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#14 role=chief_technology_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q3659898"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2032.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q133080",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q3659898"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2032.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q133080",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q3659898"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2032.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q133080",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q3659898"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2032.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q133080",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#15 role=chief_communications_officer|public_relations_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1072339"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1143466",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1072339"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1143466",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1072339"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1143466",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1072339"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00",
+                    "11-2021.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1222"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1143466",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#16 role=chief_marketing_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5097093"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1213"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q376657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5097093"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1213"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q376657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5097093"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1213"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q376657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5097093"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120",
+                    "1213"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q376657",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#17 role=chief_strategy_officer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q564612"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "23-1011.00",
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12586741",
+                "https://www.wikidata.org/wiki/Q7748",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q564612"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "23-1011.00",
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12586741",
+                "https://www.wikidata.org/wiki/Q7748",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q564612"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "23-1011.00",
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12586741",
+                "https://www.wikidata.org/wiki/Q7748",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q564612"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "23-1011.00",
+                    "11-1011.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q12586741",
+                "https://www.wikidata.org/wiki/Q7748",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#18 role=chief_legal_counsel|chief_legal_officer|general_counsel hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503444"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: faculty :: emeritus": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: faculty :: emerita": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: faculty :: both": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503444"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: academic_leadership :: emeritus": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: academic_leadership :: emerita": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: academic_leadership :: both": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503444"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: institutional_leadership :: emeritus": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: institutional_leadership :: emerita": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: institutional_leadership :: both": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503444"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: clinical_leadership :: emeritus": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: clinical_leadership :: emerita": [],
+    "#19 role=chancellor hierarchical_modifier=associate positional_qualifier=vice :: clinical_leadership :: both": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503454"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: faculty :: emeritus": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: faculty :: emerita": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: faculty :: both": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503454"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: academic_leadership :: emeritus": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: academic_leadership :: emerita": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: academic_leadership :: both": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503454"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: institutional_leadership :: emeritus": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: institutional_leadership :: emerita": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: institutional_leadership :: both": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q139503454"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: clinical_leadership :: emeritus": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: clinical_leadership :: emerita": [],
+    "#20 role=chancellor hierarchical_modifier=assistant positional_qualifier=vice :: clinical_leadership :: both": [],
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#21 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q121594",
+                "https://www.wikidata.org/wiki/Q25339110"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#22 role=professor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1240569"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#24 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q9344260"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#25 role=professor hierarchical_modifier=associate positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q105099669"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#27 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: faculty :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: academic_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: institutional_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q5669847"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emeritus": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: emerita": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#28 role=professor hierarchical_modifier=assistant positional_qualifier=null :: clinical_leadership :: both": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q131390797"
+            ],
+            "category_code": []
+        },
+        "occupational_field": []
+    },
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q64760507"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q64760507"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q64760507"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q64760507"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#30 role=instructor hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1569495"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1569495"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1569495"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1569495"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "25-1071.00"
+                ],
+                "isco_08": [
+                    "2310"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q352842"
+            ],
+            "category_code": []
+        }
+    },
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#32 role=lecturer hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: faculty :: emeritus": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: faculty :: emerita": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: faculty :: both": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: academic_leadership :: emeritus": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: academic_leadership :: emerita": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: academic_leadership :: both": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: institutional_leadership :: emeritus": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: institutional_leadership :: emerita": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: institutional_leadership :: both": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: clinical_leadership :: emeritus": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: clinical_leadership :: emerita": [],
+    "#35 role=director hierarchical_modifier=null positional_qualifier=null object=null :: clinical_leadership :: both": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: faculty :: emeritus": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: faculty :: emerita": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: faculty :: both": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: academic_leadership :: emeritus": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: academic_leadership :: emerita": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: academic_leadership :: both": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: institutional_leadership :: emeritus": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: institutional_leadership :: emerita": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: institutional_leadership :: both": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: clinical_leadership :: emeritus": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: clinical_leadership :: emerita": [],
+    "#36 role=director hierarchical_modifier=associate positional_qualifier=null object=null :: clinical_leadership :: both": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: faculty :: emeritus": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: faculty :: emerita": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: faculty :: both": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: academic_leadership :: emeritus": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: academic_leadership :: emerita": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: academic_leadership :: both": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: institutional_leadership :: emeritus": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: institutional_leadership :: emerita": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: institutional_leadership :: both": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: clinical_leadership :: emeritus": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: clinical_leadership :: emerita": [],
+    "#37 role=director hierarchical_modifier=assistant positional_qualifier=null object=null :: clinical_leadership :: both": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emeritus": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emerita": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: both": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emeritus": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emerita": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: both": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emeritus": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emerita": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: both": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1162163"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emeritus": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emerita": [],
+    "#38 role=director hierarchical_modifier=null positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: both": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emeritus": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emerita": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: both": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emeritus": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emerita": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: both": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emeritus": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emerita": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: both": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q20155512"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emeritus": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emerita": [],
+    "#39 role=director hierarchical_modifier=associate positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: both": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emeritus": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: emerita": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: faculty :: both": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emeritus": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: emerita": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: academic_leadership :: both": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emeritus": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: emerita": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: institutional_leadership :: both": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q136323334"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q484275",
+                "https://www.wikidata.org/wiki/Q2920921"
+            ],
+            "category_code": []
+        }
+    },
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emeritus": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: emerita": [],
+    "#40 role=director hierarchical_modifier=assistant positional_qualifier=null object=fellowship_program|residency_program|medical_student_clerkship|training :: clinical_leadership :: both": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q140686"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: faculty :: emeritus": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: faculty :: emerita": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: faculty :: both": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q140686"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: academic_leadership :: emeritus": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: academic_leadership :: emerita": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: academic_leadership :: both": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q140686"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: institutional_leadership :: emeritus": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: institutional_leadership :: emerita": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: institutional_leadership :: both": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q140686"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: clinical_leadership :: emeritus": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: clinical_leadership :: emerita": [],
+    "#41 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=null object=department :: clinical_leadership :: both": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1127270"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: faculty :: emeritus": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: faculty :: emerita": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: faculty :: both": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1127270"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: academic_leadership :: emeritus": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: academic_leadership :: emerita": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: academic_leadership :: both": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1127270"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: institutional_leadership :: emeritus": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: institutional_leadership :: emerita": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: institutional_leadership :: both": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q1127270"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-9033.00"
+                ],
+                "isco_08": [
+                    "1345"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q4671162",
+                "https://www.wikidata.org/wiki/Q484275"
+            ],
+            "category_code": []
+        }
+    },
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: clinical_leadership :: emeritus": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: clinical_leadership :: emerita": [],
+    "#42 role=chair|chairperson|chairman|chairwoman hierarchical_modifier=null positional_qualifier=vice|deputy object=department :: clinical_leadership :: both": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: faculty :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q112119463"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2920921",
+                "https://www.wikidata.org/wiki/Q376657"
+            ],
+            "category_code": []
+        }
+    },
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: faculty :: emeritus": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: faculty :: emerita": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: faculty :: both": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q112119463"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2920921",
+                "https://www.wikidata.org/wiki/Q376657"
+            ],
+            "category_code": []
+        }
+    },
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emeritus": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: emerita": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: academic_leadership :: both": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q112119463"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2920921",
+                "https://www.wikidata.org/wiki/Q376657"
+            ],
+            "category_code": []
+        }
+    },
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emeritus": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: emerita": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: institutional_leadership :: both": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: none": {
+        "occupation": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q112119463"
+            ],
+            "category_code": {
+                "onet_soc": [
+                    "11-1021.00"
+                ],
+                "isco_08": [
+                    "1120"
+                ]
+            }
+        },
+        "occupational_field": {
+            "same_as": [
+                "https://www.wikidata.org/wiki/Q2920921",
+                "https://www.wikidata.org/wiki/Q376657"
+            ],
+            "category_code": []
+        }
+    },
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emeritus": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: emerita": [],
+    "#43 role=chief_of_staff hierarchical_modifier=null positional_qualifier=null :: clinical_leadership :: both": []
+}

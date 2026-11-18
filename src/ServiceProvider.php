@@ -99,6 +99,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/clinical_provider_profile.php', 'clinical_provider_profile');
         $this->mergeConfigFrom(__DIR__.'/../config/researcher_profile.php', 'researcher_profile');
         $this->mergeConfigFrom(__DIR__.'/../config/find_a_doc_api.php', 'find_a_doc_api');
+        $this->mergeConfigFrom(__DIR__.'/../config/role_title.php', 'role_title');
 
         // Limit `people` entries to the organizations of the user's groups (UAMS-Web/uams-statamic-archive#3182)
         $this->app->bind(EntryPolicy::class, ScopedEntryPolicy::class);
@@ -123,6 +124,9 @@ class ServiceProvider extends AddonServiceProvider
      */
     public function bootAddon(): void
     {
+        // Let a host copy the `role_title` definition into its own `config/` to override it
+        $this->publishes([__DIR__.'/../config/role_title.php' => config_path('role_title.php')], 'aether-people-role-title-config');
+
         // Serve the people blueprints as the collections' own, with their handles unchanged
         foreach (self::COLLECTION_BLUEPRINT_DIRECTORIES as $collection) {
             Blueprint::addNamespace("collections.{$collection}", self::collectionBlueprintPath($collection));
