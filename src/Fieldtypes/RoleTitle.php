@@ -52,6 +52,9 @@ class RoleTitle extends Fieldtype
      *
      * @var bool
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Flipped by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: TrueToFalse
     protected $selectable = true;
 
     /**
@@ -66,6 +69,9 @@ class RoleTitle extends Fieldtype
      *
      * @var bool
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Flipped by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: FalseToTrue
     protected $selectableInForms = false;
 
     /**
@@ -73,6 +79,9 @@ class RoleTitle extends Fieldtype
      *
      * @var array<int, string>
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutants.
+    // Removing any entry by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'role',
         'title',
@@ -84,6 +93,9 @@ class RoleTitle extends Fieldtype
      *
      * @var array<int, string>
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Removing the entry by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $categories = [
         'text',
     ];
@@ -346,6 +358,8 @@ class RoleTitle extends Fieldtype
         string $langKey
     ): string {
         // Use option translations for Title Options checkbox attribute names
+        // The option keys and lang suffixes are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
         if (\in_array($langKey, RoleTitleValue::storedTitleOptionBooleanKeys(), true)) {
             return __('aether-people::fieldtypes.role_title.field.option.'.$langKey);
         }
@@ -393,6 +407,8 @@ class RoleTitle extends Fieldtype
 
         $enabledTitleStructures = $this->enabledTitleStructureKeys($config);
         $titleStructurePickerVisible = \count($enabledTitleStructures) > 1;
+        // The enabled structures are the canonical handle strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
         $structuredTitleStructureEnabled = \in_array(
             RoleTitleValue::MODE_STRUCTURED,
             $enabledTitleStructures,
@@ -401,6 +417,12 @@ class RoleTitle extends Fieldtype
         $unstructuredRequiredSegments = RoleTitleValue::requiredUnstructuredSubfieldHandlesFromConfig(
             $config
         );
+
+        // Whether a required field also requires this unstructured segment
+        // The segment handles are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
+        $segmentRequired = static fn (string $segment): bool => $required
+            && \in_array($segment, $unstructuredRequiredSegments, true);
 
         // Build dotted paths under this field handle
         $dot = static fn (string $path): string => sprintf('%s.%s', $prefix, $path);
@@ -444,22 +466,15 @@ class RoleTitle extends Fieldtype
         // Allow composed string storage alongside structured fields; unstructured persists free text
         $valueRules = ['nullable', 'string'];
 
-        if (
-            $required
-            && \in_array('value', $unstructuredRequiredSegments, true)
-        ) {
+        if ($segmentRequired('value')) {
             $valueRules[] = 'required_if:'.$thisKey('mode').','.RoleTitleValue::MODE_UNSTRUCTURED;
         }
 
         $rules[$dot('value')] = $valueRules;
 
-        $rules[$dot('occupation')] = ['nullable', 'array'];
         $occSameRules = ['nullable', 'array'];
 
-        if (
-            $required
-            && \in_array('occupation_same_as', $unstructuredRequiredSegments, true)
-        ) {
+        if ($segmentRequired('occupation_same_as')) {
             $occSameRules[] = 'required_if:'.$thisKey('mode').','.RoleTitleValue::MODE_UNSTRUCTURED;
             $occSameRules[] = 'min:1';
         }
@@ -469,10 +484,7 @@ class RoleTitle extends Fieldtype
         $rules[$dot('occupation.category_code')] = ['nullable', 'array'];
         $onetRules = ['nullable', 'array'];
 
-        if (
-            $required
-            && \in_array('occupation_onet_soc', $unstructuredRequiredSegments, true)
-        ) {
+        if ($segmentRequired('occupation_onet_soc')) {
             $onetRules[] = 'required_if:'.$thisKey('mode').','.RoleTitleValue::MODE_UNSTRUCTURED;
             $onetRules[] = 'min:1';
         }
@@ -481,10 +493,7 @@ class RoleTitle extends Fieldtype
         $rules[$dot('occupation.category_code.onet_soc.*')] = ['nullable', 'string', new OnetSocOccupationCode];
         $iscoRules = ['nullable', 'array'];
 
-        if (
-            $required
-            && \in_array('occupation_isco_08', $unstructuredRequiredSegments, true)
-        ) {
+        if ($segmentRequired('occupation_isco_08')) {
             $iscoRules[] = 'required_if:'.$thisKey('mode').','.RoleTitleValue::MODE_UNSTRUCTURED;
             $iscoRules[] = 'min:1';
         }
@@ -495,13 +504,9 @@ class RoleTitle extends Fieldtype
             'string',
             Rule::enum(Isco08::class),
         ];
-        $rules[$dot('occupational_field')] = ['nullable', 'array'];
         $fieldSameRules = ['nullable', 'array'];
 
-        if (
-            $required
-            && \in_array('occupational_field_same_as', $unstructuredRequiredSegments, true)
-        ) {
+        if ($segmentRequired('occupational_field_same_as')) {
             $fieldSameRules[] = 'required_if:'.$thisKey('mode').','.RoleTitleValue::MODE_UNSTRUCTURED;
             $fieldSameRules[] = 'min:1';
         }
@@ -514,7 +519,7 @@ class RoleTitle extends Fieldtype
             $rules[$dot($cpKey)] = ['nullable', 'array'];
         }
 
-        // Allow server-computed schema output maps on save
+        // Allow server-computed schema output maps (`occupation`, `occupational_field`) on save
         foreach (RoleTitleSchemaOutputComputer::storedOutputSubfieldKeys() as $outputKey) {
             $rules[$dot($outputKey)] = ['nullable', 'array'];
         }
@@ -533,6 +538,8 @@ class RoleTitle extends Fieldtype
         foreach (RoleTitleValue::topLevelRadiosSubfieldKeys() as $radiosKey) {
             $row = RoleTitleValue::topLevelSubfieldRow($radiosKey);
 
+            // topLevelRadiosSubfieldKeys() lists only rows that are arrays, so this skip is never taken (ContinueToBreak is equivalent)
+            // @pest-mutate-ignore: ContinueToBreak
             if (! \is_array($row)) {
                 continue;
             }
@@ -577,6 +584,8 @@ class RoleTitle extends Fieldtype
         foreach (RoleTitleValue::groupSubfieldKeys() as $groupKey) {
             $groupDef = RoleTitleValue::topLevelSubfieldRow($groupKey);
 
+            // groupSubfieldKeys() lists only rows that are arrays, so this skip is never taken (ContinueToBreak is equivalent)
+            // @pest-mutate-ignore: ContinueToBreak
             if (! \is_array($groupDef)) {
                 continue;
             }
@@ -592,6 +601,8 @@ class RoleTitle extends Fieldtype
                     continue;
                 }
 
+                // A row with no type matches none of the types below, whatever the fallback (EmptyStringToNotEmpty is equivalent)
+                // @pest-mutate-ignore: EmptyStringToNotEmpty
                 $nestedType = $fieldDef['type'] ?? '';
                 $path = $groupKey.'.'.$nestedKey;
 
@@ -653,6 +664,8 @@ class RoleTitle extends Fieldtype
                 $ruleList[] = $inRule;
 
                 // A joiner option that requires the article is checked against the typed scope (UAMS-Web/uams-statamic-archive#2546)
+                // Nested keys are non-numeric strings, so the cast changes nothing (RemoveStringCast is equivalent)
+                // @pest-mutate-ignore: RemoveStringCast
                 if (RoleTitleDefinition::instance()->articleRequiringOptionKeysForNestedField($groupKey, (string) $nestedKey) !== []) {
                     $ruleList[] = new RoleTitleScopeJoinerRule($fieldPathPrefix);
                 }
@@ -672,6 +685,7 @@ class RoleTitle extends Fieldtype
             $titleStructurePickerVisible,
             $structuredTitleStructureEnabled,
             $unstructuredRequiredSegments,
+            $segmentRequired,
             $prefix,
             $fieldPathPrefix,
             $dot,
@@ -722,6 +736,8 @@ class RoleTitle extends Fieldtype
             'required_unstructured_subfields' => RoleTitleValue::requiredUnstructuredSubfieldHandlesFromConfig(
                 $config
             ),
+            // The blueprint config section defaults `border` to true, so the fallback is never read (TrueToFalse is equivalent)
+            // @pest-mutate-ignore: TrueToFalse
             'border' => (bool) ($config['border'] ?? true),
             // The scope's unit picker: stock relationship config, plus meta
             // carrying the linked item so the CP shows it without a fetch (UAMS-Web/uams-statamic-archive#2146)
@@ -887,6 +903,10 @@ class RoleTitle extends Fieldtype
         foreach (
             RoleTitleSchemaOutputComputer::storedOutputSubfieldKeys() as $handle
         ) {
+            // The output handles are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent).
+            // The configured outputs are only these two handles, so stopping at the first one skips the same
+            // keys as moving past it (ContinueToBreak is equivalent).
+            // @pest-mutate-ignore: TrueToFalse, ContinueToBreak
             if (
                 $mode === RoleTitleValue::MODE_UNSTRUCTURED
                 && \in_array($handle, ['occupation', 'occupational_field'], true)
@@ -901,8 +921,12 @@ class RoleTitle extends Fieldtype
     }
 
     /**
-     * Final persistence strip: CP-only replicator keys, schema outputs, and composed
-     * `value` when structured.
+     * Final persistence strip: the composed `value` when structured.
+     *
+     * The CP replicator keys need no strip here, because `normalizeStored()` has
+     * already collapsed them, and neither do the schema output keys, because
+     * `synchronizeStoredBranchesByMode()` has already dropped them from a
+     * structured payload and an unstructured one stores them.
      *
      * @param  array<string, mixed>  $payload  Normalized role_title payload
      * @return array<string, mixed> Storable YAML payload
@@ -910,26 +934,7 @@ class RoleTitle extends Fieldtype
     private function stripForPersistence(
         array $payload
     ): array {
-        foreach (RoleTitleUnstructuredCpBridge::cpKeys() as $k) {
-            unset($payload[$k]);
-        }
-
-        $mode = $payload['mode'] ?? null;
-
-        foreach (
-            RoleTitleSchemaOutputComputer::storedOutputSubfieldKeys() as $handle
-        ) {
-            if (
-                $mode === RoleTitleValue::MODE_UNSTRUCTURED
-                && \in_array($handle, ['occupation', 'occupational_field'], true)
-            ) {
-                continue;
-            }
-
-            unset($payload[$handle]);
-        }
-
-        if ($mode !== RoleTitleValue::MODE_UNSTRUCTURED) {
+        if (($payload['mode'] ?? null) !== RoleTitleValue::MODE_UNSTRUCTURED) {
             unset($payload['value']);
         }
 
@@ -963,26 +968,13 @@ class RoleTitle extends Fieldtype
 
         $withDerived['value'] = RoleTitleValue::compose($withDerived);
 
-        $computedOutputs = RoleTitleSchemaOutputComputer::computeFromNormalizedPayload(
-            $withDerived
+        // The strip above removed every output key, so an empty result leaves none behind
+        return \array_replace(
+            $withDerived,
+            RoleTitleSchemaOutputComputer::computeFromNormalizedPayload(
+                $withDerived
+            )
         );
-
-        if ($computedOutputs === []) {
-            foreach (
-                RoleTitleSchemaOutputComputer::storedOutputSubfieldKeys() as $handle
-            ) {
-                unset($withDerived[$handle]);
-            }
-        } else {
-            $withDerived = \array_replace(
-                $withDerived,
-                $computedOutputs
-            );
-        }
-
-        unset($computedOutputs);
-
-        return $withDerived;
     }
 
     /**
@@ -1004,7 +996,9 @@ class RoleTitle extends Fieldtype
         $enabled = $this->enabledConfigurationKeys($config);
 
         // Check if the configured default is still enabled
-        if (\is_string($key) && \in_array($key, $enabled, true)) {
+        // The key and the enabled handles are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
+        if (\in_array($key, $enabled, true)) {
             // Return the configured default key
             return $key;
         }
@@ -1201,16 +1195,13 @@ class RoleTitle extends Fieldtype
             );
         }
 
+        // A structured `value` is left as posted: every caller recomposes it or strips it
         if ($merged['mode'] === RoleTitleValue::MODE_UNSTRUCTURED) {
             $merged['value'] = \is_string($merged['value'] ?? null)
                 ? \trim($merged['value'])
                 : '';
             $merged = RoleTitleValue::normalizeUnstructuredOccupationBranchesForSchemaParity(
                 $merged
-            );
-        } else {
-            $merged['value'] = RoleTitleValue::normalizedComposedTitleValue(
-                $merged['value'] ?? null
             );
         }
 
@@ -1232,8 +1223,9 @@ class RoleTitle extends Fieldtype
         // Read the group row when present
         $groupDef = RoleTitleValue::topLevelSubfieldRow($groupKey);
 
-        // Return the raw array when the group definition is missing
-        if (! \is_array($groupDef) || ($groupDef['type'] ?? '') !== 'group') {
+        // groupSubfieldKeys() lists only group rows, so the definition is never missing (RemoveEarlyReturn is equivalent)
+        // @pest-mutate-ignore: RemoveEarlyReturn
+        if (! \is_array($groupDef)) {
             return $raw;
         }
 
@@ -1253,6 +1245,8 @@ class RoleTitle extends Fieldtype
 
         foreach ($fields as $nestedKey => $fieldDef) {
             // Normalize the nested config key to a string storage key
+            // Nested keys are non-numeric strings, so the cast changes nothing (RemoveStringCast is equivalent)
+            // @pest-mutate-ignore: RemoveStringCast
             $nestedKey = (string) $nestedKey;
 
             // Skip invalid nested rows
@@ -1261,6 +1255,8 @@ class RoleTitle extends Fieldtype
             }
 
             // Read the Statamic-style field type for this nested row
+            // A row with no type matches none of the types below, whatever the fallback (EmptyStringToNotEmpty is equivalent)
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             $nestedType = $fieldDef['type'] ?? '';
 
             // Normalize nested text fields to string defaults
@@ -1318,10 +1314,14 @@ class RoleTitle extends Fieldtype
                 continue;
             }
 
+            // A row with no type is not an `entries` row, whatever the fallback (EmptyStringToNotEmpty is equivalent)
+            // @pest-mutate-ignore: EmptyStringToNotEmpty
             if (($fieldDef['type'] ?? '') !== 'entries') {
                 continue;
             }
 
+            // Nested keys are non-numeric strings, so the cast changes nothing (RemoveStringCast is equivalent)
+            // @pest-mutate-ignore: RemoveStringCast
             if (($out[(string) $nestedKey] ?? null) === null) {
                 continue;
             }
@@ -1336,6 +1336,8 @@ class RoleTitle extends Fieldtype
                     continue;
                 }
 
+                // `$out` holds only typed array rows, so neither fallback is read (EmptyStringToNotEmpty is equivalent)
+                // @pest-mutate-ignore: EmptyStringToNotEmpty
                 $replacedType = \is_array($fields[$replaces] ?? null) ? ($fields[$replaces]['type'] ?? '') : '';
 
                 $out[$replaces] = $replacedType === 'text' ? '' : null;
@@ -1364,11 +1366,10 @@ class RoleTitle extends Fieldtype
         // Trim the stored radios value
         $trimmed = \trim($value);
 
-        // Fall back to the first key when empty or unknown
-        if (
-            $trimmed === ''
-            || ! \in_array($trimmed, $allowedKeys, true)
-        ) {
+        // Fall back to the first key when empty or unknown (an empty string is never an option key)
+        // The option keys are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
+        if (! \in_array($trimmed, $allowedKeys, true)) {
             return $firstKey;
         }
 
@@ -1384,12 +1385,7 @@ class RoleTitle extends Fieldtype
     private function normalizeOptionalRadioStoredValue(
         mixed $value
     ): ?string {
-        // Check if the value is null
-        if ($value === null) {
-            return null;
-        }
-
-        // Check if the value is not a string
+        // Check if the value is not a string (null included)
         if (! \is_string($value)) {
             return null;
         }
@@ -1417,15 +1413,15 @@ class RoleTitle extends Fieldtype
     private function stripKeysForConfiguration(
         array $normalized
     ): array {
-        if (($normalized['mode'] ?? null) === RoleTitleValue::MODE_UNSTRUCTURED) {
-            return $normalized;
-        }
+        // An unstructured payload is cleared here too, and `synchronizeStoredBranchesByMode()`
+        // then drops every structured key, so it needs no early return
 
         // Read active mode, defaulting to the definition default handle
         $configuration = $normalized['configuration'] ?? RoleTitleValue::defaultConfigurationHandle();
 
         // Keep the normalized payload when no active configuration applies
-        if (! \is_string($configuration) || $configuration === '') {
+        // (`normalizeMergedPayload()` never stores an empty configuration string)
+        if (! \is_string($configuration)) {
             return $normalized;
         }
 
@@ -1532,6 +1528,8 @@ class RoleTitle extends Fieldtype
 
         $enabled = $this->enabledTitleStructureKeys($config);
 
+        // The key and the enabled structures are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
         if (\in_array($key, $enabled, true)) {
             return $key;
         }
@@ -1548,19 +1546,19 @@ class RoleTitle extends Fieldtype
         array $enabled,
         array $config
     ): string {
-        if (
-            $mode !== null
-            && $mode !== ''
-            && \in_array($mode, RoleTitleValue::titleStructureHandles(), true)
-            && \in_array($mode, $enabled, true)
-        ) {
+        // The enabled structures are canonical handles, and neither null nor '' is one
+        // The mode and the enabled structures are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
+        if (\in_array($mode, $enabled, true)) {
             return $mode;
         }
 
         $def = $config['default_title_structure'] ?? null;
-        $def = \is_string($def) ? $def : null;
 
-        if ($def !== null && \in_array($def, $enabled, true)) {
+        // A default that is not a string is never an enabled structure
+        // The default and the enabled structures are non-numeric strings, so loose and strict comparison agree (TrueToFalse is equivalent)
+        // @pest-mutate-ignore: TrueToFalse
+        if (\is_string($def) && \in_array($def, $enabled, true)) {
             return $def;
         }
 

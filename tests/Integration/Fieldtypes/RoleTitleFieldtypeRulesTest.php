@@ -67,7 +67,7 @@ function roleTitleRulesShape(mixed $rule): mixed
  * The fieldtype's nested rules, each rule in its comparable form.
  *
  * @param  array<string, mixed>  $config
- * @return array<string, list<mixed>>
+ * @return array<string, array<int, mixed>>
  */
 function roleTitleRulesMap(array $config): array
 {
@@ -83,7 +83,7 @@ function roleTitleRulesMap(array $config): array
 /**
  * The rule map for an optional field with the default config.
  *
- * @return array<string, list<mixed>>
+ * @return array<string, array<int, mixed>>
  */
 function roleTitleRulesOptionalMap(): array
 {
@@ -93,7 +93,6 @@ function roleTitleRulesOptionalMap(): array
         'rt.mode' => ['nullable', 'string', 'in:"structured","unstructured"'],
         'rt.configuration' => ['nullable', 'string', 'in:"faculty","academic_leadership","institutional_leadership","clinical_leadership"'],
         'rt.value' => ['nullable', 'string'],
-        'rt.occupation' => ['nullable', 'array'],
         'rt.occupation.same_as' => ['nullable', 'array'],
         'rt.occupation.same_as.*' => ['nullable', 'string', 'url'],
         'rt.occupation.category_code' => ['nullable', 'array'],
@@ -101,7 +100,6 @@ function roleTitleRulesOptionalMap(): array
         'rt.occupation.category_code.onet_soc.*' => ['nullable', 'string', ['class' => OnetSocOccupationCode::class]],
         'rt.occupation.category_code.isco_08' => ['nullable', 'array'],
         'rt.occupation.category_code.isco_08.*' => ['nullable', 'string', ['class' => Enum::class, 'type' => Isco08::class, 'validator' => null, 'only' => [], 'except' => []]],
-        'rt.occupational_field' => ['nullable', 'array'],
         'rt.occupational_field.same_as' => ['nullable', 'array'],
         'rt.occupational_field.same_as.*' => ['nullable', 'string', 'url'],
         'rt.occupational_field.category_code' => ['nullable', 'array'],
@@ -109,6 +107,8 @@ function roleTitleRulesOptionalMap(): array
         'rt.__cp_role_title_unstructured_onet_soc' => ['nullable', 'array'],
         'rt.__cp_role_title_unstructured_occ_same_as' => ['nullable', 'array'],
         'rt.__cp_role_title_unstructured_field_same_as' => ['nullable', 'array'],
+        'rt.occupation' => ['nullable', 'array'],
+        'rt.occupational_field' => ['nullable', 'array'],
         'rt.title_options.interim' => ['boolean'],
         'rt.title_options.co_prefix' => ['boolean'],
         'rt.title_options.regional' => ['boolean'],
@@ -133,7 +133,7 @@ function roleTitleRulesOptionalMap(): array
 /**
  * The per-configuration role rule, for a field required or not.
  *
- * @return list<mixed>
+ * @return array<int, mixed>
  */
 function roleTitleRulesRoleRule(bool $required): array
 {
@@ -141,11 +141,12 @@ function roleTitleRulesRoleRule(bool $required): array
 }
 
 it('returns the optional rule map for the default config', function (array $config): void {
-    expect(roleTitleRulesMap($config))->toBe(roleTitleRulesOptionalMap());
+    expect(roleTitleRulesMap(mustBeStringKeyed($config, 'config')))->toBe(roleTitleRulesOptionalMap());
 })->with([
     'default config' => [[]],
     'both structures, optional' => [['enabled_title_structures' => ['structured', 'unstructured']]],
     'a validate string, not a list' => [['validate' => 'required']],
+    'a validate list holding true, not the word' => [['validate' => [true]]],
     'a blank row link' => [['scope_unit_row_link' => '   ']],
     'a row link that is not a string' => [['scope_unit_row_link' => ['department']]],
 ]);
@@ -238,8 +239,7 @@ it('labels each nested validation attribute, using option labels for title optio
 it('returns the blueprint config section with every option, default and condition', function (): void {
     $fieldtype = roleTitleRulesFieldtype();
 
-    /** @var array<int, array<string, mixed>> $items */
-    $items = (fn (): array => $this->configFieldItems())->call($fieldtype);
+    $items = new ReflectionMethod(RoleTitle::class, 'configFieldItems')->invoke($fieldtype);
 
     $structures = [
         'structured' => 'Structured',
