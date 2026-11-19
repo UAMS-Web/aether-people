@@ -143,12 +143,8 @@ final class RoleTitleDefinition
         $raw = \is_array($configurations) ? ($configurations['default'] ?? null) : null;
         $configured = \is_string($raw) && $raw !== '' ? $raw : null;
 
-        // Use the configured default when it is a known handle
-        if (
-            $configured !== null
-            && $handles !== []
-            && \in_array($configured, $handles, true)
-        ) {
+        // Use the configured default when it is a known handle (handles are non-empty strings, so null and an empty list never match)
+        if (\in_array($configured, $handles, true)) {
             return $configured;
         }
 
@@ -219,7 +215,7 @@ final class RoleTitleDefinition
         $row = $this->topLevelSubfieldRow($subfieldKey);
 
         // Reject missing rows or non-radios types
-        if ($row === null || ($row['type'] ?? '') !== 'radios') {
+        if ($row === null || self::fieldType($row) !== 'radios') {
             return false;
         }
 
@@ -260,7 +256,7 @@ final class RoleTitleDefinition
             }
 
             // Keep rows that store checkbox maps
-            if (($def['type'] ?? '') === 'checkboxes') {
+            if (self::fieldType($def) === 'checkboxes') {
                 $out[] = $key;
             }
         }
@@ -293,7 +289,7 @@ final class RoleTitleDefinition
             }
 
             // Keep rows that store radios selections
-            if (($def['type'] ?? '') === 'radios') {
+            if (self::fieldType($def) === 'radios') {
                 $out[] = $key;
             }
         }
@@ -326,7 +322,7 @@ final class RoleTitleDefinition
             }
 
             // Keep rows that store nested group maps
-            if (($def['type'] ?? '') === 'group') {
+            if (self::fieldType($def) === 'group') {
                 $out[] = $key;
             }
         }
@@ -584,7 +580,7 @@ final class RoleTitleDefinition
         array $fieldDef
     ): mixed {
         // Dispatch by Statamic field type for nested and top-level rows
-        return match ($fieldDef['type'] ?? '') {
+        return match (self::fieldType($fieldDef)) {
             'checkboxes' => $this->checkboxDefaultMapFromFieldDefinition(
                 $fieldDef
             ),
@@ -703,7 +699,7 @@ final class RoleTitleDefinition
                 continue;
             }
 
-            if (($def['type'] ?? '') !== 'checkboxes') {
+            if (self::fieldType($def) !== 'checkboxes') {
                 continue;
             }
 
@@ -750,7 +746,7 @@ final class RoleTitleDefinition
             /** @var array<string, mixed> $def */
 
             // Read the Statamic-style field type for this row
-            $type = $def['type'] ?? '';
+            $type = self::fieldType($def);
             // Skip composed line (not stripped by mode) and checkboxes (handled above)
             if ($type === 'composed_line') {
                 continue;
@@ -836,7 +832,7 @@ final class RoleTitleDefinition
         string $subfieldKey,
         array $def
     ): array {
-        $type = $def['type'] ?? '';
+        $type = self::fieldType($def);
 
         // Emit one slot for top-level radios or checkboxes
         if ($type === 'radios' || $type === 'checkboxes') {
@@ -862,7 +858,7 @@ final class RoleTitleDefinition
                     continue;
                 }
 
-                $nestedType = $nestedDef['type'] ?? '';
+                $nestedType = self::fieldType($nestedDef);
 
                 // Skip nested fields that do not expose option maps
                 if ($nestedType !== 'radios' && $nestedType !== 'checkboxes') {
@@ -915,6 +911,8 @@ final class RoleTitleDefinition
 
         // Signal unknown slots when subfields are missing
         if (! \is_array($subfields)) {
+            // Unreachable: both callers pass only slots preloadSlotOrderFromSubfields() read from this same subfields array
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -924,7 +922,7 @@ final class RoleTitleDefinition
                 continue;
             }
 
-            $type = $def['type'] ?? '';
+            $type = self::fieldType($def);
 
             // Match a top-level radios/checkboxes row by declared slot name
             if ($type === 'radios' || $type === 'checkboxes') {
@@ -957,7 +955,7 @@ final class RoleTitleDefinition
                     continue;
                 }
 
-                $nestedType = $nestedDef['type'] ?? '';
+                $nestedType = self::fieldType($nestedDef);
 
                 if ($nestedType !== 'radios' && $nestedType !== 'checkboxes') {
                     continue;
@@ -995,6 +993,8 @@ final class RoleTitleDefinition
 
         // Return null when the group row is missing
         if (! \is_array($groupDef)) {
+            // Equivalent: every read below is a null-safe ?? that ends in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1003,6 +1003,8 @@ final class RoleTitleDefinition
 
         // Return null when nested fields are missing
         if (! \is_array($fields)) {
+            // Equivalent: every read below is a null-safe ?? that ends in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1011,6 +1013,8 @@ final class RoleTitleDefinition
 
         // Return null when the nested field row is missing
         if (! \is_array($nested)) {
+            // Equivalent: every read below is a null-safe ?? that ends in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1019,6 +1023,8 @@ final class RoleTitleDefinition
 
         // Return null when nested options are missing
         if (! \is_array($opts)) {
+            // Equivalent: the null-safe ?? read below ends in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1043,6 +1049,8 @@ final class RoleTitleDefinition
 
         // Treat unknown slots as non-applicable
         if ($loc === null) {
+            // Unreachable: the slot comes with option keys only when resolvePreloadSlotLocation() found it
+            // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
             return false;
         }
 
@@ -1053,6 +1061,8 @@ final class RoleTitleDefinition
 
             // Reject missing top-level definitions
             if ($def === null) {
+                // Unreachable: the location was resolved from this array row
+                // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
                 return false;
             }
 
@@ -1072,6 +1082,8 @@ final class RoleTitleDefinition
 
         // Reject missing group rows
         if (! \is_array($groupDef)) {
+            // Unreachable: the location was resolved from this array group row
+            // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
             return false;
         }
 
@@ -1080,6 +1092,8 @@ final class RoleTitleDefinition
 
         // Reject missing nested field maps
         if (! \is_array($fields)) {
+            // Unreachable: the location was resolved from this array fields map
+            // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
             return false;
         }
 
@@ -1088,6 +1102,8 @@ final class RoleTitleDefinition
 
         // Reject missing nested field rows
         if (! \is_array($nestedDef)) {
+            // Unreachable: the location was resolved from this array nested row
+            // @pest-mutate-ignore: FalseToTrue, RemoveEarlyReturn
             return false;
         }
 
@@ -1259,6 +1275,8 @@ final class RoleTitleDefinition
         // Check if the subfield row is missing
         if (! \is_array($def)) {
             // Signal that the subfield is not configured
+            // Equivalent: the null-safe ?? reads below end in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1268,6 +1286,8 @@ final class RoleTitleDefinition
         // Check if options are missing
         if (! \is_array($opts)) {
             // Signal that this subfield has no options table
+            // Equivalent: the null-safe ?? read below ends in the same null
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return null;
         }
 
@@ -1324,23 +1344,20 @@ final class RoleTitleDefinition
 
         // Treat unknown option keys as inline placement
         if ($row === null) {
+            // Equivalent: the null-safe ?? read below ends in the same inline placement
+            // @pest-mutate-ignore: RemoveEarlyReturn
             return 'inline';
         }
 
         // Read the compose position flag from config
         $position = $row['position'] ?? null;
 
-        // Treat missing or empty position as inline (compose in encountered order)
-        if (! \is_string($position) || $position === '') {
-            return 'inline';
-        }
-
         // Preserve explicit prefix and suffix segments
         if ($position === 'prefix' || $position === 'suffix') {
             return $position;
         }
 
-        // Map any other explicit label to inline placement
+        // Map a missing, empty or any other position to inline placement
         return 'inline';
     }
 
@@ -1377,7 +1394,7 @@ final class RoleTitleDefinition
         // Check if resolving a nested option field inside a group subfield
         if ($fieldWithinGroup !== null) {
             // Check if the parent subfield is a group
-            if (($def['type'] ?? '') !== 'group') {
+            if (self::fieldType($def) !== 'group') {
                 // Return an empty list when nested path is invalid
                 return [];
             }
@@ -1487,7 +1504,7 @@ final class RoleTitleDefinition
         array $fieldDef
     ): array {
         // Check if the field defines an options map for radios or checkboxes
-        $type = $fieldDef['type'] ?? '';
+        $type = self::fieldType($fieldDef);
 
         if ($type !== 'radios' && $type !== 'checkboxes') {
             // Return an empty list when option storage is not configured
@@ -1513,9 +1530,9 @@ final class RoleTitleDefinition
      * Uses `defaultStoredValueForFieldDefinition()` so behavior matches nested
      * `fields` rows: `checkboxes`, `radios`, `text`, and `group` resolve the
      * same way (required radios with null `default` use the first option key).
-     * `checkboxes` and `group` results are normalized to arrays when the row
-     * exists. When the subfield row is missing, returns `null` (v3 config is
-     * expected to define every stored subfield row).
+     * `checkboxes` and `group` rows always resolve to arrays. When the
+     * subfield row is missing, returns `null` (v3 config is expected to
+     * define every stored subfield row).
      *
      * @param  string  $subfieldKey  Key under `subfields`
      * @return mixed `null` for optional radios, checkbox map, group array, or
@@ -1538,36 +1555,7 @@ final class RoleTitleDefinition
         /** @var array<string, mixed> $def */
 
         // Resolve defaults with the same rules as nested blueprint field rows
-        $value = $this->defaultStoredValueForFieldDefinition($def);
-
-        // Coerce structured subfield defaults to an array when the type stores maps
-        return $this->normalizeStructuredSubfieldDefault($def, $value);
-    }
-
-    /**
-     * Ensure `checkboxes` and `group` defaults are always arrays for storage.
-     *
-     * @param  array<string, mixed>  $def  Top-level `subfields` row
-     */
-    private function normalizeStructuredSubfieldDefault(
-        array $def,
-        mixed $value
-    ): mixed {
-        // Check if this subfield stores a map-shaped default
-        $type = $def['type'] ?? '';
-
-        if ($type !== 'checkboxes' && $type !== 'group') {
-            // Return scalar or null defaults unchanged for radios and other fields
-            return $value;
-        }
-
-        // Return the map when the resolved value is already an array
-        if (\is_array($value)) {
-            return $value;
-        }
-
-        // Fall back to an empty map when structured resolution did not yield an array
-        return [];
+        return $this->defaultStoredValueForFieldDefinition($def);
     }
 
     /**
@@ -1618,7 +1606,7 @@ final class RoleTitleDefinition
             }
 
             // Read the subfield storage type
-            $type = $def['type'] ?? '';
+            $type = self::fieldType($def);
 
             // Treat checkbox maps and group maps as merged objects in the CP
             if ($type === 'checkboxes' || $type === 'group') {
@@ -1661,7 +1649,7 @@ final class RoleTitleDefinition
             }
 
             // Read the nested field storage type
-            $nestedType = $fieldDef['type'] ?? '';
+            $nestedType = self::fieldType($fieldDef);
 
             // Render radios, text inputs, and entries links in the CP only
             if (! in_array($nestedType, ['radios', 'text', 'entries'], true)) {
@@ -1748,7 +1736,7 @@ final class RoleTitleDefinition
                 }
 
                 // Read the subfield storage type
-                $type = $def['type'] ?? '';
+                $type = self::fieldType($def);
 
                 // Append supported editor block types only
                 if (
@@ -1806,14 +1794,8 @@ final class RoleTitleDefinition
 
         // Walk each top-level radios subfield from configuration order
         foreach ($this->topLevelRadiosSubfieldKeys() as $subfieldKey) {
-            // Read the radios row when present
-            $row = $this->topLevelSubfieldRow($subfieldKey);
             // Skip rows that are not optional-none radios
-            if ($row === null) {
-                continue;
-            }
-
-            if (($row['allow_optional_none'] ?? false) !== true) {
+            if (($this->topLevelSubfieldRow($subfieldKey)['allow_optional_none'] ?? false) !== true) {
                 continue;
             }
 
@@ -1837,7 +1819,7 @@ final class RoleTitleDefinition
                     continue;
                 }
 
-                if (($fieldDef['type'] ?? '') !== 'radios') {
+                if (self::fieldType($fieldDef) !== 'radios') {
                     continue;
                 }
 
@@ -1912,7 +1894,7 @@ final class RoleTitleDefinition
             /** @var array<string, mixed> $def */
 
             // Read the subfield storage type
-            $type = $def['type'] ?? '';
+            $type = self::fieldType($def);
 
             // Collect labels only for CP-edited scalar groups (not `group` rows)
             if ($type !== 'checkboxes' && $type !== 'radios') {
@@ -1943,19 +1925,8 @@ final class RoleTitleDefinition
 
         // Walk each group subfield from configuration order
         foreach ($this->groupSubfieldKeys() as $groupKey) {
-            // Read the group row when present
-            $group = $this->topLevelSubfieldRow($groupKey);
-            // Skip rows that are not groups
-            if ($group === null) {
-                continue;
-            }
-
-            if (($group['type'] ?? '') !== 'group') {
-                continue;
-            }
-
-            // Read nested fields for this group
-            $fields = $group['fields'] ?? null;
+            // Read nested fields for this group (`groupSubfieldKeys()` lists only group rows)
+            $fields = $this->topLevelSubfieldRow($groupKey)['fields'] ?? null;
 
             // Skip groups without a nested field map
             if (! \is_array($fields)) {
@@ -1972,7 +1943,7 @@ final class RoleTitleDefinition
                 /** @var array<string, mixed> $fieldDef */
 
                 // Read the nested field storage type
-                $nestedType = $fieldDef['type'] ?? '';
+                $nestedType = self::fieldType($fieldDef);
 
                 // Keep only nested field types rendered with a field label
                 if (! in_array($nestedType, ['radios', 'text', 'entries'], true)) {
@@ -2034,7 +2005,7 @@ final class RoleTitleDefinition
                 }
 
                 // Read the subfield storage type
-                $type = $def['type'] ?? '';
+                $type = self::fieldType($def);
 
                 // Map top-level radios to checklist kinds aligned with validation
                 if ($type === 'radios') {
@@ -2077,7 +2048,7 @@ final class RoleTitleDefinition
                     /** @var array<string, mixed> $fieldDef */
 
                     // Keep radios nested fields only
-                    if (($fieldDef['type'] ?? '') !== 'radios') {
+                    if (self::fieldType($fieldDef) !== 'radios') {
                         continue;
                     }
 
@@ -2125,6 +2096,22 @@ final class RoleTitleDefinition
     }
 
     /**
+     * Read a field row's `type` as text, or `''` when it is missing or not a string.
+     *
+     * @param  array<array-key, mixed>  $def  A subfield or nested field row
+     */
+    private static function fieldType(
+        array $def
+    ): string {
+        // Read the declared field type when present
+        $type = $def['type'] ?? null;
+
+        // Equivalent for the '' fallback: every caller compares the type strictly against a field type name, which no other text matches either
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
+        return \is_string($type) ? $type : '';
+    }
+
+    /**
      * Whether a subfield definition applies to a configuration mode.
      *
      * @param  array<string, mixed>  $def
@@ -2164,7 +2151,7 @@ final class RoleTitleDefinition
         // Preserve order and count while typing each entry as a string handle
         $out = [];
 
-        foreach (\array_values($avail) as $entry) {
+        foreach ($avail as $entry) {
             // Coerce scalar handles to string; replace non-scalars with empty
             $out[] = \is_scalar($entry) ? (string) $entry : '';
         }
