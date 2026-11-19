@@ -124,25 +124,21 @@ final class RoleTitleUnstructuredReplicatorSupport
         return [
             'unstructured_replicator_isco_config' => self::configSetsForVue(
                 $iscoCfg,
-                null,
                 'aether-people::fieldtypes.role_title.unstructured.add_row_isco_08'
             ),
             'unstructured_replicator_isco_meta' => self::metaForSets($iscoCfg),
             'unstructured_replicator_onet_config' => self::configSetsForVue(
                 $onetCfg,
-                null,
                 'aether-people::fieldtypes.role_title.unstructured.add_row_onet_soc'
             ),
             'unstructured_replicator_onet_meta' => self::metaForSets($onetCfg),
             'unstructured_replicator_occ_same_as_config' => self::configSetsForVue(
                 $occCfg,
-                null,
                 'aether-people::fieldtypes.role_title.unstructured.add_row_occupation_same_as'
             ),
             'unstructured_replicator_occ_same_as_meta' => self::metaForSets($occCfg),
             'unstructured_replicator_field_same_as_config' => self::configSetsForVue(
                 $fieldCfg,
-                null,
                 'aether-people::fieldtypes.role_title.unstructured.add_row_occupational_field_same_as'
             ),
             'unstructured_replicator_field_same_as_meta' => self::metaForSets($fieldCfg),
@@ -192,17 +188,17 @@ final class RoleTitleUnstructuredReplicatorSupport
 
     /**
      * @param  array<string, mixed>  $setsConfig
-     * @param  string|null  $replicatorInstructions  CP instructions on the replicator (not per set)
-     * @param  string|null  $buttonLabelKey  Statamic translation key for the replicator “Add” button (passed to `__()` in the CP)
+     * @param  string  $buttonLabelKey  Statamic translation key for the replicator “Add” button (passed to `__()` in the CP)
      * @return array<string, mixed>
      */
     private static function configSetsForVue(
         array $setsConfig,
-        ?string $replicatorInstructions = null,
-        ?string $buttonLabelKey = null
+        string $buttonLabelKey
     ): array {
         $main = $setsConfig['main'] ?? null;
 
+        // Unreachable: every caller passes a config wrapMain() built, whose `main` always holds a `sets` array
+        // @pest-mutate-ignore: BooleanOrToBooleanAnd, RemoveArrayItem, RemoveEarlyReturn
         if (! \is_array($main) || ! isset($main['sets']) || ! \is_array($main['sets'])) {
             return ['sets' => []];
         }
@@ -222,6 +218,8 @@ final class RoleTitleUnstructuredReplicatorSupport
                 foreach ($setFields as $field) {
                     $field = \is_array($field) ? $field : [];
                     $nestedField = $field['field'] ?? [];
+                    // Equivalent for the '' fallback: every field this class builds declares its handle
+                    // @pest-mutate-ignore: EmptyStringToNotEmpty
                     $fields[] = [
                         'handle' => $field['handle'] ?? '',
                         ...(\is_array($nestedField) ? $nestedField : []),
@@ -233,6 +231,8 @@ final class RoleTitleUnstructuredReplicatorSupport
             $setsArray[] = ReplicatorVueSet::fromSet($handle, $set, $fields);
         }
 
+        // Equivalent for the fallback: wrapMain() always sets `display` to the same translated `Main`
+        // @pest-mutate-ignore: CoalesceRemoveLeft
         $out = [
             'sets' => [
                 [
@@ -242,19 +242,7 @@ final class RoleTitleUnstructuredReplicatorSupport
             ],
         ];
 
-        if (
-            \is_string($replicatorInstructions)
-            && $replicatorInstructions !== ''
-        ) {
-            $out['instructions'] = $replicatorInstructions;
-        }
-
-        if (
-            \is_string($buttonLabelKey)
-            && $buttonLabelKey !== ''
-        ) {
-            $out['button_label'] = $buttonLabelKey;
-        }
+        $out['button_label'] = $buttonLabelKey;
 
         return $out;
     }
