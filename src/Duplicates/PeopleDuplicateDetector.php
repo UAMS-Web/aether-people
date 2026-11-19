@@ -97,10 +97,14 @@ class PeopleDuplicateDetector
             // Index each non-empty signal value so entries sharing it can be unioned
             foreach ($signals as $slot => $values) {
                 foreach ($values as $value) {
-                    // The slot names are fixed words and none is the start of another, so the separator and the order of the key
-                    // never change which entries share a bucket.
+                    // The slot names are fixed words and none is the start of another, so the separator and its place
+                    // beside the slot never change which entries share a bucket.
                     // @pest-mutate-ignore: ConcatRemoveRight, ConcatSwitchSides
-                    $buckets[$slot.'|'.$value][] = $id;
+                    $slotPrefix = $slot.'|';
+                    // Every key puts the value on the same side of the prefix, so the order never changes which entries
+                    // share a bucket.
+                    // @pest-mutate-ignore: ConcatSwitchSides
+                    $buckets[$slotPrefix.$value][] = $id;
                 }
             }
         }
@@ -285,10 +289,14 @@ class PeopleDuplicateDetector
         foreach (self::IDENTIFIER_PATHS as $kind => $path) {
             $normalized = $this->normalizeIdentifier(Arr::get($data, $path));
             if ($normalized !== null) {
-                // The kinds are fixed words and none is the start of another, so the separator and the order of the key
-                // never change which entries share an identifier.
+                // The kinds are fixed words and none is the start of another, so the separator and its place beside
+                // the kind never change which entries share an identifier.
                 // @pest-mutate-ignore: ConcatRemoveRight, ConcatSwitchSides
-                $identifiers[] = $kind.':'.$normalized;
+                $kindPrefix = $kind.':';
+                // Every identifier puts the value on the same side of the prefix, so the order never changes which
+                // entries share an identifier.
+                // @pest-mutate-ignore: ConcatSwitchSides
+                $identifiers[] = $kindPrefix.$normalized;
             }
         }
 
@@ -347,11 +355,11 @@ class PeopleDuplicateDetector
         // The class is Unicode-aware (\p{L}\p{N} with the /u flag) so non-Latin names
         // (CJK, Cyrillic, accented Latin) keep their letters and produce a stable key
         // instead of normalizing to null, duplicate detection must work for every name.
+        $fullName = $first.' '.$last;
         // preg_replace() returns null only for a bad pattern or invalid UTF-8 the lowercase call cannot leave, and the trim
-        // below does the same work as this one, so neither is observable on its own. Swapping the two parts gives every
-        // person a key in the reverse order, which groups the same people.
-        // @pest-mutate-ignore: EmptyStringToNotEmpty, UnwrapTrim, ConcatSwitchSides
-        $key = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower($first.' '.$last)) ?? '');
+        // below does the same work as this one, so neither is observable on its own.
+        // @pest-mutate-ignore: EmptyStringToNotEmpty, UnwrapTrim
+        $key = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower($fullName)) ?? '');
         // preg_replace() returns a string here, so the cast is a type narrowing, and this trim is the second of two that
         // do the same work.
         // @pest-mutate-ignore: RemoveStringCast, UnwrapTrim
@@ -405,9 +413,10 @@ class PeopleDuplicateDetector
             return null;
         }
 
+        $stripped = preg_replace('/\D+/', '', (string) $value);
         // preg_replace() returns null only for a bad pattern or invalid UTF-8, neither of which this input can be.
         // @pest-mutate-ignore: EmptyStringToNotEmpty
-        $digits = preg_replace('/\D+/', '', (string) $value) ?? '';
+        $digits = $stripped ?? '';
 
         // Require at least 7 digits so partial extensions never match coincidentally
         return \strlen($digits) >= 7 ? $digits : null;
@@ -427,10 +436,12 @@ class PeopleDuplicateDetector
         }
 
         // "jane-smith-2" → "jane-smith" so a freed-then-reused slug still matches
-        // An entry's slug is already a trimmed string, so the cast and the trim have nothing to change, and
+        // An entry's slug is already a trimmed string, so the cast and the trim have nothing to change.
+        // @pest-mutate-ignore: RemoveStringCast, UnwrapTrim
+        $stripped = preg_replace('/-\d+$/', '', mb_strtolower(trim((string) $slug)));
         // preg_replace() returns null only for a bad pattern or invalid UTF-8, which a slug cannot be.
-        // @pest-mutate-ignore: RemoveStringCast, UnwrapTrim, EmptyStringToNotEmpty
-        $stem = preg_replace('/-\d+$/', '', mb_strtolower(trim((string) $slug))) ?? '';
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
+        $stem = $stripped ?? '';
 
         // A slug is a non-empty string or null here (the repository drops a leading hyphen and an empty slug is null), so no stem is empty.
         // @pest-mutate-ignore: EmptyStringToNotEmpty

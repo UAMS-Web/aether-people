@@ -55,7 +55,9 @@ final class PeopleLensUrl extends Tags
         // The registry holds no lens under an empty handle, so a blank lens would end in the same empty
         // string at the lookup below; the blank slug is the check that matters.
         // @pest-mutate-ignore: EmptyStringToNotEmpty
-        if ($lens === '' || $slug === '') {
+        $lensIsBlank = $lens === '';
+
+        if ($lensIsBlank || $slug === '') {
             return '';
         }
 

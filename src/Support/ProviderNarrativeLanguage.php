@@ -59,10 +59,13 @@ final class ProviderNarrativeLanguage
         // Reduce to the first whitespace-delimited word, stripping leading
         // punctuation (e.g. a parenthesized or quoted title). Keep the original
         // case so an initialism can be detected.
-        // Splitting a non-empty string always yields a first element, and this fixed pattern cannot fail,
-        // so neither fallback is reached
+        // Splitting a non-empty string always yields a first element, so the fallback is not reached
         // @pest-mutate-ignore: EmptyStringToNotEmpty
-        $firstWordRaw = preg_replace('/^[^A-Za-z]+/', '', preg_split('/\s+/', $trimmed)[0] ?? '') ?? '';
+        $firstToken = preg_split('/\s+/', $trimmed)[0] ?? '';
+        $stripped = preg_replace('/^[^A-Za-z]+/', '', $firstToken);
+        // This fixed pattern cannot fail, so the fallback is not reached
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
+        $firstWordRaw = $stripped ?? '';
 
         if ($firstWordRaw === '') {
             return 'a';
