@@ -33,17 +33,12 @@ final class Isco08FieldtypeStorage
      */
     public static function normalizeTierCode(mixed $v): ?string
     {
-        // Treat null and CP sentinel `false` as an empty tier
-        if ($v === null || $v === false) {
-            return null;
-        }
-
         // Coerce numeric scalars to string before trimming
         if (\is_int($v) || \is_float($v)) {
             $v = (string) $v;
         }
 
-        // Reject non-string tier values
+        // Reject non-string tier values, including null and the CP sentinel `false`
         if (! \is_string($v)) {
             return null;
         }

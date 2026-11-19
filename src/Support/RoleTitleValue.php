@@ -423,7 +423,7 @@ final class RoleTitleValue
         $merged = [];
 
         // Loop through each configuration and add its option keys to the merged list
-        foreach (\array_values($byConfiguration) as $optionKeys) {
+        foreach ($byConfiguration as $optionKeys) {
             // Use the spread operator to add the option keys to the merged list
             $merged = [...$merged, ...$optionKeys];
         }
@@ -762,14 +762,9 @@ final class RoleTitleValue
             return '';
         }
 
-        // Read configuration key from the payload
-        $configuration = $data['configuration'] ?? null;
-
-        // Coerce to string for match arms; non-strings become empty
-        $configuration = \is_string($configuration) ? $configuration : '';
-
-        // Dispatch to the composer for the active configuration mode
-        return match ($configuration) {
+        // Dispatch to the composer for the active configuration mode; `match` is
+        // strict, so a missing or non-string configuration takes the default arm
+        return match ($data['configuration'] ?? null) {
             self::CONFIGURATION_FACULTY => self::composeFaculty($data),
             self::CONFIGURATION_ACADEMIC_LEADERSHIP => self::composeAcademicAdministrative(
                 $data
@@ -1237,7 +1232,9 @@ final class RoleTitleValue
     private static function scopeName(
         mixed $scope
     ): string {
-        // Only an array payload can carry a name
+        // Only an array payload can carry a name. Unreachable: both callers pass a
+        // scope that `resolvedScopeJoiner()` has already found to be an array.
+        // @pest-mutate-ignore: EmptyStringToNotEmpty, RemoveEarlyReturn
         if (! \is_array($scope)) {
             // Report no name
             return '';
@@ -1290,7 +1287,9 @@ final class RoleTitleValue
             return null;
         }
 
-        // Read the scope joiner from the scope data
+        // Read the scope joiner from the scope data. Equivalent for the '' fallback:
+        // the empty check below and any other unknown text both reach the default.
+        // @pest-mutate-ignore: EmptyStringToNotEmpty
         $joiner = isset($scope['scope_joiner']) && \is_string($scope['scope_joiner'])
             ? \trim($scope['scope_joiner'])
             : '';
@@ -1389,7 +1388,9 @@ final class RoleTitleValue
     private static function scopeArticle(
         mixed $scope
     ): ?string {
-        // Only an array payload carries an article choice
+        // Only an array payload carries an article choice. Unreachable: the only
+        // caller passes a scope `resolvedScopeJoiner()` has already found to be an array.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if (! \is_array($scope)) {
             return null;
         }
@@ -1453,7 +1454,7 @@ final class RoleTitleValue
         $prefixes = '';
 
         foreach ($segments as $index => $segment) {
-            if ($segment !== '' && \str_ends_with($segment, '-')) {
+            if (\str_ends_with($segment, '-')) {
                 $prefixes .= $segment;
                 $segments[$index] = '';
             }
@@ -1467,31 +1468,19 @@ final class RoleTitleValue
     }
 
     /**
-     * Trim a string subfield to null when empty after trim.
+     * Trim a string subfield, or null when it is not a string.
+     *
+     * A blank value trims to `''`, which `optionSegment()` rejects even when a
+     * host config keys an option by it.
      *
      * @param  mixed  $value  Raw subfield value.
-     * @return string|null Non-empty trimmed string, or null.
+     * @return string|null Trimmed string, or null.
      */
     private static function normalizeOptionalString(
         mixed $value
     ): ?string {
         // Reject non-strings as unset optional values
-        if (! \is_string($value)) {
-            // Return null to signal that the value is not a string
-            return null;
-        }
-
-        // Trim the value string
-        $t = \trim($value);
-
-        // Check if the trimmed value is empty
-        if ($t === '') {
-            // Return null to signal that the trimmed value is empty
-            return null;
-        }
-
-        // Return the trimmed value
-        return $t;
+        return \is_string($value) ? \trim($value) : null;
     }
 
     /**
@@ -1505,17 +1494,8 @@ final class RoleTitleValue
         ?string $normalized,
         array $allowedSuffixes
     ): string {
-        // Check if the normalized value is null or empty
-        if (
-            $normalized === null
-            || $normalized === ''
-        ) {
-            // Return an empty string to signal that the normalized value is null or empty
-            return '';
-        }
-
-        // Check if the normalized value is not in the allowed suffixes
-        if (! \in_array($normalized, $allowedSuffixes, true)) {
+        // Check if the normalized value is unset, blank, or not in the allowed suffixes
+        if ($normalized === null || $normalized === '' || ! \in_array($normalized, $allowedSuffixes, true)) {
             // ---
             // Return an empty string to signal that the normalized value is not in the
             // allowed suffixes

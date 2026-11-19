@@ -92,7 +92,9 @@ final class RoleTitleScopeUnit
     public static function entry(
         ?string $id
     ): ?Entry {
-        // Nothing linked resolves to nothing
+        // Nothing linked resolves to nothing. Equivalent without the return:
+        // `Entry::find(null)` finds nothing either.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($id === null) {
             return null;
         }
@@ -227,9 +229,9 @@ final class RoleTitleScopeUnit
 
         $fieldtype = self::field($id)->fieldtype();
 
-        // An `entries` field always resolves to a fieldtype, so InstanceOfToTrue
-        // cannot be killed; the guard is kept for the static type of `preload()`.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // An `entries` field always resolves to a fieldtype, so neither InstanceOfToTrue
+        // nor removing the return can be killed; the guard is kept for the static type of `preload()`.
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $fieldtype instanceof Fieldtype) {
             return [];
         }
