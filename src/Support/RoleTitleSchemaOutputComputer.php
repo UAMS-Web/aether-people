@@ -425,7 +425,7 @@ final class RoleTitleSchemaOutputComputer
         if (self::conditionSubfieldIsCheckboxMap($subfieldKey)) {
             // Reject non-list checkbox actual shapes
             // actualForConditionKey() always returns a list for a checkbox key, so this guard is unreachable
-            // @pest-mutate-ignore: BooleanOrToBooleanAnd
+            // @pest-mutate-ignore: BooleanOrToBooleanAnd, FalseToTrue, RemoveEarlyReturn
             if (
                 ! \is_array($actual)
                 || ! \array_is_list($actual)

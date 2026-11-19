@@ -29,7 +29,10 @@ it('merges the role_title config and offers it for publishing', function (): voi
     $paths = ServiceProvider::pathsToPublish(UAMSWeb\Aether\People\ServiceProvider::class, 'aether-people-role-title-config');
 
     expect(array_keys($paths))->toHaveCount(1)
-        ->and(basename((string) array_key_first($paths)))->toBe('role_title.php');
+        ->and(basename((string) array_key_first($paths)))->toBe('role_title.php')
+        // The source is the add-on's own copy, which a host publishes into its config directory
+        ->and(is_file((string) array_key_first($paths)))->toBeTrue()
+        ->and(array_values($paths))->toBe([config_path('role_title.php')]);
 });
 
 it('reads the ISCO-08 codes from aether-enums', function (): void {

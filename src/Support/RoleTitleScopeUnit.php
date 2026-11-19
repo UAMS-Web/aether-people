@@ -227,9 +227,9 @@ final class RoleTitleScopeUnit
 
         $fieldtype = self::field($id)->fieldtype();
 
-        // An `entries` field always resolves to a fieldtype, so InstanceOfToTrue
-        // cannot be killed; the guard is kept for the static type of `preload()`.
-        // @pest-mutate-ignore: InstanceOfToTrue
+        // An `entries` field always resolves to a fieldtype, so neither InstanceOfToTrue
+        // nor removing the return can be killed; the guard is kept for the static type of `preload()`.
+        // @pest-mutate-ignore: InstanceOfToTrue, RemoveEarlyReturn
         if (! $fieldtype instanceof Fieldtype) {
             return [];
         }
