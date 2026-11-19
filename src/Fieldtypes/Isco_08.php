@@ -26,6 +26,9 @@ final class Isco_08 extends Fieldtype
     /**
      * @var array<int, string>
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutants.
+    // Removing any entry by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $keywords = [
         'ILO',
         'ISCO 08',
@@ -58,6 +61,9 @@ final class Isco_08 extends Fieldtype
     /**
      * @var array<int, string>
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutants.
+    // Removing either entry by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: RemoveArrayItem
     protected $categories = [
         'special',
         'structured',
@@ -66,11 +72,17 @@ final class Isco_08 extends Fieldtype
     /**
      * @var bool
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Flipped by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: TrueToFalse
     protected $selectable = true;
 
     /**
      * @var bool
      */
+    // The coverage driver attributes no coverage to a property default, so Pest selects no test for its mutant.
+    // Flipped by hand, it fails "declares its picker metadata".
+    // @pest-mutate-ignore: FalseToTrue
     protected $localizable = false;
 
     /**

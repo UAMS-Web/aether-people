@@ -307,3 +307,39 @@ it('builds the tier rules, requiring a major only when the field is required', f
     'a validate string, not a list' => [['validate' => 'required'], false],
     'a loose required match in the validate list' => [['validate' => [true]], false],
 ]);
+
+it('declares its picker metadata', function (): void {
+    $fieldtype = new Isco_08;
+
+    expect($fieldtype->keywords())->toBe([
+        'ILO',
+        'ISCO 08',
+        'ISCO 2008',
+        'ISCO',
+        'ISCO-08',
+        'ISCO-2008',
+        'ISCO08',
+        'ISCO2008',
+        'International Labor Organization',
+        'International Labour Organization',
+        'International Standard Classification of Occupations 2008',
+        'International Standard Classification of Occupations',
+        'classification',
+        'classifications',
+        'classifier',
+        'classifiers',
+        'classify',
+        'classifying',
+        'code',
+        'codes',
+        'identification',
+        'identifications',
+        'identifier',
+        'identifiers',
+        'identify',
+        'occupation',
+    ])
+        ->and($fieldtype->categories())->toBe(['special', 'structured'])
+        ->and($fieldtype->selectable())->toBeTrue()
+        ->and($fieldtype->localizable())->toBeFalse();
+});
