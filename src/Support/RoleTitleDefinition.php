@@ -1534,8 +1534,9 @@ final class RoleTitleDefinition
      * Uses `defaultStoredValueForFieldDefinition()` so behavior matches nested
      * `fields` rows: `checkboxes`, `radios`, `text`, and `group` resolve the
      * same way (required radios with null `default` use the first option key).
-     * `checkboxes` and `group` rows always resolve to arrays. When the subfield row is missing, returns `null` (v3 config is
-     * expected to define every stored subfield row).
+     * `checkboxes` and `group` rows always resolve to arrays. When the
+     * subfield row is missing, returns `null` (v3 config is expected to
+     * define every stored subfield row).
      *
      * @param  string  $subfieldKey  Key under `subfields`
      * @return mixed `null` for optional radios, checkbox map, group array, or
