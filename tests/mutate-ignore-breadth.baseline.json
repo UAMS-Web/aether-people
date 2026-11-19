@@ -1,0 +1,106 @@
+{
+    "findings": [
+        {
+            "path": "src/ComputedFields/ProviderPeople/ProviderProfileBodyResolver.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=6"
+        },
+        {
+            "path": "src/ComputedFields/ProviderPeople/ProviderProfileBodyResolver.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=5"
+        },
+        {
+            "path": "src/Duplicates/PeopleDuplicateDetector.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=4"
+        },
+        {
+            "path": "src/Fieldtypes/Isco_08.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=26"
+        },
+        {
+            "path": "src/Fieldtypes/Isco_08.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=2"
+        },
+        {
+            "path": "src/Fieldtypes/RoleTitle.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=3"
+        },
+        {
+            "path": "src/Fieldtypes/RoleTitle.php",
+            "marker": "// @pest-mutate-ignore: EmptyStringToNotEmpty",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "EmptyStringToNotEmpty=2"
+        },
+        {
+            "path": "src/Fieldtypes/TextPhoneticPair.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=4"
+        },
+        {
+            "path": "src/Merge/PeopleMergeService.php",
+            "marker": "// @pest-mutate-ignore: RemoveStringCast",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveStringCast=2"
+        },
+        {
+            "path": "src/ServiceProvider.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=2"
+        },
+        {
+            "path": "src/Support/PersonNameComposite.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=3"
+        },
+        {
+            "path": "src/Support/PersonNameDisplayFormats.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem, IncrementInteger, DecrementInteger",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=13, IncrementInteger=13, DecrementInteger=13"
+        },
+        {
+            "path": "src/Support/PersonNameDisplayFormats.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=26"
+        },
+        {
+            "path": "src/Support/PersonNameDisplayFormats.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=11"
+        },
+        {
+            "path": "src/Support/ProviderNarrativeLanguage.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=9"
+        },
+        {
+            "path": "src/Support/RoleTitleUnstructuredReplicatorSupport.php",
+            "marker": "// @pest-mutate-ignore: BooleanOrToBooleanAnd, RemoveArrayItem, RemoveEarlyReturn",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "BooleanOrToBooleanAnd=2, RemoveArrayItem=1, RemoveEarlyReturn=1"
+        },
+        {
+            "path": "src/Support/WorkdayManagedFields.php",
+            "marker": "// @pest-mutate-ignore: RemoveArrayItem",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveArrayItem=6"
+        }
+    ]
+}
