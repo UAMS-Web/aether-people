@@ -143,12 +143,8 @@ final class RoleTitleDefinition
         $raw = \is_array($configurations) ? ($configurations['default'] ?? null) : null;
         $configured = \is_string($raw) && $raw !== '' ? $raw : null;
 
-        // Use the configured default when it is a known handle
-        if (
-            $configured !== null
-            && $handles !== []
-            && \in_array($configured, $handles, true)
-        ) {
+        // Use the configured default when it is a known handle (handles are non-empty strings, so null and an empty list never match)
+        if (\in_array($configured, $handles, true)) {
             return $configured;
         }
 
