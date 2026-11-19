@@ -736,8 +736,6 @@ class RoleTitle extends Fieldtype
             'required_unstructured_subfields' => RoleTitleValue::requiredUnstructuredSubfieldHandlesFromConfig(
                 $config
             ),
-            // The blueprint config section defaults `border` to true, so the fallback is never read (TrueToFalse is equivalent)
-            // @pest-mutate-ignore: TrueToFalse
             'border' => (bool) ($config['border'] ?? true),
             // The scope's unit picker: stock relationship config, plus meta
             // carrying the linked item so the CP shows it without a fetch (UAMS-Web/uams-statamic-archive#2146)

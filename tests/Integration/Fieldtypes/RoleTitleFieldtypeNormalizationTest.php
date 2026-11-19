@@ -140,7 +140,12 @@ it('preloads the border toggle as a boolean', function (mixed $border, bool $exp
     'off' => [false, false],
     'zero' => [0, false],
     'one' => [1, true],
+    'null, which overrides the config default' => [null, true],
 ]);
+
+it('preloads a bordered container without a field', function (): void {
+    expect(new RoleTitle()->preload()['border'])->toBeTrue();
+});
 
 it('preloads a configured default configuration that is enabled', function (): void {
     $preload = roleTitleNormFieldtype([
