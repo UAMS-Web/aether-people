@@ -450,10 +450,12 @@ it('matches each identifier kind on its own', function (string $handle, array $d
 ]);
 
 it('does not match people whose names differ in a part', function (): void {
-    // Same last name only, and the first and last names run together to the same letters.
+    // Same last name only; the first and last names run together to the same letters; and the last and first
+    // names run together to the same letters.
     dupMakePerson('a', 'one', ['person_name' => dupName('Jane', 'Smith'), 'telephone' => '501-555-7777']);
     dupMakePerson('b', 'two', ['person_name' => dupName('John', 'Smith')]);
     dupMakePerson('c', 'three', ['person_name' => dupName('Janes', 'mith')]);
+    dupMakePerson('e', 'five', ['person_name' => dupName('ne', 'Smithja')]);
     dupMakePerson('d', 'four', ['telephone' => '501-555-7777']);
 
     expect(dupClusterIds('a'))->toBe(['a', 'd']);

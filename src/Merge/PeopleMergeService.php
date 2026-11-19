@@ -815,9 +815,8 @@ class PeopleMergeService
      */
     private function displayValue(mixed $value): string
     {
-        // An empty string renders as an empty string whichever branch it takes, so its entry is redundant.
-        // @pest-mutate-ignore: RemoveArrayItem, EmptyStringToNotEmpty
-        if (in_array($value, [null, '', []], true)) {
+        // An empty string is scalar, so the branch below renders it as an empty string too.
+        if (in_array($value, [null, []], true)) {
             return '';
         }
 
