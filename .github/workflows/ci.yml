@@ -65,7 +65,7 @@ jobs:
     with:
       linux-only: true
       mutate-paths: src
-      mutate-timeout-minutes: 120
+      mutate-timeout-minutes: 360
       # The weekly full pass takes its own timeout, which the pull-request value above does not touch. The
       # first scheduled run was cancelled at the 180-minute default (#43); a full pass then took 224 minutes,
       # and 360 is GitHub's longest job (#106).
