@@ -58,3 +58,16 @@ it('builds no meta for a config without a main set list', function (mixed $confi
     'a main with no sets' => [['main' => ['display' => 'Main']]],
     'sets that are not a list' => [['main' => ['sets' => 'number']]],
 ]);
+
+it('keys each default by the field handle as text, or by an empty key for a handle that is not a scalar', function (mixed $fieldHandle, int|string $expectedKey): void {
+    $meta = ReplicatorSetMeta::forSets(
+        ['main' => ['sets' => ['set' => ['fields' => [['handle' => $fieldHandle, 'field' => ['type' => 'text']]]]]]],
+        'schema_property_value'
+    );
+
+    expect($meta['defaults'])->toBe(['set' => [$expectedKey => null]]);
+})->with([
+    // A float key would be truncated to 1 without the cast to text
+    'a decimal handle' => [1.5, '1.5'],
+    'no handle' => [null, ''],
+]);
