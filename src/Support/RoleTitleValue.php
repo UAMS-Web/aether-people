@@ -534,9 +534,7 @@ final class RoleTitleValue
         // Read the nested Title Options map when present
         $nested = $data['title_options'] ?? null;
 
-        // Treat missing maps or unknown keys as off. Equivalent without the return:
-        // `empty()` reads a missing key, or an offset of a non-array, as empty too.
-        // @pest-mutate-ignore: RemoveEarlyReturn
+        // Treat missing maps or unknown keys as off
         if (! \is_array($nested) || ! \array_key_exists($key, $nested)) {
             return false;
         }
@@ -1290,15 +1288,16 @@ final class RoleTitleValue
         }
 
         // Read the scope joiner from the scope data. Equivalent for the '' fallback:
-        // no joiner option is keyed by an empty or any other unknown text.
+        // the empty check below and any other unknown text both reach the default.
         // @pest-mutate-ignore: EmptyStringToNotEmpty
         $joiner = isset($scope['scope_joiner']) && \is_string($scope['scope_joiner'])
             ? \trim($scope['scope_joiner'])
             : '';
 
-        // Check if the scope joiner is not a known stored key
+        // Check if the scope joiner is empty or not a known stored key
         if (
-            ! \in_array(
+            $joiner === ''
+            || ! \in_array(
                 $joiner,
                 self::orderedOptionKeysForSubfield(
                     'scope',
@@ -1471,8 +1470,8 @@ final class RoleTitleValue
     /**
      * Trim a string subfield, or null when it is not a string.
      *
-     * A blank value trims to `''`, which `optionSegment()` rejects like any other
-     * key that is not an option.
+     * A blank value trims to `''`, which `optionSegment()` rejects even when a
+     * host config keys an option by it.
      *
      * @param  mixed  $value  Raw subfield value.
      * @return string|null Trimmed string, or null.
@@ -1495,8 +1494,8 @@ final class RoleTitleValue
         ?string $normalized,
         array $allowedSuffixes
     ): string {
-        // Check if the normalized value is unset or not in the allowed suffixes
-        if ($normalized === null || ! \in_array($normalized, $allowedSuffixes, true)) {
+        // Check if the normalized value is unset, blank, or not in the allowed suffixes
+        if ($normalized === null || $normalized === '' || ! \in_array($normalized, $allowedSuffixes, true)) {
             // ---
             // Return an empty string to signal that the normalized value is not in the
             // allowed suffixes

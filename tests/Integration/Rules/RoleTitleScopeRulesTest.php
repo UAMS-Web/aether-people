@@ -94,6 +94,7 @@ it('checks a linked scope unit exists, has a name, stands without an object, and
     'a missing entry' => [['scope' => ['scope_unit' => 'missing']], null, 'unit', 'scope_unit_not_found'],
     'an entry outside the allowed collections' => [['scope' => ['scope_unit' => 'page']], null, 'unit', 'scope_unit_not_found'],
     'a unit with no name' => [['scope' => ['scope_unit' => 'unnamed']], null, 'unit', 'scope_unit_unnamed'],
+    'a unit with no name next to an object' => [['configuration' => 'academic_leadership', 'object' => 'dean', 'scope' => ['scope_unit' => 'unnamed']], null, 'unit', 'scope_unit_unnamed'],
     'a unit next to an object' => [['configuration' => 'academic_leadership', 'object' => 'dean', 'scope' => ['scope_unit' => 'named']], null, 'unit', 'scope_unit_object'],
     'a unit other than the row unit' => [['scope' => ['scope_unit' => ['named']]], 'other', 'unit', 'scope_unit_row_mismatch'],
     'the row unit' => [['scope' => ['scope_unit' => ['named']]], 'named', 'unit', null],

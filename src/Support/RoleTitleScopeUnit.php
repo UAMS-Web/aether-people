@@ -92,7 +92,9 @@ final class RoleTitleScopeUnit
     public static function entry(
         ?string $id
     ): ?Entry {
-        // Nothing linked resolves to nothing
+        // Nothing linked resolves to nothing. Equivalent without the return:
+        // `Entry::find(null)` finds nothing either.
+        // @pest-mutate-ignore: RemoveEarlyReturn
         if ($id === null) {
             return null;
         }

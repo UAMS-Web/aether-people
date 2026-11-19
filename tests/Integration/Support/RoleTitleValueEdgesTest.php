@@ -198,11 +198,12 @@ it('composes nothing for an unstructured, unknown or missing configuration', fun
 
 it('composes a faculty title from every slot, trimming each stored key', function (): void {
     roleTitleValueAddOption('title_options', 'tenured', ['available_in' => ['faculty']]);
-    roleTitleValueLabelOptions(['tenured' => 'tenured']);
+    roleTitleValueAddOption('title_options', 'unused', ['available_in' => ['faculty']]);
+    roleTitleValueLabelOptions(['tenured' => 'tenured', 'unused' => 'unused']);
 
     expect(RoleTitleValue::compose([
         'configuration' => 'faculty',
-        'title_options' => ['visiting' => true, 'adjunct' => false, 'tenured' => true],
+        'title_options' => ['visiting' => true, 'adjunct' => false, 'tenured' => true, 'unused' => false],
         'scope_qualifier' => 'clinical',
         'hierarchical_modifier' => ' associate ',
         'role' => ' professor ',
@@ -210,6 +211,44 @@ it('composes a faculty title from every slot, trimming each stored key', functio
         'scope' => ['scope_joiner' => ' of ', 'scope_name' => 'Medicine'],
     ]))->toBe('visiting tenured clinical associate professor emeritus of Medicine');
 });
+
+it('takes the article for a typed scope that chose it', function (string $article, string $expected): void {
+    expect(RoleTitleValue::compose([
+        'configuration' => 'faculty',
+        'role' => 'professor',
+        'scope' => ['scope_joiner' => 'of', 'scope_name' => 'Medicine', 'scope_article' => $article],
+    ]))->toBe($expected);
+})->with([
+    'the article' => ['the', 'professor of the Medicine'],
+    'a padded article' => [' the ', 'professor of the Medicine'],
+    'another article' => ['a', 'professor of Medicine'],
+]);
+
+it('rejects a blank stored key and a blank joiner even when a host keys an option by it', function (): void {
+    roleTitleValueAddOption('honorific', '');
+    /** @var array<int|string, mixed> $joiners */
+    $joiners = config('role_title.subfields.scope.fields.scope_joiner.options');
+    $joiners[''] = ['available_in' => []];
+    config()->set('role_title.subfields.scope.fields.scope_joiner.options', $joiners);
+    RoleTitleDefinition::forgetInstance();
+
+    expect(RoleTitleValue::compose([
+        'configuration' => 'faculty',
+        'role' => 'professor',
+        'honorific' => '   ',
+        'scope' => ['scope_joiner' => '  ', 'scope_name' => 'Medicine'],
+    ]))->toBe('professor for Medicine');
+});
+
+it('reads a Title Option as on only when its map stores a truthy value', function (mixed $options, bool $expected): void {
+    expect(RoleTitleValue::titleOptionIsSet(['title_options' => $options], 'visiting'))->toBe($expected);
+})->with([
+    'on' => [['visiting' => true], true],
+    'off' => [['visiting' => false], false],
+    'not stored' => [['adjunct' => true], false],
+    'a map that is an object' => [new stdClass, false],
+    'no map' => [null, false],
+]);
 
 it('composes an institutional leadership title from its modifiers', function (): void {
     expect(RoleTitleValue::compose([
@@ -315,4 +354,5 @@ it('counts an object only in the configurations that compose one', function (mix
     'the optional-none sentinel' => [['configuration' => 'academic_leadership', 'object' => ' __role_title_none__ '], false],
     'an object that is not text' => [['configuration' => 'academic_leadership', 'object' => 5], false],
     'a title that is not an array' => ['text', false],
+    'a title that is an object' => [new stdClass, false],
 ]);
