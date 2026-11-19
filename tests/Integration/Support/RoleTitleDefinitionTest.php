@@ -9,7 +9,7 @@ use UAMSWeb\Aether\People\Support\RoleTitleValue;
  * Parity tests for `RoleTitleDefinition` vs `config/role_title.php` and
  * `RoleTitleValue` delegation.
  *
- * Mutation: 100% on UAMSWeb\Aether\People\Support\RoleTitleDefinition (551 mutants, --covered-only).
+ * Mutation: with RoleTitleDefinitionConfigShapesTest, 100% on UAMSWeb\Aether\People\Support\RoleTitleDefinition, measured without --covered-only (#129).
  *
  * @command  php artisan test --compact tests/Integration/Support/RoleTitleDefinitionTest.php
  */
