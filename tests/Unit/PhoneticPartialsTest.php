@@ -123,3 +123,30 @@ it('renders text_phonetic_pair with the add-on partials', function (): void {
         ->and(phoneticPartialsSource('resources/js/components/fieldtypes/partials/TextPhoneticPair.vue'))
         ->toContain("import PhoneticTextInput from './PhoneticTextInput.vue';");
 });
+
+it('ships each phonetic partial once, so no second copy can shadow the add-on one', function (string $basename): void {
+    $found = [];
+    $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__, 2).'/resources/js', FilesystemIterator::SKIP_DOTS));
+
+    foreach ($files as $file) {
+        if ($file instanceof SplFileInfo && $file->getFilename() === $basename) {
+            $found[] = str_replace(DIRECTORY_SEPARATOR, '/', $file->getPathname());
+        }
+    }
+
+    expect($found)->toHaveCount(1)
+        ->and($found[0])->toEndWith('/resources/js/components/fieldtypes/partials/'.$basename);
+})->with(['TextPhoneticPair.vue', 'PhoneticTextInput.vue', 'PhoneticTextInstructions.vue']);
+
+it('carries the phonetic components in the committed Control Panel build a host serves', function (): void {
+    $builds = glob(dirname(__DIR__, 2).'/resources/dist/build/assets/cp-*.js');
+    $builds = $builds === false ? [] : $builds;
+
+    expect($builds)->toHaveCount(1);
+
+    $build = mustBeString(file_get_contents($builds[0]), 'the committed Control Panel build');
+
+    expect($build)->toContain('text_phonetic_pair-fieldtype')
+        ->toContain('phonetic-text-instructions-alert')
+        ->toContain('text-phonetic-pair');
+});
