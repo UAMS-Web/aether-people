@@ -30,6 +30,9 @@ return [
     |                 route answers and no clinical provider profile renders.
     |                 The `clinical_provider_eligible` modifier and scope stay
     |                 available, so a template that calls them still renders.
+    |                 On, the layer needs the host to bind `LocationRegions` and
+    |                 `PublicationCitations`; until it does, each refuses by name
+    |                 when first used.
     |
     */
     'features' => [

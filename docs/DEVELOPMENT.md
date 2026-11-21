@@ -12,6 +12,10 @@ aether-people-host
 
 It is a stock `statamic/statamic` project with one change: `composer.json` carries a path repository pointing at the add-on checkout, and requires the add-on at `@dev`. Record any other change the add-on needs (for example, turning on multisite and defining two sites, if the add-on is about sites) in the host's own files, so it can be rebuilt from this page, and add that step to the list below.
 
+## What a host binds
+
+The clinical provider layer (`PEOPLE_PROVIDER_LAYER`, on by default) uses contracts the host supplies, and a stock host supplies none of them. The add-on still boots on a stock host: `LocationRegions` and `PublicationCitations`, the two contracts built while the layer registers, default to implementations that refuse with a message naming the contract and the flag, and a host binding replaces either one. The other contracts (`DepartmentHubRoster`, `OrganizationDisplayName`, `EntryReferenceRepointer`, `MergeRedirectWriter`) are resolved when a lens gate, a role-title scope unit or a merge uses them, and a host that has not bound one fails at that point. A host that wants none of the layer sets `PEOPLE_PROVIDER_LAYER=false`.
+
 ## Rebuilding the host
 
 Run these in the web server's directory. `<path-to-addon-checkout>` is the absolute path of the primary checkout or the slot being tested; it differs per machine, so it is written as a placeholder here.
