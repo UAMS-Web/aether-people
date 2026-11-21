@@ -219,3 +219,49 @@ it('previews zero redirects when the global writer has no redirects set, as the 
     expect($preview->redirectsCreated)->toBe(0)
         ->and($result->redirectsCreated)->toBe(0);
 });
+
+it('previews the number of rows the commit then adds to the redirects global, across sites and past an existing source', function (): void {
+    mrwPerson('surv', 'jane');
+    $loser = mrwPerson('lose', 'old-jane');
+    $loser->makeLocalization('health')->slug('old-jane-health')->published(true)->saveQuietly();
+
+    /** @var Statamic\Globals\GlobalSet $set */
+    $set = GlobalSet::findByHandle('redirects');
+
+    // One of the two planned sources already redirects, so only the other may be counted and written
+    $existing = [['id' => 'seed', 'source_type' => 'url', 'source' => '/people/old-jane', 'target_type' => 'url', 'target' => '/people/jane', 'response' => '301', 'enabled' => true]];
+    $default = $set->in('default');
+    $default->data(['redirects' => $existing]);
+    $default->save();
+
+    $health = $set->makeLocalization('health');
+    $health->data(['redirects' => []]);
+    $health->save();
+
+    $storedRows = static function (): int {
+        /** @var Statamic\Globals\GlobalSet $redirects */
+        $redirects = GlobalSet::findByHandle('redirects');
+
+        return collect(['default', 'health'])
+            ->sum(static function (string $site) use ($redirects): int {
+                /** @var Variables $variables */
+                $variables = $redirects->in($site);
+
+                return \count($variables->get('redirects', []));
+            });
+    };
+
+    $service = mrwService(new RedirectsGlobalWriter);
+    $before = $storedRows();
+
+    $preview = $service->preview(['surv', 'lose'], 'surv', []);
+    $afterPreview = $storedRows();
+
+    $result = $service->merge(['surv', 'lose'], 'surv', []);
+    $added = $storedRows() - $before;
+
+    expect($preview->redirectsCreated)->toBe(1)
+        ->and($afterPreview)->toBe($before)
+        ->and($added)->toBe($preview->redirectsCreated)
+        ->and($result->redirectsCreated)->toBe($added);
+});
