@@ -39,8 +39,8 @@ it('renders the text_phonetic_pair field with the add-on view', function (): voi
     $fieldtype = mustBe(TextPhoneticPair::class, new Field('pronounced', ['type' => 'text_phonetic_pair'])->fieldtype(), 'fieldtype');
 
     expect($fieldtype->view())->toBe('statamic::forms.fields.text_phonetic_pair')
-        ->and(realpath(view()->getFinder()->find('statamic::forms.fields.text_phonetic_pair')))
-        ->toBe(dirname(__DIR__, 3).'/resources/field-views/forms/fields/text_phonetic_pair.antlers.html');
+        ->and(str_replace(DIRECTORY_SEPARATOR, '/', (string) realpath(view()->getFinder()->find('statamic::forms.fields.text_phonetic_pair'))))
+        ->toBe(str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__, 3)).'/resources/field-views/forms/fields/text_phonetic_pair.antlers.html');
 });
 
 it('renders a text and a phonetic input under the field handle', function (): void {
