@@ -55,3 +55,13 @@ Oldest first, one entry per closed decision, so **a new entry is appended to the
 **Rejected.** Refusing a merge when the global is missing, with no contract: it fails closed but leaves a host that wants no redirects with no supported way to say so. Keeping the log-and-continue path and making only the preview report zero: the smallest change, but the operator can still commit and lose the URLs.
 
 **Companion.** `UAMS-Web/aether-people#98`. The pull request that moved the merge into the add-on (`UAMS-Web/aether-people#99`) ports the site's behavior unchanged and is not affected.
+
+## 2026-11-21: Boot without host bindings and refuse a missing contract by name at first use (#144)
+
+**Decision.** The add-on binds a default for `LocationRegions` and `PublicationCitations`, the two contracts the provider layer builds at boot, and each default refuses with a message naming the contract and `PEOPLE_PROVIDER_LAYER`. A host binding replaces it, whether bound before or after the add-on registers.
+
+**Why.** A package that resolves host-supplied services while it boots fails every stock host, CI run and `composer require`, whatever the host uses the layer for. Refusing at first use matches the merge contracts (#98) and keeps the failure named instead of a container error.
+
+**Rejected.** Turning the layer off in the host recipe only: the stock host boots but a real host missing a binding keeps the container error. A boot-time check that names the contracts: a better message, but the package still cannot boot without the host's bindings. Null-object defaults that return empty data: the package would work out of the box, but a missing binding would read as empty locations and citations.
+
+**Companion.** `UAMS-Web/aether-people#144`.
