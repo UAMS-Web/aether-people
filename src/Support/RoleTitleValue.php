@@ -843,18 +843,6 @@ final class RoleTitleValue
     }
 
     /**
-     * Normalize the composed one-line title for storage and validation.
-     *
-     * @param  mixed  $value  Raw `value` key from the payload
-     * @return string Empty string when unset or non-string
-     */
-    public static function normalizedComposedTitleValue(
-        mixed $value
-    ): string {
-        return \is_string($value) ? $value : '';
-    }
-
-    /**
      * Subfield values to apply for `stripKeysForConfiguration` so inactive mode fields
      * stay cleared for the active `configuration`.
      *
