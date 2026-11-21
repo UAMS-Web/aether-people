@@ -223,17 +223,23 @@ it('previews zero redirects when the global writer has no redirects set, as the 
 it('previews the number of rows the commit then adds to the redirects global, across sites and past an existing source', function (): void {
     mrwPerson('surv', 'jane');
     $loser = mrwPerson('lose', 'old-jane');
-    $loser->makeLocalization('health')->slug('old-jane-health')->published(true)->saveQuietly();
+    /** @var EntryClass $healthLoser */
+    $healthLoser = $loser->makeLocalization('health');
+    $healthLoser->slug('old-jane-health');
+    $healthLoser->published(true);
+    $healthLoser->saveQuietly();
 
     /** @var Statamic\Globals\GlobalSet $set */
     $set = GlobalSet::findByHandle('redirects');
 
     // One of the two planned sources already redirects, so only the other may be counted and written
     $existing = [['id' => 'seed', 'source_type' => 'url', 'source' => '/people/old-jane', 'target_type' => 'url', 'target' => '/people/jane', 'response' => '301', 'enabled' => true]];
+    /** @var Variables $default */
     $default = $set->in('default');
     $default->data(['redirects' => $existing]);
     $default->save();
 
+    /** @var Variables $health */
     $health = $set->makeLocalization('health');
     $health->data(['redirects' => []]);
     $health->save();
@@ -247,7 +253,10 @@ it('previews the number of rows the commit then adds to the redirects global, ac
                 /** @var Variables $variables */
                 $variables = $redirects->in($site);
 
-                return \count($variables->get('redirects', []));
+                /** @var list<array<string, mixed>> $rows */
+                $rows = $variables->get('redirects', []);
+
+                return \count($rows);
             });
     };
 
