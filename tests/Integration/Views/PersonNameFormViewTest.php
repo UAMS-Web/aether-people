@@ -37,8 +37,8 @@ it('renders the person_name field with the add-on view', function (): void {
     $fieldtype = mustBe(PersonName::class, new Field('legal_name', ['type' => 'person_name'])->fieldtype(), 'fieldtype');
 
     expect($fieldtype->view())->toBe('statamic::forms.fields.person_name')
-        ->and(realpath(view()->getFinder()->find('statamic::forms.fields.person_name')))
-        ->toBe(dirname(__DIR__, 3).'/resources/field-views/forms/fields/person_name.antlers.html');
+        ->and(str_replace(DIRECTORY_SEPARATOR, '/', (string) realpath(view()->getFinder()->find('statamic::forms.fields.person_name'))))
+        ->toBe(str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__, 3)).'/resources/field-views/forms/fields/person_name.antlers.html');
 });
 
 it('renders each name part through the pair partial', function (): void {
