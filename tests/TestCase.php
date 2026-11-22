@@ -50,11 +50,35 @@ abstract class TestCase extends AddonTestCase
         // Let Statamic's test case configure the environment first
         parent::getEnvironmentSetUp($app);
 
-        // Point the license-check cache at this worker's directory, if any
-        $path = self::outpostCachePath($_SERVER['TEST_TOKEN'] ?? null);
+        // Point the license-check cache and the local search index at this worker's directories, if any
+        $token = $_SERVER['TEST_TOKEN'] ?? null;
+        $path = self::outpostCachePath($token);
         if ($path !== null) {
             $app['config']->set('cache.stores.outpost.path', $path);
         }
+
+        $searchPath = self::searchIndexPath($token);
+        if ($searchPath !== null) {
+            $app['config']->set('statamic.search.drivers.local.path', $searchPath);
+        }
+    }
+
+    /**
+     * The local search index directory for a parallel worker token, or null
+     * outside a parallel run.
+     *
+     * Saving an entry updates the `default` search index, and Statamic's local driver
+     * creates the index directory with a plain `mkdir` that throws when another worker
+     * created it first, so one directory shared by every worker failed whichever test
+     * saved an entry at that moment with "mkdir(): File exists" (#149). A directory per
+     * worker removes the race.
+     *
+     * @param  mixed  $token  The parallel worker token, or null outside a parallel run.
+     * @return ?string The worker's index directory, or null without a usable token.
+     */
+    public static function searchIndexPath(mixed $token): ?string
+    {
+        return is_string($token) || is_int($token) ? storage_path("statamic/search-{$token}") : null;
     }
 
     /**
