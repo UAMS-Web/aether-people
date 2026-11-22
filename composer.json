@@ -62,8 +62,8 @@
     "require": {
         "php": "^8.4",
         "statamic/cms": "^6.35",
-        "uams-web/aether-enums": "^0.1.0",
-        "uams-web/aether-fieldtypes": "^0.1.0"
+        "uams-web/aether-enums": "^0.1.0 || ^0.2.0",
+        "uams-web/aether-fieldtypes": "^0.1.0 || ^0.2.0"
     },
     "require-dev": {
         "cweagans/composer-patches": "^2.0",
