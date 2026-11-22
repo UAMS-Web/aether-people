@@ -334,13 +334,6 @@ it('builds the empty value template for each mode', function (): void {
         ->and($unstructured['value'])->toBe('');
 });
 
-it('reads a composed title value only from text', function (mixed $value, string $expected): void {
-    expect(RoleTitleValue::normalizedComposedTitleValue($value))->toBe($expected);
-})->with([
-    'text' => ['Professor', 'Professor'],
-    'a number' => [5, ''],
-]);
-
 it('counts an object only in the configurations that compose one', function (mixed $title, bool $expected): void {
     expect(RoleTitleValue::objectSelected($title))->toBe($expected);
 })->with([

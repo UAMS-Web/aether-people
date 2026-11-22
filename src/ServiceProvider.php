@@ -18,6 +18,8 @@ use Statamic\Sites\Site as SiteInstance;
 use Statamic\Sites\Sites;
 use Statamic\Statamic;
 use UAMSWeb\Aether\People\ComputedFields\Registration\ProvidersPeopleSharedCollectionComputedsRegistrar;
+use UAMSWeb\Aether\People\Contracts\LocationRegions;
+use UAMSWeb\Aether\People\Contracts\PublicationCitations;
 use UAMSWeb\Aether\People\EditingScope\PeopleEditingScopeRegistrar;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderIndexController;
 use UAMSWeb\Aether\People\Http\Controllers\Api\V1\FindADoc\ProviderShowController;
@@ -27,6 +29,8 @@ use UAMSWeb\Aether\People\Lenses\PeopleLensRegistry;
 use UAMSWeb\Aether\People\Merge\PeopleMergeRegistrar;
 use UAMSWeb\Aether\People\Policies\ScopedEntryPolicy;
 use UAMSWeb\Aether\People\Support\Features;
+use UAMSWeb\Aether\People\Support\UnboundLocationRegions;
+use UAMSWeb\Aether\People\Support\UnboundPublicationCitations;
 use UAMSWeb\Aether\People\Workday\WorkdayToolingRegistrar;
 
 /**
@@ -103,6 +107,11 @@ class ServiceProvider extends AddonServiceProvider
 
         // Limit `people` entries to the organizations of the user's groups (UAMS-Web/uams-statamic-archive#3182)
         $this->app->bind(EntryPolicy::class, ScopedEntryPolicy::class);
+
+        // Default the contracts the provider layer builds at boot to refusals that name them, so a host
+        // without bindings boots; a host binding replaces either one (UAMS-Web/aether-people#144)
+        $this->app->bindIf(LocationRegions::class, UnboundLocationRegions::class);
+        $this->app->bindIf(PublicationCitations::class, UnboundPublicationCitations::class);
     }
 
     /**

@@ -55,7 +55,8 @@ function viewFilesUnder(string $directory): array
 
     foreach ($iterator as $file) {
         if ($file instanceof SplFileInfo && $file->isFile()) {
-            $files[] = $file->getPathname();
+            // One separator on every platform, so a path can be sliced and split on `/`
+            $files[] = str_replace(DIRECTORY_SEPARATOR, '/', $file->getPathname());
         }
     }
 
@@ -69,7 +70,7 @@ function viewFilesUnder(string $directory): array
  */
 function partialNameOf(string $path, string $root): string
 {
-    $relative = substr($path, strlen($root) + 1);
+    $relative = substr($path, strlen(str_replace(DIRECTORY_SEPARATOR, '/', $root)) + 1);
     $name = preg_replace('/\.antlers\.html$/', '', $relative);
 
     return (string) preg_replace('/(^|\/)_([^\/]+)$/', '$1$2', (string) $name);
