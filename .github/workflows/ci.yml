@@ -204,6 +204,42 @@ jobs:
       - run: composer stan
       - run: composer test
 
+  # The add-on requires `uams-web/aether-fieldtypes` at `>=0.1 <1.0`, so a new `0.x` of that package
+  # reaches a host without a change here. Every other job installs the locked version; this one
+  # resolves the newest version the range allows and runs Larastan and Pest against it, so a release
+  # that breaks the add-on fails here instead of in a host.
+  #   - `uams-web/aether-enums` is named because the fieldtypes add-on requires it at its own range
+  #     (v0.3.0 needs `^0.2`), and a root requirement is not moved by `--with-dependencies` unless it
+  #     is an argument.
+  #   - The assertion fails the job when the resolved version is not the newest `0.x` tag, so a
+  #     resolver that quietly kept an older one cannot pass as a run of the newest.
+  # The update rewrites `composer.lock` in the runner only.
+  newest-fieldtypes:
+    name: Newest allowed uams-web/aether-fieldtypes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - name: Resolve the newest allowed uams-web/aether-fieldtypes
+        run: composer update uams-web/aether-fieldtypes uams-web/aether-enums --with-dependencies --no-interaction --no-progress
+
+      - name: Show and check the resolved version
+        run: |
+          installed=$(composer show uams-web/aether-fieldtypes --format=json | jq -r '.versions[0]')
+          newest=$(composer show --all uams-web/aether-fieldtypes --format=json | jq -r '[.versions[] | select(startswith("v0."))][0]')
+          echo "installed=$installed newest=$newest"
+          composer show --no-ansi uams-web/aether-fieldtypes | grep -E '^(name|versions)'
+          composer show --no-ansi uams-web/aether-enums | grep -E '^(name|versions)'
+          if [ -z "$newest" ] || [ "$newest" = "null" ] || [ "$installed" != "$newest" ]; then
+            echo "::error::Resolved uams-web/aether-fieldtypes $installed, not the newest allowed $newest"
+            exit 1
+          fi
+
+      - run: composer stan
+      - run: composer test
+
   # The one check a ruleset requires from this workflow. Keep `needs:` naming the call and every
   # plain job in the file; .claude/skills/code-quality/scripts/check-aggregate-needs.mjs checks it.
   ci:
@@ -216,6 +252,7 @@ jobs:
       - parallel-safe
       - mutate-ignore-breadth
       - compatibility
+      - newest-fieldtypes
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
