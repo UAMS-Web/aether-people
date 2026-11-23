@@ -76,7 +76,7 @@
         "rector/rector": "^2.7",
         "uams-web/patches-orchestra-testbench-core": "^1.1",
         "uams-web/patches-pest-plugin-mutate": "^1.4",
-        "uams-web/patches-statamic-cms": "^1.2"
+        "uams-web/patches-statamic-cms": "^1.3"
     },
     "config": {
         "sort-packages": true,
