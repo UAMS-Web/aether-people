@@ -24,14 +24,7 @@
             "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch",
             "Add blueprint-aware collection create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-collection-create-label-blueprint.patch",
             "Add blueprint-aware taxonomy create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-taxonomy-create-label-blueprint.patch",
-            "Align CP updates badge with updater availableUpdatesCount": "vendor/uams-web/patches-statamic-cms/patches/statamic-updates-overview-badge.patch",
-            "Skip a Stache file removed between listing and stat so a concurrent delete cannot abort the traversal (temporary; see UAMS-Web/uams-statamic-archive#2241)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-traverser-vanished-file.patch",
-            "Skip a Stache file removed after its stat in Store::paths() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-paths.patch",
-            "Skip a Stache file removed after the change scan in Store::getItemFromModifiedPath() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-modified.patch",
-            "Return no items from TaxonomyTermsStore::getItemFromModifiedPath() when the parent skips a vanished file, rather than fatal on null (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-modified.patch",
-            "Skip a Stache term file removed after its stat in TaxonomyTermsStore::paths() so it is not rebuilt as a new, empty term (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-paths.patch",
-            "Return null from TaxonomyTermsStore::getItem() for a term file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-get-item.patch",
-            "Return null from BasicStore::getItem() for a file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-basic-vanished-file-get-item.patch"
+            "Align CP updates badge with updater availableUpdatesCount": "vendor/uams-web/patches-statamic-cms/patches/statamic-updates-overview-badge.patch"
         },
         "laravel/framework": {
             "Tolerate a lost facade stub rename on Windows (temporary; see UAMS-Web/patches-orchestra-testbench-core#6)": "vendor/uams-web/patches-orchestra-testbench-core/patches/laravel-facade-stub-rename.patch"

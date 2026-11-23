@@ -1,5 +1,5 @@
 {
-    "_hash": "fbca3afb0c224c87eba5cab70dd03a03f892c356532f1490eabde4ffc2c2934a",
+    "_hash": "f886c10f0c73b4e4776d954196ce2fdade919b8cf8013c92448aaf08bb59a060",
     "patches": {
         "pestphp/pest-plugin-mutate": [
             {
@@ -201,76 +201,6 @@
                 "description": "Align CP updates badge with updater availableUpdatesCount",
                 "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-updates-overview-badge.patch",
                 "sha256": "8a89d44c84095f3e0a2560f0419d017bf58d090a46e14639d2ff3c9161a9fe6c",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Skip a Stache file removed between listing and stat so a concurrent delete cannot abort the traversal (temporary; see UAMS-Web/uams-statamic-archive#2241)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-traverser-vanished-file.patch",
-                "sha256": "97cb35eae5d57869c5a7476684a29c1570823079e56853c035ab0cdfdc602556",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Skip a Stache file removed after its stat in Store::paths() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-paths.patch",
-                "sha256": "10610d3761d3a4f5b7d412e0e3926af052180807e92eeebb31c7da543dd6d8bf",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Skip a Stache file removed after the change scan in Store::getItemFromModifiedPath() so it is not rebuilt as a new, empty item (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-store-vanished-file-modified.patch",
-                "sha256": "13ddb6ba19ca9f90e9049e73bf5ae0dbe2970fb2c65b2f5ae6f3fff5295c4292",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Return no items from TaxonomyTermsStore::getItemFromModifiedPath() when the parent skips a vanished file, rather than fatal on null (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-modified.patch",
-                "sha256": "4b9ba9c167faaf7bae52a246e16fbc67d73057d96c372668d8b711633a8541b3",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Skip a Stache term file removed after its stat in TaxonomyTermsStore::paths() so it is not rebuilt as a new, empty term (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-paths.patch",
-                "sha256": "b57bbb7673fcbd5cbd6cad05754a8397202643e297ea79d2804e14926111dc4e",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Return null from TaxonomyTermsStore::getItem() for a term file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-terms-vanished-file-get-item.patch",
-                "sha256": "54a321a6e6ba825e97866ac9add0dc9631df18c35c79a4b745dcf976a5dd1396",
-                "depth": 1,
-                "extra": {
-                    "provenance": "patches-file:patches.json"
-                }
-            },
-            {
-                "package": "statamic/cms",
-                "description": "Return null from BasicStore::getItem() for a file removed after its path was recorded, rather than rebuild it (temporary; see UAMS-Web/uams-statamic-archive#2643)",
-                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-basic-vanished-file-get-item.patch",
-                "sha256": "edb5b63794a9508c335872c3dd9fa9357d0a68082efff1313d690a2e25f252be",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"
