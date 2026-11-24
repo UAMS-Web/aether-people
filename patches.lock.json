@@ -1,5 +1,5 @@
 {
-    "_hash": "e3a725bd7df312eb89f659bf669bd59fc03f61c537b20dff80f45dab65d733fd",
+    "_hash": "54dd3b32fd90537b521b79b5a86e2312b91f199f3cbf74c4674e39f060420cb0",
     "patches": {
         "pestphp/pest-plugin-mutate": [
             {
@@ -191,6 +191,16 @@
                 "description": "Add blueprint-aware taxonomy create labels",
                 "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-taxonomy-create-label-blueprint.patch",
                 "sha256": "97c8ac5b5de383513981adeb14c0c725beb1f74c22b832a630fddf9e263dd5fe",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:patches.json"
+                }
+            },
+            {
+                "package": "statamic/cms",
+                "description": "Reset the Stache store's cached file items at the start of warm() so a warm after a query outside a warm does not index from a stale collection (temporary; see UAMS-Web/aether-wordpress-importer#618; upstream: statamic/cms#16022, statamic/cms#16024)",
+                "url": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-clear-file-items.patch",
+                "sha256": "10227d899f2e517d9d102ce66ada8460c9f59ad57dc7ce893fc49d5740c839f3",
                 "depth": 1,
                 "extra": {
                     "provenance": "patches-file:patches.json"
