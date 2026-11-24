@@ -14465,16 +14465,16 @@
         },
         {
             "name": "uams-web/patches-statamic-cms",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UAMS-Web/patches-statamic-cms.git",
-                "reference": "f3dc7e4a4a33d99ca14a607e40d374f1d63d63c0"
+                "reference": "f40c6ef121304e57dfb3749e0147968a6ad49ea7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UAMS-Web/patches-statamic-cms/zipball/f3dc7e4a4a33d99ca14a607e40d374f1d63d63c0",
-                "reference": "f3dc7e4a4a33d99ca14a607e40d374f1d63d63c0",
+                "url": "https://api.github.com/repos/UAMS-Web/patches-statamic-cms/zipball/f40c6ef121304e57dfb3749e0147968a6ad49ea7",
+                "reference": "f40c6ef121304e57dfb3749e0147968a6ad49ea7",
                 "shasum": ""
             },
             "require": {
@@ -14486,7 +14486,8 @@
                     "statamic/cms": {
                         "Add blueprint-aware collection create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-collection-create-label-blueprint.patch",
                         "Add blueprint-aware taxonomy create labels": "vendor/uams-web/patches-statamic-cms/patches/statamic-taxonomy-create-label-blueprint.patch",
-                        "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281; upstream: statamic/cms#15880, statamic/cms#15881)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch"
+                        "Resolve a collection blueprint served from an add-on directory by normalizing the namespace in makeBlueprintFromFile() (temporary; see UAMS-Web/uams-statamic#281; upstream: statamic/cms#15880, statamic/cms#15881)": "vendor/uams-web/patches-statamic-cms/patches/statamic-blueprint-namespace-slash.patch",
+                        "Reset the Stache store's cached file items at the start of warm() so a warm after a query outside a warm does not index from a stale collection (temporary; see UAMS-Web/aether-wordpress-importer#618; upstream: statamic/cms#16022, statamic/cms#16024)": "vendor/uams-web/patches-statamic-cms/patches/statamic-stache-clear-file-items.patch"
                     }
                 }
             },
@@ -14503,7 +14504,7 @@
                 "issues": "https://github.com/UAMS-Web/patches-statamic-cms/issues",
                 "source": "https://github.com/UAMS-Web/patches-statamic-cms"
             },
-            "time": "2026-11-23T21:39:38+00:00"
+            "time": "2026-11-24T19:27:22+00:00"
         }
     ],
     "aliases": [],
