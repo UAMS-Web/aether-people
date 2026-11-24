@@ -73,7 +73,8 @@ Validation refuses:
 - a typed scope that uses "in" without the article "the" ("A typed scope that uses \"in\" must use the article \"the\", or link a scope unit instead.");
 - a linked scope unit that does not exist or is not an organizational unit;
 - a linked scope unit with no public label, or combined with an object;
-- a scope unit that differs from the row's own linked unit.
+- a scope unit that differs from the row's own linked unit;
+- an O*Net-SOC code in an unstructured title's occupation rows that does not match the pattern `NN-NNNN.NN`: "The value must be a valid O*Net-SOC Occupation Code beginning with two digits, followed by a hyphen, four digits, a period and two digits (e.g., '11-1011.00', '13-2011.01')." An empty value passes.
 
 The fieldtype cannot be rendered on a public form.
 
